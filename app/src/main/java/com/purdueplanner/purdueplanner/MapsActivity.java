@@ -40,9 +40,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         // Add a marker in Purdue University and move the camera
-        LatLng PurdueUni = new LatLng(-40.4278651, -86.9184754);
+        LatLng PurdueUni = new LatLng(40.4280571, -86.9204117);
         mMap.addMarker(new MarkerOptions().position(PurdueUni).title("Marker at Purdue University"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(PurdueUni));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(PurdueUni, 14));
 
         //This enables us to put as many markers as we need. We can put 1 marker per class
     }
