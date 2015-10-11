@@ -1,0 +1,21 @@
+<resources>
+    <!--
+
+
+    To get one, follow this link, follow the directions and press "Create" at the end:
+
+    https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=B8:26:71:FA:DE:84:F0:37:3B:50:E4:DF:23:47:B8:2C:49:9C:BE:6F%3Bcom.purdueplanner.purdueplanner
+
+    You can also add your credentials to an existing key, using this line:
+    B8:26:71:FA:DE:84:F0:37:3B:50:E4:DF:23:47:B8:2C:49:9C:BE:6F;com.purdueplanner.purdueplanner
+
+    Alternatively, follow the directions here:
+    https://developers.google.com/maps/documentation/android/start#get-key
+
+    Once you have your key (it starts with "AIza"), replace the "google_maps_key"
+    string in this file.
+    -->
+    <string name="google_maps_key" translatable="false" templateMergeStrategy="preserve">
+        AIzaSyBzhcYE4y6TbTgntigsxuQyd3K7M6URB2w
+    </string>
+</resources>
