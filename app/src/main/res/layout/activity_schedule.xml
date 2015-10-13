@@ -4,8 +4,19 @@
     android:layout_height="match_parent"
     android:weightSum="1">
 
-    <CalendarView
+    <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/calendarView" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"></TableLayout>
+
+    <GridView
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:id="@+id/weekdayView"
+        android:layout_gravity="center_vertical"
+        android:numColumns="7"
+        android:layout_weight="0.01"
+        android:choiceMode="none"
+        />
+
 </LinearLayout>
