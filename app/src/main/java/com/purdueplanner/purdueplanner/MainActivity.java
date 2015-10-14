@@ -29,13 +29,23 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
        });*/
-
+       //code that implements  the map button
         ImageButton mapButton = (ImageButton) findViewById(R.id.mapsButton);
 
         mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, MapsActivity.class));
+            }
+        });
+
+        //code that implements the friends button
+        ImageButton friendButton = (ImageButton) findViewById(R.id.friendButton);
+
+        friendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, FriendsActivity.class));
             }
         });
     }
