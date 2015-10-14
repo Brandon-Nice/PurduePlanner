@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBar;
 /**
  * Created by menane on 10/13/15.
  */
+// Comment
 public class FriendsActivity extends FragmentActivity {
     @Override
     //provide the onCreate method to apply the Friends layout to the activity
