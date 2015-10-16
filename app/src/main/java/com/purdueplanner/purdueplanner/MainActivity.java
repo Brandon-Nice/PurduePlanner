@@ -10,10 +10,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ListView;
 
 public class MainActivity extends AppCompatActivity {
+
+    private String[] testArray = {"CS 354", "CS 252", "CS 348", "CS 391"};
+    private ListView dayListView;
+    private ArrayAdapter arrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, MapsActivity.class));
+                //startActivity(new Intent(MainActivity.this, MapsActivity.class));
             }
         });
 
@@ -48,6 +54,11 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, FriendsActivity.class));
             }
         });
+
+        //Sets the list view for the day
+        dayListView = (ListView) findViewById(R.id.dayList);
+        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, testArray);
+        dayListView.setAdapter(arrayAdapter);
     }
 
     @Override
