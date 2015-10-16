@@ -14,6 +14,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
+
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -59,6 +62,12 @@ public class MainActivity extends AppCompatActivity {
         dayListView = (ListView) findViewById(R.id.dayList);
         arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, testArray);
         dayListView.setAdapter(arrayAdapter);
+
+        //Gets the current day
+        Date date = new Date();
+        CharSequence currDay = android.text.format.DateFormat.format("EEEE",date);
+        TextView myTextView = (TextView) findViewById(R.id.textView);
+        myTextView.setText(currDay);
     }
 
     @Override
