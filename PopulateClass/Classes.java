@@ -8,27 +8,43 @@ import java.sql.Types;
 
 public class Classes {
 	
+	// Stores the class's start time
 	private String startTime;
+	// Stores the class's end time
 	private String endTime;
+	// Stores the class's start date
 	private String startDate;
+	// Stores the class's end date
 	private String endDate;
+	// Stores the class's CRN
 	private String CRN;
+	// Stores the class's major
 	private String major;
+	// Stores the class's course number
 	private String courseNum;
+	// Stores the class's section number
 	private String sectionNum;
+	// Stores the class's credit number
 	private double credits;
+	// Stores the class's title
 	private String title;
+	// Stores the days the class meets
 	private String days;
+	// Stores the primary instructor of the class
 	private String instructor;
+	// Stores the primary instructor's email
 	private String instructorEmail;
+	// Stores the location the class meets at
 	private String location;
+	// Stores the type of class
 	private String type;
 	
-	
+	// Default constructor
 	public Classes()
 	{
 		
 	}
+	// Constructor that can set all the variables needed
 	public Classes(String startTime, String endTime, String startDate, String endDate, 
 			String CRN, String major, String courseNum, String section, double credits, 
 			String title, String days, String instructors, String location, String type)
@@ -126,16 +142,20 @@ public class Classes {
 		this.instructorEmail = instructorsEmail;
 	}
 	
-	//Must be connected to database for this to work
+	// Adds a class to the database
 	public void addClassToSQLDataBase()
 	{
+		// This is the database that will stores the class
 		String url = "jdbc:mysql://localhost:3306/PurduePlanner";
+		// Username for sql database
 		String username = "root";
+		// Password for sql database
 		String password = "root";
 
 		System.out.println("Connecting database...");
 		
 		try (Connection connection = DriverManager.getConnection(url, username, password)) {
+			// Will print when connection to database is achieved
 			System.out.println("Database connected!");
 			// the mysql insert statement
 			String query = " insert into classes (startTime, endTime, startDate, "
@@ -145,6 +165,8 @@ public class Classes {
 
 			// create the mysql insert preparedstatement
 			PreparedStatement preparedStmt = connection.prepareStatement(query);
+			
+			// These prepared statements fill in each of the ? in the insert statement
 			if (startTime.equals("TBA"))
 			{
 				preparedStmt.setNull(1, Types.VARCHAR);
@@ -202,10 +224,12 @@ public class Classes {
 				preparedStmt.setString(14, location);
 			}
 			preparedStmt.setString(15, type);
-			// execute the preparedstatement
+			// execute the prepared statement
 			preparedStmt.execute();
+			// close the connection
 			connection.close();
 		} catch (SQLException e) {
+			// Will print if connection to the database cannot be made
 		    throw new IllegalStateException("Cannot connect the database!", e);
 		}
 	       
