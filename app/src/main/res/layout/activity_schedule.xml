@@ -44,7 +44,6 @@
         android:text="Week View"
         android:layout_above="@+id/weekdayView"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>
