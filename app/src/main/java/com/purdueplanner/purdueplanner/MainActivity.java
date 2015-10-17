@@ -16,17 +16,21 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+//import Firebase library
+import com.firebase.client.Firebase;
+
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
-    private String testerStringCool;
     private String[] testArray = {"CS 354", "CS 252", "CS 348", "CS 391"};
     private ListView dayListView;
     private ArrayAdapter arrayAdapter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //Firebase library initilization
+        Firebase.setAndroidContext(this);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
