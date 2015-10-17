@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //startActivity(new Intent(MainActivity.this, MapsActivity.class));
+                startActivity(new Intent(MainActivity.this, MapsActivity.class));
             }
         });
 
@@ -60,6 +60,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, FriendsActivity.class));
+            }
+        });
+
+        //code that implements the schedule button
+        ImageButton scheduleButton = (ImageButton) findViewById(R.id.scheduleButton);
+
+        scheduleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, ScheduleActivity.class));
             }
         });
 
