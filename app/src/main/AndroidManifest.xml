@@ -54,6 +54,17 @@
                 android:name="com.google.android.geo.API_KEY"
                 android:value="@string/google_maps_key" />
         </activity>
+
+        <!-- Added by Jake 10/16 -->
+        <activity android:name=".ScheduleActivity"
+                  android:label="Schedule" >
+        </activity>
+
+        <!-- Added by Jake 10/16 -->
+        <activity android:name=".FriendsActivity"
+                  android:label="Friends">
+        </activity>
+
     </application>
 
 </manifest>
