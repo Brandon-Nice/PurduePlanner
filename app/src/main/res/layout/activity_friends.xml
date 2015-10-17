@@ -4,13 +4,11 @@
     android:layout_height="match_parent"
     android:weightSum="1">
 
-    <TextView
+    <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Friends List Goes Here"
-        android:id="@+id/textView2"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="45dp" />
+        android:id="@+id/listView"
+        android:choiceMode="none"
+        />
+
 </RelativeLayout>
