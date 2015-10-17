@@ -19,7 +19,7 @@ import android.widget.TextView;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
-
+    private String testerStringCool;
     private String[] testArray = {"CS 354", "CS 252", "CS 348", "CS 391"};
     private ListView dayListView;
     private ArrayAdapter arrayAdapter;
