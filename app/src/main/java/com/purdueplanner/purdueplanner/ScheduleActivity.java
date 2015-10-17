@@ -10,6 +10,7 @@ import android.widget.ListView;
 /**
  * Created by menane on 10/13/15.
  */
+//This is a comment
 public class ScheduleActivity extends FragmentActivity {
 
     private String[] testArray = {"CS 354", "CS 252", "CS 348", "CS 391", "CS 307", "CS 381", "CS 250"};
