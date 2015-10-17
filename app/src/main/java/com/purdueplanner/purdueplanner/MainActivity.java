@@ -58,6 +58,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //code that implements the schedule button
+        ImageButton scheduleButton = (ImageButton) findViewById(R.id.scheduleButton);
+
+        scheduleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, ScheduleActivity.class));
+            }
+        });
+
         //Sets the list view for the day
         dayListView = (ListView) findViewById(R.id.dayList);
         arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, testArray);
