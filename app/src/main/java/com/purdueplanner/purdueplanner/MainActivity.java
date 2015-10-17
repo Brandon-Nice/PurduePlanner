@@ -19,6 +19,7 @@ import android.widget.TextView;
 //import Firebase library
 import com.firebase.client.Firebase;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
@@ -64,11 +65,20 @@ public class MainActivity extends AppCompatActivity {
 
         //Sets the list view for the day
         dayListView = (ListView) findViewById(R.id.dayList);
-        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, testArray);
+        //arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, testArray);
+        //arrayAdapter.set
+        ArrayList<String> classList = new ArrayList<>();
+        classList.add("CS 354");
+        classList.add("CS 307");
+        classList.add("CS 391");
+        classList.add("MA 265");
+
+        customAdapter arrayAdapter = new customAdapter(classList, this);
         dayListView.setAdapter(arrayAdapter);
 
         //Gets the current day
         Date date = new Date();
+
         CharSequence currDay = android.text.format.DateFormat.format("EEEE",date);
         TextView myTextView = (TextView) findViewById(R.id.textView);
         myTextView.setText(currDay);
