@@ -57,7 +57,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng MSEE = new LatLng(40.429353, -86.912628);
         LatLng ElectricalEngin = new LatLng(40.428574, -86.911958);
 
-        mMap.addMarker(new MarkerOptions().position(Lawson));
+        mMap.addMarker(new MarkerOptions().position(Lawson).title("Lawson"));
         mMap.addMarker(new MarkerOptions().position(Elliot));
         mMap.addMarker(new MarkerOptions().position(Forney));
         mMap.addMarker(new MarkerOptions().position(Physics));
