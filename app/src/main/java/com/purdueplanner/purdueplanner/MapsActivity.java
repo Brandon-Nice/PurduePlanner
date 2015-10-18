@@ -8,7 +8,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -39,11 +38,37 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Purdue University and move the camera
-        LatLng PurdueUni = new LatLng(-40.4278651, -86.9184754);
-        mMap.addMarker(new MarkerOptions().position(PurdueUni).title("Marker at Purdue University"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(PurdueUni));
+        // Add a marker at Purdue University and move the camera
+        LatLng purdueUni = new LatLng(40.427976, -86.915479);
+        mMap.addMarker(new MarkerOptions().position(purdueUni).title("Marker at Purdue"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(purdueUni, 16));
 
-        //This enables us to put as many markers as we need. We can put 1 marker per class
+        // Adds markers at important buildings
+        LatLng Lawson = new LatLng(40.427735, -86.917002);
+        LatLng Elliot = new LatLng(40.427931, -86.914915);
+        LatLng Forney = new LatLng(40.429507, -86.913933);
+        LatLng Physics = new LatLng(40.430079, -86.913262);
+        LatLng Armstrong = new LatLng(40.430961, -86.914684);
+        LatLng Stewart = new LatLng(40.425045, -86.912638);
+        LatLng Hicks = new LatLng(40.424514, -86.912686);
+        LatLng Math = new LatLng(40.426137, -86.915768);
+        LatLng Recitation = new LatLng(40.425834, -86.915202);
+        LatLng StanleyCoulter = new LatLng(40.426417, -86.914431);
+        LatLng MSEE = new LatLng(40.429353, -86.912628);
+        LatLng ElectricalEngin = new LatLng(40.428574, -86.911958);
+
+        mMap.addMarker(new MarkerOptions().position(Lawson));
+        mMap.addMarker(new MarkerOptions().position(Elliot));
+        mMap.addMarker(new MarkerOptions().position(Forney));
+        mMap.addMarker(new MarkerOptions().position(Physics));
+        mMap.addMarker(new MarkerOptions().position(Armstrong));
+        mMap.addMarker(new MarkerOptions().position(Stewart));
+        mMap.addMarker(new MarkerOptions().position(Hicks));
+        mMap.addMarker(new MarkerOptions().position(Math));
+        mMap.addMarker(new MarkerOptions().position(Recitation));
+        mMap.addMarker(new MarkerOptions().position(StanleyCoulter));
+        mMap.addMarker(new MarkerOptions().position(MSEE));
+        mMap.addMarker(new MarkerOptions().position(ElectricalEngin));
+
     }
 }

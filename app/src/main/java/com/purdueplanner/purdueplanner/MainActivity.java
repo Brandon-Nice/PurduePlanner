@@ -16,17 +16,22 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+//import Firebase library
+import com.firebase.client.Firebase;
+
+import java.util.ArrayList;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
-
     private String[] testArray = {"CS 354", "CS 252", "CS 348", "CS 391"};
     private ListView dayListView;
     private ArrayAdapter arrayAdapter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //Firebase library initilization
+        Firebase.setAndroidContext(this);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -44,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //startActivity(new Intent(MainActivity.this, MapsActivity.class));
+                startActivity(new Intent(MainActivity.this, MapsActivity.class));
             }
         });
 
@@ -58,13 +63,32 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //code that implements the schedule button
+        ImageButton scheduleButton = (ImageButton) findViewById(R.id.scheduleButton);
+
+        scheduleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, ScheduleActivity.class));
+            }
+        });
+
         //Sets the list view for the day
         dayListView = (ListView) findViewById(R.id.dayList);
-        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, testArray);
+        //arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, testArray);
+        //arrayAdapter.set
+        ArrayList<String> classList = new ArrayList<>();
+        classList.add("CS 354");
+        classList.add("CS 307");
+        classList.add("CS 391");
+        classList.add("MA 265");
+
+        customAdapter arrayAdapter = new customAdapter(classList, this);
         dayListView.setAdapter(arrayAdapter);
 
         //Gets the current day
         Date date = new Date();
+
         CharSequence currDay = android.text.format.DateFormat.format("EEEE",date);
         TextView myTextView = (TextView) findViewById(R.id.textView);
         myTextView.setText(currDay);
