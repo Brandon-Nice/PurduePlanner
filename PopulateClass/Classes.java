@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -6,7 +7,7 @@ import java.sql.Statement;
 import java.sql.Types;
 
 
-public class Classes {
+public class Classes implements Serializable{
 	
 	// Stores the class's start time
 	private String startTime;
@@ -25,7 +26,7 @@ public class Classes {
 	// Stores the class's section number
 	private String sectionNum;
 	// Stores the class's credit number
-	private double credits;
+	private String credits;
 	// Stores the class's title
 	private String title;
 	// Stores the days the class meets
@@ -99,11 +100,11 @@ public class Classes {
 	public void setSectionNum(String sectionNum) {
 		this.sectionNum = sectionNum;
 	}
-	public double getCredits() {
+	public String getCredits() {
 		return credits;
 	}
-	public void setCredits(double credits) {
-		this.credits = credits;
+	public void setCredits(String string) {
+		this.credits = string;
 	}
 	public String getTitle() {
 		return title;
@@ -189,7 +190,7 @@ public class Classes {
 			preparedStmt.setString(6, major);
 			preparedStmt.setString(7, courseNum);
 			preparedStmt.setString(8, sectionNum);
-			preparedStmt.setDouble(9, credits);
+			preparedStmt.setString(9, credits);
 			preparedStmt.setString(10, title);
 			if (days.equals("TBA"))
 			{
