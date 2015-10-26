@@ -1,13 +1,18 @@
-import java.io.Serializable;
-import java.sql.Connection;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+/*import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Types;
+import java.sql.Types;*/
 
 
-public class Classes implements Serializable{
+
+public class Classes {
 	
 	// Stores the class's start time
 	private String startTime;
@@ -143,7 +148,7 @@ public class Classes implements Serializable{
 		this.instructorEmail = instructorsEmail;
 	}
 	
-	// Adds a class to the database
+	/*// Adds a class to the database
 	public void addClassToSQLDataBase()
 	{
 		// This is the database that will stores the class
@@ -235,5 +240,159 @@ public class Classes implements Serializable{
 		}
 	       
 	   
+	}*/
+	
+	// Write an arraylist of classes to a file
+	public static void writeClassesToFile(ArrayList<Classes> classes, String filename)
+	{
+		try 
+		{
+        	// Code to write classes to text file
+			PrintWriter out = new PrintWriter(filename);
+			for (int i = 0; i < classes.size(); i++)
+			{
+				Classes currentClass = classes.get(i);
+				out.print("\"" + currentClass.getStartTime() + "\"");
+				out.print("\"" + currentClass.getEndTime() + "\"");
+				out.print("\"" + currentClass.getStartDate() + "\"");
+				out.print("\"" + currentClass.getEndDate() + "\"");
+				out.print("\"" + currentClass.getCRN() + "\"");
+				out.print("\"" + currentClass.getMajor() + "\"");
+				out.print("\"" + currentClass.getCourseNum() + "\"");
+				out.print("\"" + currentClass.getSectionNum() + "\"");
+				out.print("\"" + currentClass.getCredits() + "\"");
+				out.print("\"" + currentClass.getTitle() + "\"");
+				out.print("\"" + currentClass.getDays() + "\"");
+				out.print("\"" + currentClass.getInstructor() + "\"");
+				out.print("\"" + currentClass.getInstructorEmail() + "\"");
+				out.print("\"" + currentClass.getLocation() + "\"");
+				out.println("\"" + currentClass.getType() + "\"");
+			}
+			out.close();
+		} 
+		catch (FileNotFoundException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	// Read an arraylist of classes from a file
+	public static ArrayList<Classes> readClassesFromFile(String filename)
+	{
+		// Code to read classes from text file
+     	ArrayList<Classes> readClasses = new ArrayList<Classes>();
+     	try 
+     	{
+			FileReader fileReader = new FileReader(filename);
+			BufferedReader bufferedReader = new BufferedReader(fileReader);
+			String line = null;
+			while((line = bufferedReader.readLine()) != null) 
+			{
+				Classes currentClass = new Classes();
+				//System.out.println(line);
+                int startTimeStart = line.indexOf("\"") + 1;
+                int startTimeEnd = line.indexOf("\"", startTimeStart);
+                currentClass.setStartTime(line.substring(startTimeStart, startTimeEnd));
+                
+                int endTimeStart = line.indexOf("\"", startTimeEnd + 1) + 1;
+                int endTimeEnd = line.indexOf("\"", endTimeStart);
+                currentClass.setEndTime(line.substring(endTimeStart, endTimeEnd));
+                
+                int startDateStart = line.indexOf("\"", endTimeEnd + 1) + 1;
+                int startDateEnd = line.indexOf("\"", startDateStart);
+                currentClass.setStartDate(line.substring(startDateStart, startDateEnd));
+                
+                int endDateStart = line.indexOf("\"", startDateEnd + 1) + 1;
+                int endDateEnd = line.indexOf("\"", endDateStart);
+                currentClass.setEndDate(line.substring(endDateStart, endDateEnd));
+                
+                int crnStart = line.indexOf("\"", endDateEnd + 1) + 1;
+                int crnEnd = line.indexOf("\"", crnStart);
+                currentClass.setCRN(line.substring(crnStart, crnEnd));
+                
+                int majorStart = line.indexOf("\"", crnEnd + 1) + 1;
+                int majorEnd = line.indexOf("\"", majorStart);
+                currentClass.setMajor(line.substring(majorStart, majorEnd));
+                
+                int coursenumStart = line.indexOf("\"", majorEnd + 1) + 1;
+                int coursenumEnd = line.indexOf("\"", coursenumStart);
+                currentClass.setCourseNum(line.substring(coursenumStart, coursenumEnd));
+                
+                int sectionnumStart = line.indexOf("\"", coursenumEnd + 1) + 1;
+                int sectionnumEnd = line.indexOf("\"", sectionnumStart);
+                currentClass.setSectionNum(line.substring(sectionnumStart, sectionnumEnd));
+                
+                int creditsStart = line.indexOf("\"", sectionnumEnd + 1) + 1;
+                int creditsEnd = line.indexOf("\"", creditsStart);
+                currentClass.setCredits(line.substring(creditsStart, creditsEnd));
+                
+                int titleStart = line.indexOf("\"", creditsEnd + 1) + 1;
+                int titleEnd = line.indexOf("\"", titleStart);
+                currentClass.setTitle(line.substring(titleStart, titleEnd));
+                
+                int daysStart = line.indexOf("\"", titleEnd + 1) + 1;
+                int daysEnd = line.indexOf("\"",  daysStart);
+                currentClass.setDays(line.substring(daysStart, daysEnd));
+                
+                int instructorStart = line.indexOf("\"", daysEnd + 1) + 1;
+                int instructorEnd = line.indexOf("\"", instructorStart);
+                currentClass.setInstructor(line.substring(instructorStart, instructorEnd));
+                
+                int emailStart = line.indexOf("\"", instructorEnd + 1) + 1;
+                int emailEnd = line.indexOf("\"", emailStart);
+                currentClass.setInstructorEmail(line.substring(emailStart, emailEnd));
+                
+                int locationStart = line.indexOf("\"", emailEnd + 1) + 1;
+                int locationEnd = line.indexOf("\"", locationStart);
+                currentClass.setLocation(line.substring(locationStart, locationEnd));
+                
+                int typeStart = line.indexOf("\"", locationEnd + 1) + 1;
+                int typeEnd = line.indexOf("\"", typeStart);
+                currentClass.setType(line.substring(typeStart, typeEnd));
+                
+                readClasses.add(currentClass);
+            }  
+		    bufferedReader.close();         
+        }
+     	catch(FileNotFoundException ex) 
+     	{
+            System.out.println("Unable to open file '" + filename + "'");                
+        }
+        catch(IOException ex) 
+     	{
+            System.out.println("Error reading file '" + filename + "'");    
+        }
+     	
+     	return readClasses;
+	}
+	
+	
+	
+	// Convert classes to a string
+	@Override 
+	public String toString()
+	{
+		String startTime = "Start Time: " +  getStartTime() + "\n";
+		String endTime = "End Time : " + getEndTime() + "\n";
+		String startDate = "Start Date: " +  getStartDate() + "\n";
+		String endDate = "End Date : " + getEndDate() + "\n";
+		String crn = "CRN: " + getCRN() + "\n";
+		String major = "Major: " + getMajor() + "\n";
+		String courseNum = "Course Number: " + getCourseNum() + "\n";
+		String sectionNum = "Section NUmber: " + getSectionNum() + "\n";
+		String credits = "Credits: " + getCredits() + "\n";
+		String title = "Title: " + getTitle() + "\n";
+		String days = "Days: " + getDays() + "\n";
+		String instructor = "Primary instructor: " + getInstructor() + "\n";
+		String instructorEmail = "Primary instructor email: " + getInstructorEmail() + "\n";
+		String location = "Location: " + getLocation() + "\n";
+		String type = "Type: " + getType();
+		
+		String total = startTime + endTime + startDate + endDate + crn + major +
+				courseNum + sectionNum + credits + title + days + instructor +
+				instructorEmail + location + type;
+		return total;
+		
 	}
 }
