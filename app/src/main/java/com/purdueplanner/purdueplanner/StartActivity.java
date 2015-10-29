@@ -1,9 +1,14 @@
 package com.purdueplanner.purdueplanner;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,6 +25,9 @@ import android.widget.TextView;
 
 import com.firebase.client.Firebase;
 
+import com.facebook.FacebookSdk;
+
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -34,6 +42,7 @@ public class StartActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        FacebookSdk.sdkInitialize(getApplicationContext());
         setSupportActionBar(toolbar);
 
         //Firebase library initilization
