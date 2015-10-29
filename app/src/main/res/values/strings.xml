@@ -68,6 +68,9 @@
     <string name="title_activity_start">StartActivity</string>
     <string name="facebook_app_id">1642741806011548</string>
 
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <!-- Strings related to MainActivity -->
 
 </resources>

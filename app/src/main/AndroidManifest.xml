@@ -23,18 +23,7 @@
                 "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:label="@string/app_name" />
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" >
-            //Not the start application anymore
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        </activity>
-        //Child activity Settings
+        <!--Child activity Settings-->
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
@@ -44,7 +33,7 @@
                 android:value="com.purdueplanner.purdueplanner.StartActivity" >
             </meta-data>
         </activity>
-        //Child activity Maps
+        <!--Child activity Maps-->
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -84,8 +73,9 @@
             android:label="@string/title_activity_maps" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.purdueplanner.purdueplanner.MainActivity" />
+                android:value="com.purdueplanner.purdueplanner.StartActivity" />
         </activity>
+        <!--Changed for StartActivity by Milia 11/1-->
         <activity
             android:name=".StartActivity"
             android:label="@string/title_activity_start"

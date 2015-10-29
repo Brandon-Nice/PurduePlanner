@@ -42,7 +42,7 @@ public class StartActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        FacebookSdk.sdkInitialize(getApplicationContext());
+        FacebookSdk.sdkInitialize(this.getApplicationContext());
         setSupportActionBar(toolbar);
 
         //Firebase library initilization
