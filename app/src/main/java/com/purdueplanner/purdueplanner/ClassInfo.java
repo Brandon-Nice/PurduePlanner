@@ -13,7 +13,7 @@ public class ClassInfo extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Firebase ref = new Firebase("https://purduescheduler.firebaseio.com/Classes/CS/CS 307000 : Software Engineering");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_start);
         ListView dayListView = (ListView) findViewById(R.id.dayList);
         ArrayList<String> classList = new ArrayList<>();
         //classList.add(ref.getKey(courseNum));
