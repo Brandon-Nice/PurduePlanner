@@ -148,18 +148,19 @@ public class StartActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camara) {
-            // Handle the camera action
+        if (id == R.id.nav_login) {
+            // Handle the login action
+            startActivity(new Intent(StartActivity.this, FacebookFragment.class));
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_contact) {
+            startActivity(new Intent(StartActivity.this, ContactActivity.class));
+        } else if (id == R.id.nav_about) {
+            startActivity(new Intent(StartActivity.this, AboutActivity.class));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
