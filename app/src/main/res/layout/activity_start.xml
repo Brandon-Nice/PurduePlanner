@@ -13,11 +13,4 @@
         android:layout_gravity="start" android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_start" app:menu="@menu/activity_start_drawer" />
 
-    <!--TODO: Want the Facebook login button to go inside the drawer-->
-    <!--<com.facebook.login.widget.LoginButton-->
-        <!--android:id="@+id/fblogin_button"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content" />-->
-
-
 </android.support.v4.widget.DrawerLayout>
