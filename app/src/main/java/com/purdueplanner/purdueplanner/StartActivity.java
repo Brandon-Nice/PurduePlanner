@@ -79,6 +79,7 @@ public class StartActivity extends AppCompatActivity
             }
         });
 
+
         //Sets the list view for the day
         dayListView = (ListView) findViewById(R.id.dayList);
         //arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, testArray);
@@ -137,6 +138,10 @@ public class StartActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             startActivity(new Intent(StartActivity.this, SettingsActivity.class));
+        }
+        //code that implements the add class button
+        else if (id == R.id.add_class) {
+            startActivity(new Intent(StartActivity.this, AddClassActivity.class));
         }
 
         return super.onOptionsItemSelected(item);
