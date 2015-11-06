@@ -44,7 +44,7 @@ public class StartActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         FacebookSdk.sdkInitialize(this.getApplicationContext());
         setSupportActionBar(toolbar);
-
+        getSupportActionBar().setTitle("Purdue Planner");
         //Firebase library initilization
         Firebase.setAndroidContext(this);
 
@@ -78,6 +78,7 @@ public class StartActivity extends AppCompatActivity
                 startActivity(new Intent(StartActivity.this, ScheduleActivity.class));
             }
         });
+
 
         //Sets the list view for the day
         dayListView = (ListView) findViewById(R.id.dayList);
@@ -137,6 +138,10 @@ public class StartActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             startActivity(new Intent(StartActivity.this, SettingsActivity.class));
+        }
+        //code that implements the add class button
+        else if (id == R.id.add_class) {
+            startActivity(new Intent(StartActivity.this, AddClassActivity.class));
         }
 
         return super.onOptionsItemSelected(item);
