@@ -44,7 +44,7 @@ public class StartActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         FacebookSdk.sdkInitialize(this.getApplicationContext());
         setSupportActionBar(toolbar);
-
+        getSupportActionBar().setTitle("Purdue Planner");
         //Firebase library initilization
         Firebase.setAndroidContext(this);
 

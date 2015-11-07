@@ -17,7 +17,7 @@ public class AddClassActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_class);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        getSupportActionBar().setTitle("Add Class");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
