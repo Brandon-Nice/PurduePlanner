@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 
 public class AddClassActivity extends AppCompatActivity {
 
@@ -19,6 +20,24 @@ public class AddClassActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Add Class");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        //Add buttons and spinners
+        Button okbutton = (Button) findViewById(R.id.okbutton);
+        okbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Submit schedule to the database
+            }
+        });
+
+        Button cancelbutton = (Button) findViewById(R.id.cancelbutton);
+        cancelbutton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AddClassActivity.this, StartActivity.class));
+            }
+        });
     }
 
     @Override

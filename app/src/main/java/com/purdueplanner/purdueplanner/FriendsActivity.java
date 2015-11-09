@@ -26,7 +26,7 @@ public class FriendsActivity extends FragmentActivity {
         if (actionBar != null) {
             // Show the Up button in the action bar.
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle("Example");
+            actionBar.setTitle("Friends");
         }
     }
 }

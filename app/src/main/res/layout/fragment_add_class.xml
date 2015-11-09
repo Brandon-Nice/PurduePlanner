@@ -7,13 +7,43 @@
     tools:showIn="@layout/activity_add_class"
     tools:context="com.purdueplanner.purdueplanner.AddClassFragment">
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ok"
+        android:id="@+id/okbutton"
+        android:layout_marginBottom="68dp"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/cancelbutton"
+        android:layout_toStartOf="@+id/cancelbutton" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner"
+        android:layout_below="@+id/majortextView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancel"
+        android:id="@+id/cancelbutton"
+        android:layout_alignTop="@+id/okbutton"
+        android:layout_alignRight="@+id/spinner"
+        android:layout_alignEnd="@+id/spinner" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add stuff to add classes. Probably things like buttons,
-        text boxes, you know, that sort of stuff. I don't know, I'm just a phone."
-        android:id="@+id/textView4"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Major"
+        android:id="@+id/majortextView"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/spinner"
+        android:layout_alignEnd="@+id/spinner" />
+
 </RelativeLayout>

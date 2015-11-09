@@ -1,5 +1,6 @@
 package com.purdueplanner.purdueplanner;
 
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.widget.ArrayAdapter;
@@ -21,6 +22,12 @@ public class ScheduleActivity extends FragmentActivity {
     //provide the onCreate method to apply the Schedule layout to the activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //TODO: not have this crash the code
+//        //Implements the action bar
+//        android.app.ActionBar ab = getActionBar();
+//        getActionBar().setTitle("Schedule");
+//        getActionBar().setDisplayHomeAsUpEnabled(true);
+
         setContentView(R.layout.activity_schedule);
 
         //Sets the week list view for the week
