@@ -97,6 +97,7 @@ public class AddClassFragment extends Fragment {
                     // Add it to the interface
                     rl.addView(currentButton);
                 }
+
             }
             @Override
             public void onCancelled(FirebaseError firebaseError) {
@@ -216,6 +217,7 @@ public class AddClassFragment extends Fragment {
                 rl.addView(addClassButton);
 
             }
+
             @Override
             public void onCancelled(FirebaseError firebaseError) {
 

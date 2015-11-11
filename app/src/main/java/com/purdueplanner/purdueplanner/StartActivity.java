@@ -131,77 +131,74 @@ public class StartActivity extends AppCompatActivity
 
                 if (databaseClasses != null) {
                     for (int i = 0; i < databaseClasses.size(); i++) {
-                        HashMap<String, String> currentDBClass = databaseClasses.get(i);
-                        String major = currentDBClass.get("Major");
-                        String course = currentDBClass.get("Course");
-                        String section = currentDBClass.get("Section");
-                        System.out.println(major + " " + course + " " + section);
-                        Firebase ref = new Firebase("https://purduescheduler.firebaseio.com/Classes/" + major + "/" +
-                                course + "/" + section);
-                        System.out.println(ref.getRoot());
-                        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot snapshot) {
-                                System.out.println(snapshot);
-                                Classes currentClass = new Classes();
-                                HashMap<String, String> val = (HashMap) snapshot.getValue();
-                                currentClass.setCourseNum(val.get("courseNum"));
-                                currentClass.setCredits(val.get("credits"));
-                                currentClass.setCRN(val.get("crn"));
-                                currentClass.setDays(val.get("days"));
-                                currentClass.setEndDate(val.get("endDate"));
-                                currentClass.setEndTime(val.get("endTime"));
-                                currentClass.setInstructor(val.get("instructor"));
-                                currentClass.setInstructorEmail(val.get("instructorEmail"));
-                                currentClass.setLocation(val.get("location"));
-                                currentClass.setMajor(val.get("major"));
-                                currentClass.setSectionNum(val.get("sectionNum"));
-                                currentClass.setStartDate(val.get("startDate"));
-                                currentClass.setStartTime(val.get("startTime"));
-                                currentClass.setTitle(val.get("title"));
-                                currentClass.setType(val.get("type"));
-                                currentStudentClasses.add(currentClass);
-                                boolean addClassForDay = false;
-                                if (currentClass.getDays().contains("M") && currDay.equals("Monday"))
-                                {
-                                    addClassForDay = true;
-                                }
-                                if (currentClass.getDays().contains("T") && currDay.equals("Tuesday"))
-                                {
-                                    addClassForDay = true;
-                                }
-                                if (currentClass.getDays().contains("W") && currDay.equals("Wednesday"))
-                                {
-                                    addClassForDay = true;
-                                }
-                                if (currentClass.getDays().contains("R") && currDay.equals("Thursday"))
-                                {
-                                    addClassForDay = true;
-                                }
-                                if (currentClass.getDays().contains("F") && currDay.equals("Friday"))
-                                {
-                                    addClassForDay = true;
+                        if ( databaseClasses.get(i) != null) {
+                            HashMap<String, String> currentDBClass = databaseClasses.get(i);
+                            String major = currentDBClass.get("Major");
+                            String course = currentDBClass.get("Course");
+                            String section = currentDBClass.get("Section");
+                            System.out.println(major + " " + course + " " + section);
+                            Firebase ref = new Firebase("https://purduescheduler.firebaseio.com/Classes/" + major + "/" +
+                                    course + "/" + section);
+                            System.out.println(ref.getRoot());
+                            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot snapshot) {
+                                    System.out.println(snapshot);
+                                    Classes currentClass = new Classes();
+                                    HashMap<String, String> val = (HashMap) snapshot.getValue();
+                                    currentClass.setCourseNum(val.get("courseNum"));
+                                    currentClass.setCredits(val.get("credits"));
+                                    currentClass.setCRN(val.get("crn"));
+                                    currentClass.setDays(val.get("days"));
+                                    currentClass.setEndDate(val.get("endDate"));
+                                    currentClass.setEndTime(val.get("endTime"));
+                                    currentClass.setInstructor(val.get("instructor"));
+                                    currentClass.setInstructorEmail(val.get("instructorEmail"));
+                                    currentClass.setLocation(val.get("location"));
+                                    currentClass.setMajor(val.get("major"));
+                                    currentClass.setSectionNum(val.get("sectionNum"));
+                                    currentClass.setStartDate(val.get("startDate"));
+                                    currentClass.setStartTime(val.get("startTime"));
+                                    currentClass.setTitle(val.get("title"));
+                                    currentClass.setType(val.get("type"));
+                                    currentStudentClasses.add(currentClass);
+                                    boolean addClassForDay = false;
+                                    if (currentClass.getDays().contains("M") && currDay.equals("Monday")) {
+                                        addClassForDay = true;
+                                    }
+                                    if (currentClass.getDays().contains("T") && currDay.equals("Tuesday")) {
+                                        addClassForDay = true;
+                                    }
+                                    if (currentClass.getDays().contains("W") && currDay.equals("Wednesday")) {
+                                        addClassForDay = true;
+                                    }
+                                    if (currentClass.getDays().contains("R") && currDay.equals("Thursday")) {
+                                        addClassForDay = true;
+                                    }
+                                    if (currentClass.getDays().contains("F") && currDay.equals("Friday")) {
+                                        addClassForDay = true;
+                                    }
+
+                                    if (addClassForDay) {
+                                        classList.add(currentClass.getMajor() + " " + currentClass.getCourseNum());
+                                        Comparator<String> comparator = new Comparator<String>() {
+                                            public int compare(String s1, String s2) {
+                                                return s1.compareTo(s2);
+                                            }
+
+                                        };
+                                        Collections.sort(classList);
+                                        ((customAdapter) dayListView.getAdapter()).notifyDataSetChanged();
+                                    }
+
                                 }
 
-                                if (addClassForDay) {
-                                    classList.add(currentClass.getMajor() + " " + currentClass.getCourseNum());
-                                    Comparator<String> comparator = new Comparator<String>() {
-                                        public int compare(String s1, String s2) {
-                                            return s1.compareTo(s2);
-                                        }
+                                @Override
+                                public void onCancelled(FirebaseError firebaseError) {
 
-                                    };
-                                    Collections.sort(classList);
-                                    ((customAdapter) dayListView.getAdapter()).notifyDataSetChanged();
                                 }
-
-                            }
-
-                            @Override
-                            public void onCancelled(FirebaseError firebaseError) {
-
-                            }
-                        });
+                            });
+                        }
                     }
                 }
                 System.out.println(currentStudentClasses);
