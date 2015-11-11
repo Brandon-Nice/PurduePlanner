@@ -16,6 +16,6 @@
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_add_class" />
-    
+
 
 </android.support.design.widget.CoordinatorLayout>

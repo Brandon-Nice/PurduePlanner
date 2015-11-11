@@ -23,19 +23,28 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 
 import com.facebook.FacebookSdk;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
+import java.lang.reflect.Array;
 import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 
 public class StartActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private String[] testArray = {"CS 354", "CS 252", "CS 348", "CS 391"};
     private ListView dayListView;
-    private ArrayAdapter arrayAdapter;
+    private customAdapter arrayAdapter;
+    private ArrayList<Classes> studentsClasses;
+    private String currDay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +54,8 @@ public class StartActivity extends AppCompatActivity
         FacebookSdk.sdkInitialize(this.getApplicationContext());
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Purdue Planner");
-        //Firebase library initilization
-        Firebase.setAndroidContext(this);
-
-
+        // Set the student's schedule up to be displayed
+        setStudent();
         //code that implements  the map button
         ImageButton mapButton = (ImageButton) findViewById(R.id.mapsButton);
 
@@ -79,24 +86,11 @@ public class StartActivity extends AppCompatActivity
             }
         });
 
-
-        //Sets the list view for the day
-        dayListView = (ListView) findViewById(R.id.dayList);
-        //arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, testArray);
-        //arrayAdapter.set
-        ArrayList<String> classList = new ArrayList<>();
-        classList.add("CS 354");
-        classList.add("CS 307");
-        classList.add("CS 391");
-        classList.add("MA 265");
-
-        customAdapter arrayAdapter = new customAdapter(classList, this);
-        dayListView.setAdapter(arrayAdapter);
-
         //Gets the current day
         Date date = new Date();
 
-        CharSequence currDay = android.text.format.DateFormat.format("EEEE", date);
+        currDay = (String) android.text.format.DateFormat.format("EEEE", date);
+        System.out.println(currDay);
         TextView myTextView = (TextView) findViewById(R.id.textView);
         myTextView.setText(currDay);
 
@@ -109,6 +103,127 @@ public class StartActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void setStudent() {
+        Firebase.setAndroidContext(this);
+        Firebase ref = new Firebase("https://purduescheduler.firebaseio.com/Students/" + Integer.toString(-1));
+        final Student currentStudent = new Student();
+        final ArrayList<Classes> currentStudentClasses = new ArrayList<Classes>();
+        final ArrayList<String> classList = new ArrayList<>();
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                System.out.println(snapshot);
+                HashMap<String, Object> val = (HashMap) snapshot.getValue();
+                ArrayList<HashMap<String, String>> databaseClasses = null;
+                for (HashMap.Entry<String, Object> entry : val.entrySet()) {
+                    if (entry.getKey().equals("lastName")) {
+                        currentStudent.setLastName((String) entry.getValue());
+                    } else if (entry.getKey().equals("firstName")) {
+                        currentStudent.setFirstName((String) entry.getValue());
+                    } else if (entry.getKey().equals("Schedule")) {
+                        databaseClasses = (ArrayList<HashMap<String, String>>) entry.getValue();
+                    } else if (entry.getKey().equals("id")) {
+                        currentStudent.setId((Long) entry.getValue());
+                    }
+                }
+
+                if (databaseClasses != null) {
+                    for (int i = 0; i < databaseClasses.size(); i++) {
+                        HashMap<String, String> currentDBClass = databaseClasses.get(i);
+                        String major = currentDBClass.get("Major");
+                        String course = currentDBClass.get("Course");
+                        String section = currentDBClass.get("Section");
+                        System.out.println(major + " " + course + " " + section);
+                        Firebase ref = new Firebase("https://purduescheduler.firebaseio.com/Classes/" + major + "/" +
+                                course + "/" + section);
+                        System.out.println(ref.getRoot());
+                        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot snapshot) {
+                                System.out.println(snapshot);
+                                Classes currentClass = new Classes();
+                                HashMap<String, String> val = (HashMap) snapshot.getValue();
+                                currentClass.setCourseNum(val.get("courseNum"));
+                                currentClass.setCredits(val.get("credits"));
+                                currentClass.setCRN(val.get("crn"));
+                                currentClass.setDays(val.get("days"));
+                                currentClass.setEndDate(val.get("endDate"));
+                                currentClass.setEndTime(val.get("endTime"));
+                                currentClass.setInstructor(val.get("instructor"));
+                                currentClass.setInstructorEmail(val.get("instructorEmail"));
+                                currentClass.setLocation(val.get("location"));
+                                currentClass.setMajor(val.get("major"));
+                                currentClass.setSectionNum(val.get("sectionNum"));
+                                currentClass.setStartDate(val.get("startDate"));
+                                currentClass.setStartTime(val.get("startTime"));
+                                currentClass.setTitle(val.get("title"));
+                                currentClass.setType(val.get("type"));
+                                currentStudentClasses.add(currentClass);
+                                boolean addClassForDay = false;
+                                if (currentClass.getDays().contains("M") && currDay.equals("Monday"))
+                                {
+                                    addClassForDay = true;
+                                }
+                                if (currentClass.getDays().contains("T") && currDay.equals("Tuesday"))
+                                {
+                                    addClassForDay = true;
+                                }
+                                if (currentClass.getDays().contains("W") && currDay.equals("Wednesday"))
+                                {
+                                    addClassForDay = true;
+                                }
+                                if (currentClass.getDays().contains("R") && currDay.equals("Thursday"))
+                                {
+                                    addClassForDay = true;
+                                }
+                                if (currentClass.getDays().contains("F") && currDay.equals("Friday"))
+                                {
+                                    addClassForDay = true;
+                                }
+
+                                if (addClassForDay) {
+                                    classList.add(currentClass.getMajor() + " " + currentClass.getCourseNum());
+                                    Comparator<String> comparator = new Comparator<String>() {
+                                        public int compare(String s1, String s2) {
+                                            return s1.compareTo(s2);
+                                        }
+
+                                    };
+                                    Collections.sort(classList);
+                                    ((customAdapter) dayListView.getAdapter()).notifyDataSetChanged();
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(FirebaseError firebaseError) {
+
+                            }
+                        });
+                    }
+                }
+                System.out.println(currentStudentClasses);
+                currentStudent.setSchedule(currentStudentClasses);
+                ((MyApplication) getApplication()).setStudent(currentStudent);
+                studentsClasses = ((MyApplication) getApplication()).getStudent().getSchedule();
+
+                //Sets the list view for the day
+                dayListView = (ListView) findViewById(R.id.dayList);
+                //arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, testArray);
+                //arrayAdapter.set
+
+                customAdapter arrayAdapter = new customAdapter(classList, getApplicationContext());
+                dayListView.setAdapter(arrayAdapter);
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
     }
 
     @Override
@@ -172,4 +287,47 @@ public class StartActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    @Override
+    public void onRestart() {
+        ArrayList<String> classList = new ArrayList<>();
+        for (int i = 0; i < studentsClasses.size(); i++) {
+            Classes currentClass = studentsClasses.get(i);
+            boolean addClassForDay = false;
+            if (currentClass.getDays().contains("M") && currDay.equals("Monday"))
+            {
+                addClassForDay = true;
+            }
+            if (currentClass.getDays().contains("T") && currDay.equals("Tuesday"))
+            {
+                addClassForDay = true;
+            }
+            if (currentClass.getDays().contains("W") && currDay.equals("Wednesday"))
+            {
+                addClassForDay = true;
+            }
+            if (currentClass.getDays().contains("R") && currDay.equals("Thursday"))
+            {
+                addClassForDay = true;
+            }
+            if (currentClass.getDays().contains("F") && currDay.equals("Friday"))
+            {
+                addClassForDay = true;
+            }
+            if (addClassForDay) {
+                classList.add(currentClass.getMajor() + " " + currentClass.getCourseNum());
+            }
+        }
+        Comparator<String> comparator = new Comparator<String>() {
+            public int compare(String s1, String s2) {
+                return s1.compareTo(s2);
+            }
+
+        };
+        Collections.sort(classList);
+        customAdapter arrayAdapter = new customAdapter(classList, this);
+        dayListView.setAdapter(arrayAdapter);
+        super.onRestart();
+    }
+
 }

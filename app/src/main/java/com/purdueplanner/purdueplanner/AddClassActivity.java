@@ -1,5 +1,6 @@
 package com.purdueplanner.purdueplanner;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -17,8 +18,9 @@ public class AddClassActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_class);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Add Class");
+        getSupportActionBar().setTitle("Select Major");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
     }
 
     @Override
@@ -34,6 +36,12 @@ public class AddClassActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+
+    public void setActionBarTitle(String title){
+        getSupportActionBar().setTitle(title);
     }
 
 }
