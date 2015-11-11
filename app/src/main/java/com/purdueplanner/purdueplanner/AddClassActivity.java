@@ -23,7 +23,7 @@ public class AddClassActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-        //Add buttons and spinners
+        /*//Add buttons and spinners
         Button okbutton = (Button) findViewById(R.id.okbutton);
         okbutton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,7 +39,7 @@ public class AddClassActivity extends AppCompatActivity {
             public void onClick(View v) {
                 startActivity(new Intent(AddClassActivity.this, StartActivity.class));
             }
-        });
+        });*/
     }
 
     @Override
