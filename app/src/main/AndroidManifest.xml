@@ -58,8 +58,7 @@
         <activity
             android:name=".LoginActivity"
             android:label="Log In" >
-            <meta-data
-                android:name="com.facebook.sdk.ApplicationId"
+            <meta-data android:name="com.facebook.sdk.ApplicationId"
                 android:value="@string/facebook_app_id" />
         </activity>
 
@@ -106,27 +105,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.purdueplanner.purdueplanner.StartActivity" />
         </activity>
-        <activity
-            android:name=".FriendsActivity"
-            android:label="@string/title_activity_friends"
-            android:parentActivityName=".StartActivity"
-            android:theme="@style/AppTheme.NoActionBar" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.purdueplanner.purdueplanner.StartActivity" />
+        <activity android:name=".viewClasses" >
         </activity>
-
-        <activity
-            android:name=".ClassInformationActivity"
-            android:label="ClassInformation"
-            android:parentActivityName=".StartActivity"
-            android:theme="@style/AppTheme.NoActionBar" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.purdueplanner.purdueplanner.StartActivity" />
-        </activity>
-
-
     </application>
 
 </manifest>

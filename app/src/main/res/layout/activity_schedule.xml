@@ -4,22 +4,37 @@
     android:layout_height="match_parent"
     android:weightSum="1">
 
-    <EditText
-        android:layout_width="wrap_content"
+    <TableLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/weekTitle"
-        android:text="Week View"
-        android:focusable="false"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/tableLayout"></TableLayout>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/calendarTitle"
+        android:layout_gravity="center_horizontal"
+        android:text="Calendar View"
+        android:editable="false" />
+
+    <CalendarView
+        android:layout_width="match_parent"
+        android:layout_height="352dp"
+        android:id="@+id/calendarView"
+        android:layout_gravity="center_horizontal"
+        android:layout_below="@+id/calendarTitle"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
-    <ExpandableListView
-        android:layout_width="1000dp"
-        android:layout_height="match_parent"
-        android:id="@+id/weekdayView"
-        android:layout_below="@+id/weekTitle"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="View All Classes"
+        android:id="@+id/thursdayButton"
+        android:layout_alignBottom="@+id/calendarView"
+        android:layout_centerHorizontal="true"
+        android:onClick="buttonOnClick" />
 
 
 </RelativeLayout>
