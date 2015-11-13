@@ -4,50 +4,22 @@
     android:layout_height="match_parent"
     android:weightSum="1">
 
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"></TableLayout>
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/calendarTitle"
-        android:layout_gravity="center_horizontal"
-        android:text="Calendar View"
-        android:editable="false" />
-
-    <CalendarView
-        android:layout_width="match_parent"
-        android:layout_height="352dp"
-        android:id="@+id/calendarView"
-        android:layout_gravity="center_horizontal"
-        android:layout_above="@+id/weekdayView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <GridView
-        android:layout_width="match_parent"
-        android:layout_height="140dp"
-        android:id="@+id/weekdayView"
-        android:numColumns="7"
-        android:choiceMode="none"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="false" />
-
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/weekTitle"
         android:text="Week View"
-        android:layout_above="@+id/weekdayView"
+        android:focusable="false"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:focusable="false"/>
+        android:layout_alignParentStart="true" />
 
+    <ExpandableListView
+        android:layout_width="1000dp"
+        android:layout_height="match_parent"
+        android:id="@+id/weekdayView"
+        android:layout_below="@+id/weekTitle"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 
 </RelativeLayout>
