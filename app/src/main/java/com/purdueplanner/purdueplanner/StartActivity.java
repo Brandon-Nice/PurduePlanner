@@ -1,14 +1,7 @@
 package com.purdueplanner.purdueplanner;
 
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -30,8 +22,6 @@ import com.facebook.FacebookSdk;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
-import java.lang.reflect.Array;
-import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -72,7 +62,7 @@ public class StartActivity extends AppCompatActivity
         friendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(StartActivity.this, FriendsActivity.class));
+                startActivity(new Intent(StartActivity.this, LoginActivity.class));
             }
         });
 
@@ -267,7 +257,7 @@ public class StartActivity extends AppCompatActivity
 
         if (id == R.id.nav_login) {
             // Handle the login action
-            startActivity(new Intent(StartActivity.this, FacebookFragment.class));
+            startActivity(new Intent(StartActivity.this, LoginActivity.class));
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {

@@ -5,17 +5,4 @@
     android:layout_height="match_parent"
     android:weightSum="1">
 
-    <!--Adding for the Facebook button-->
-
-    <!--The actual Facebook login fragment-->
-    <!--<fragment-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:name="com.purdueplanner.purdueplanner.FacebookFragment"-->
-        <!--android:id="@+id/fb_fragment"-->
-        <!--tools:layout="@layout/fragment_facebook"-->
-        <!--android:layout_alignParentTop="true"-->
-        <!--android:layout_alignParentLeft="true"-->
-        <!--android:layout_alignParentStart="true" />-->
-
 </RelativeLayout>
