@@ -2,6 +2,7 @@ package com.purdueplanner.purdueplanner;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -11,10 +12,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.facebook.AccessToken;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 
@@ -44,6 +48,15 @@ public class StartActivity extends AppCompatActivity
         FacebookSdk.sdkInitialize(this.getApplicationContext());
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Purdue Planner");
+
+        //sets the name in the nav_header
+        if(isLoggedIn()) {
+            TextView user_name = (TextView) findViewById(R.id.usertextView);
+            TextView user_email = (TextView) findViewById(R.id.useremailtextView);
+            ImageView user_pic = (ImageView) findViewById(R.id.userimageView);
+            //TODO: get the user name, email, and picture of person logged in
+
+        }
         // Set the student's schedule up to be displayed
         setStudent();
         //code that implements  the map button
@@ -93,6 +106,11 @@ public class StartActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    public boolean isLoggedIn() {
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        return accessToken != null;
     }
 
     private void setStudent() {

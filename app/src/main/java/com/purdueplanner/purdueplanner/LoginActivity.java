@@ -18,6 +18,8 @@ import com.facebook.login.widget.LoginButton;
 
 import org.w3c.dom.Text;
 
+import java.util.Arrays;
+
 /**
  * Created by menane on 10/13/15.
  */
@@ -42,6 +44,7 @@ public class LoginActivity extends Activity {
 
         //gets the login button from activity_login.xml
         loginButton = (LoginButton) findViewById(R.id.fb_button);
+        loginButton.setReadPermissions(Arrays.asList("public_profile", "user_friends", "email"));
         //gets the textview from activity_login.xml
         info = (TextView) findViewById(R.id.fb_info);
 
