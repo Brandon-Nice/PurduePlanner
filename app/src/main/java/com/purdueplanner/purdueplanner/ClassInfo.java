@@ -20,7 +20,7 @@ public class ClassInfo extends AppCompatActivity {
         classList.add("CS 307");
         classList.add("CS 391");
         classList.add("MA 265");
-        customAdapter arrayAdapter = new customAdapter(classList, this);
-        dayListView.setAdapter(arrayAdapter);
+        //customAdapter arrayAdapter = new customAdapter(classList, this);
+        //dayListView.setAdapter(arrayAdapter);
     }
 }

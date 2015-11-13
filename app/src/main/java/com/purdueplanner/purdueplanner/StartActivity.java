@@ -118,11 +118,12 @@ public class StartActivity extends AppCompatActivity
         Firebase ref = new Firebase("https://purduescheduler.firebaseio.com/Students/" + Integer.toString(-1));
         final Student currentStudent = new Student();
         final ArrayList<Classes> currentStudentClasses = new ArrayList<Classes>();
-        final ArrayList<String> classList = new ArrayList<>();
+        final ArrayList<String> classList = new ArrayList<String>();
+        final ArrayList<HashMap<String, String>> databaseAdapterList = new ArrayList<HashMap<String, String>>();
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                System.out.println(snapshot);
+                //System.out.println(snapshot);
                 HashMap<String, Object> val = (HashMap) snapshot.getValue();
                 ArrayList<HashMap<String, String>> databaseClasses = null;
                 for (HashMap.Entry<String, Object> entry : val.entrySet()) {
@@ -140,18 +141,18 @@ public class StartActivity extends AppCompatActivity
                 if (databaseClasses != null) {
                     for (int i = 0; i < databaseClasses.size(); i++) {
                         if ( databaseClasses.get(i) != null) {
-                            HashMap<String, String> currentDBClass = databaseClasses.get(i);
+                            final HashMap<String, String> currentDBClass = databaseClasses.get(i);
                             String major = currentDBClass.get("Major");
                             String course = currentDBClass.get("Course");
                             String section = currentDBClass.get("Section");
-                            System.out.println(major + " " + course + " " + section);
+                            //System.out.println(major + " " + course + " " + section);
                             Firebase ref = new Firebase("https://purduescheduler.firebaseio.com/Classes/" + major + "/" +
                                     course + "/" + section);
-                            System.out.println(ref.getRoot());
+                            //System.out.println(ref.getRoot());
                             ref.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot snapshot) {
-                                    System.out.println(snapshot);
+                                    //System.out.println(snapshot);
                                     Classes currentClass = new Classes();
                                     HashMap<String, String> val = (HashMap) snapshot.getValue();
                                     currentClass.setCourseNum(val.get("courseNum"));
@@ -195,7 +196,14 @@ public class StartActivity extends AppCompatActivity
                                             }
 
                                         };
-                                        Collections.sort(classList);
+                                        Collections.sort(classList, comparator);
+                                        databaseAdapterList.add(currentDBClass);
+                                        Comparator<HashMap<String, String>> hashMapComparator = new Comparator<HashMap<String, String>>() {
+                                            public int compare(HashMap<String,String> h1, HashMap<String, String> h2) {
+                                                return (h1.get("Major") + h1.get("Course")).compareTo(h2.get("Major") + h2.get("Course"));
+                                            }
+                                        };
+                                        Collections.sort(databaseAdapterList, hashMapComparator);
                                         ((customAdapter) dayListView.getAdapter()).notifyDataSetChanged();
                                     }
 
@@ -219,7 +227,7 @@ public class StartActivity extends AppCompatActivity
                 //arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, testArray);
                 //arrayAdapter.set
 
-                customAdapter arrayAdapter = new customAdapter(classList, getApplicationContext());
+                customAdapter arrayAdapter = new customAdapter(classList, databaseAdapterList, getApplicationContext());
                 dayListView.setAdapter(arrayAdapter);
             }
 
@@ -296,6 +304,7 @@ public class StartActivity extends AppCompatActivity
     @Override
     public void onRestart() {
         ArrayList<String> classList = new ArrayList<>();
+        ArrayList<HashMap<String, String>> databaseAdapterList = new ArrayList<HashMap<String, String>>();
         for (int i = 0; i < studentsClasses.size(); i++) {
             Classes currentClass = studentsClasses.get(i);
             boolean addClassForDay = false;
@@ -321,6 +330,11 @@ public class StartActivity extends AppCompatActivity
             }
             if (addClassForDay) {
                 classList.add(currentClass.getMajor() + " " + currentClass.getCourseNum());
+                HashMap<String, String> currentDatabaseClass = new HashMap<String, String>();
+                currentDatabaseClass.put("Major", currentClass.getMajor());
+                currentDatabaseClass.put("Course", currentClass.getCourseNum());
+                currentDatabaseClass.put("Section", currentClass.getSectionNum());
+                databaseAdapterList.add(currentDatabaseClass);
             }
         }
         Comparator<String> comparator = new Comparator<String>() {
@@ -329,8 +343,15 @@ public class StartActivity extends AppCompatActivity
             }
 
         };
-        Collections.sort(classList);
-        customAdapter arrayAdapter = new customAdapter(classList, this);
+        Collections.sort(classList, comparator);
+        Comparator<HashMap<String, String>> hashMapComparator = new Comparator<HashMap<String, String>>() {
+            public int compare(HashMap<String,String> h1, HashMap<String, String> h2) {
+                return (h1.get("Major") + h1.get("Course")).compareTo(h2.get("Major") + h2.get("Course"));
+            }
+        };
+        Collections.sort(databaseAdapterList, hashMapComparator);
+        ((customAdapter) dayListView.getAdapter()).notifyDataSetChanged();
+        customAdapter arrayAdapter = new customAdapter(classList, databaseAdapterList, this);
         dayListView.setAdapter(arrayAdapter);
         super.onRestart();
     }

@@ -115,6 +115,18 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.purdueplanner.purdueplanner.StartActivity" />
         </activity>
+
+        <activity
+            android:name=".ClassInformationActivity"
+            android:label="ClassInformation"
+            android:parentActivityName=".StartActivity"
+            android:theme="@style/AppTheme.NoActionBar" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.purdueplanner.purdueplanner.StartActivity" />
+        </activity>
+
+
     </application>
 
 </manifest>

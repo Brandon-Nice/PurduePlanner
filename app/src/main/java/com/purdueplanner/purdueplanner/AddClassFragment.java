@@ -162,7 +162,7 @@ public class AddClassFragment extends Fragment {
         // This should direct to the class the user selected in the previous methods
         Firebase ref = new Firebase("https://purduescheduler.firebaseio.com/Classes/" + dir);
         // Get the class information for the firebase database that is being accessed
-        ref.addValueEventListener(new ValueEventListener() {
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 // Where all the class information from the database will be stored

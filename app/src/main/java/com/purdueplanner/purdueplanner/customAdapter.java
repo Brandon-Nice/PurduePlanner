@@ -20,16 +20,19 @@ import com.firebase.client.Firebase;
 import com.firebase.client.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Kenny on 10/17/2015.
  */
 public class customAdapter extends BaseAdapter implements ListAdapter {
     private ArrayList<String> list = new ArrayList<String>();
+    private ArrayList<HashMap<String, String>> databaseList = new ArrayList<HashMap<String, String>>();
     private Context context;
     private View view;
-    public customAdapter(ArrayList<String> list, Context context) {
+    public customAdapter(ArrayList<String> list, ArrayList<HashMap<String, String>> databaseList, Context context) {
         this.list = list;
+        this.databaseList = databaseList;
         this.context = context;
     }
 
@@ -58,7 +61,7 @@ public class customAdapter extends BaseAdapter implements ListAdapter {
         }
 
         //Handle TextView and display string from your list
-        TextView listItemText = (TextView)view.findViewById(R.id.list_item_string);
+        final TextView listItemText = (TextView)view.findViewById(R.id.list_item_string);
         listItemText.setText(list.get(position));
 
         //Handle buttons and add onClickListeners
@@ -67,7 +70,13 @@ public class customAdapter extends BaseAdapter implements ListAdapter {
         moreInfoBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-
+                System.out.println("Hello");
+                System.out.println(listItemText.getText());
+                System.out.println(databaseList.get(position));
+                Intent init = new Intent(context, ClassInformationActivity.class);
+                init.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                init.putExtra("Database Info", databaseList.get(position));
+                context.startActivity(init);
                 //view.getContext().startActivity(new Intent(this, ClassInfo.class));
                 //System.out.println("HERE");
                 //Intent i = new Intent(AppCompatPreferenceActivity.this, ClassInfo.class);
