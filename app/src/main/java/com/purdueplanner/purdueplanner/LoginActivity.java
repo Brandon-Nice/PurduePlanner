@@ -29,8 +29,8 @@ import java.util.Arrays;
 public class LoginActivity extends Activity {
     //Declaring variables
     private TextView info;
-    private LoginButton loginButton;
-    private CallbackManager callbackManager;
+    public static LoginButton loginButton;
+    public static CallbackManager callbackManager;
 
     @Override
     //provide the onCreate method to apply the Friends layout to the activity
@@ -86,5 +86,14 @@ public class LoginActivity extends Activity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle("Friends");
         }
+    }
+
+    //LoginButton getter
+    static LoginButton getLoginButton() {
+        return loginButton;
+    }
+    //CallbackManager getter
+    static CallbackManager getCallbackManager() {
+        return callbackManager;
     }
 }

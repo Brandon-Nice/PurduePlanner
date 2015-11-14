@@ -3,6 +3,7 @@ package com.purdueplanner.purdueplanner;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,12 +20,22 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookException;
+import com.facebook.FacebookCallback;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 
 import com.facebook.FacebookSdk;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,6 +50,8 @@ public class StartActivity extends AppCompatActivity
     private customAdapter arrayAdapter;
     private ArrayList<Classes> studentsClasses;
     private String currDay;
+    static LoginButton loginButton;
+    static CallbackManager callbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +64,53 @@ public class StartActivity extends AppCompatActivity
 
         //sets the name in the nav_header
         if(isLoggedIn()) {
-            TextView user_name = (TextView) findViewById(R.id.usertextView);
-            TextView user_email = (TextView) findViewById(R.id.useremailtextView);
-            ImageView user_pic = (ImageView) findViewById(R.id.userimageView);
+            final TextView user_name = (TextView) findViewById(R.id.usertextView);
+            final TextView user_email = (TextView) findViewById(R.id.useremailtextView);
+            final ImageView user_pic = (ImageView) findViewById(R.id.userimageView);
             //TODO: get the user name, email, and picture of person logged in
+            loginButton = LoginActivity.getLoginButton();
+            callbackManager = LoginActivity.getCallbackManager();
+            loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+                        @Override
+                        public void onSuccess(LoginResult loginResult) {
+                            GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(),
+                                    new GraphRequest.GraphJSONObjectCallback() {
+                                        @Override
+                                        public void onCompleted(JSONObject object, GraphResponse response) {
+                                            try {
+                                                object = response.getJSONObject();
+                                                Log.d("LoginActivity", response.toString());
+                                                String id = object.getString("id");
+                                                String name = object.getString("name");
+                                                String email = object.getString("email");
+                                                //TODO: get picture
+
+                                                user_name.setText(name);
+                                                user_email.setText(email);
+                                            }
+                                            catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+
+                                        }
+                                    });
+                            Bundle parameters = new Bundle();
+                            parameters.putString("fields", "id,name,email,picture");
+                            request.setParameters(parameters);
+                            request.executeAsync();
+                            }
+
+                            @Override
+                            public void onCancel() {
+
+                            }
+
+                            @Override
+                            public void onError(FacebookException e) {
+                                e.printStackTrace();
+                            }
+                        });
+
 
         }
         // Set the student's schedule up to be displayed
@@ -75,7 +131,7 @@ public class StartActivity extends AppCompatActivity
         friendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(StartActivity.this, LoginActivity.class));
+                startActivity(new Intent(StartActivity.this, FriendsActivity.class));
             }
         });
 
