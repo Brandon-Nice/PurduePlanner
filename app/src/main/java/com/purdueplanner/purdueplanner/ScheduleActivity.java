@@ -4,14 +4,19 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.view.ViewGroup.LayoutParams;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,7 +39,6 @@ public class ScheduleActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule);
 
-
         //DEFAULT: Gets the current date to be displayed on the screen.
         //Almost the same stuff inside of the onSetChangeListener... just for the current date
         CalendarView v = (CalendarView)findViewById(R.id.calendarView); //gets the calendar
@@ -53,11 +57,14 @@ public class ScheduleActivity extends FragmentActivity {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy"); //makes the date format for the date - month, day, and year
                 Calendar c = Calendar.getInstance(); //makes an instance of a calendar object
                 c.set(year,month,dayOfMonth); //sets the year, month and date based on what the user selected
-                String currdate =  dateFormat.format(c.getTime()); //formats the date based on our date format
+                String currdate = dateFormat.format(c.getTime()); //formats the date based on our date format
                 TextView dateText = (TextView)findViewById(R.id.selected_date); //the
                 dateText.setText(currdate);
+                startActivity(new Intent(ScheduleActivity.this, DayScheduleActivity.class)); //goes to new activity once the button is pressed
             }
+
         });
+
     }
 
     public void buttonOnClick(View v) {
