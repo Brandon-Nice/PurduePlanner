@@ -7,4 +7,22 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.purdueplanner.purdueplanner.DayScheduleActivity">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Classes For The Day"
+        android:id="@+id/mainTitle"
+        android:layout_marginTop="33dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/classesForDayView"
+        android:layout_below="@+id/mainTitle"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
 </RelativeLayout>
