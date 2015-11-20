@@ -32,7 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="View All Classes"
-        android:id="@+id/thursdayButton"
+        android:id="@+id/viewClassesButton"
         android:onClick="buttonOnClick"
         android:layout_below="@+id/calendarView"
         android:layout_centerHorizontal="true" />
@@ -43,7 +43,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Selected date goes here"
         android:id="@+id/selected_date"
-        android:layout_below="@+id/thursdayButton"
+        android:layout_below="@+id/viewClassesButton"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 

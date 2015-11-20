@@ -33,8 +33,6 @@ import java.util.Locale;
 
 public class ScheduleActivity extends FragmentActivity {
 
-    public final static String EXTRA_MESSAGE = "testing this shit";
-
     @Override
     //provide the onCreate method to apply the Schedule layout to the activity
     protected void onCreate(Bundle savedInstanceState) {
