@@ -34,7 +34,7 @@
             android:parentActivityName=".StartActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.purdueplanner.purdueplanner.StartActivity" >
+                android:value=".StartActivity" >
             </meta-data>
         </activity>
         <!-- Child activity Maps -->
@@ -81,12 +81,12 @@
             android:label="@string/title_activity_maps" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.purdueplanner.purdueplanner.StartActivity" />
+                android:value=".StartActivity" />
         </activity>
         <!-- Changed for StartActivity by Milia 11/1 -->
         <activity
             android:name=".StartActivity"
-            android:label="@string/title_activity_start"
+            android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -105,7 +105,7 @@
             android:theme="@style/AppTheme.NoActionBar" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.purdueplanner.purdueplanner.StartActivity" />
+                android:value=".StartActivity" />
         </activity>
         <activity android:name=".viewClasses" >
         </activity>
