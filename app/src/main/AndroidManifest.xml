@@ -55,6 +55,12 @@
             android:label="Schedule" >
         </activity>
 
+        <!-- Added by Milia 11/22 -->
+        <activity
+            android:name=".FriendsActivity"
+            android:label="Friends" >
+        </activity>
+
         <!-- Added by Jake 10/16 -->
         <activity
             android:name=".LoginActivity"

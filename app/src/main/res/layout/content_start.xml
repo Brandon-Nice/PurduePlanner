@@ -35,8 +35,8 @@
         android:layout_gravity="bottom" />
 
     <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
         android:id="@+id/friendButton"
         android:background="@drawable/friend"
         android:layout_alignTop="@+id/scheduleButton"

@@ -49,6 +49,8 @@ public class ScheduleActivity extends FragmentActivity {
         TextView dateText1 = (TextView)this.findViewById(R.id.selected_date);
         dateText1.setText(currentDate);
 
+
+
         //listens to see the selected date from the user
         v.setOnDateChangeListener( new CalendarView.OnDateChangeListener() {
 
