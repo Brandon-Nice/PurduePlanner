@@ -57,10 +57,15 @@
         <!-- Added by Jake 10/16 -->
         <activity
             android:name=".LoginActivity"
-            android:label="Log In" >
+            android:label="@string/app_name" >
             <meta-data
                 android:name="com.facebook.sdk.ApplicationId"
                 android:value="@string/facebook_app_id" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <!--
@@ -88,11 +93,6 @@
             android:name=".StartActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".AboutActivity" >
         </activity>
@@ -110,6 +110,11 @@
         <activity android:name=".viewClasses" >
         </activity>
         <activity android:name=".DayScheduleActivity" >
+        </activity>
+        <activity
+            android:name=".ClassInformationActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar" >
         </activity>
     </application>
 

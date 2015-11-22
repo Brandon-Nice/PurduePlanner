@@ -111,8 +111,7 @@ public class StartActivity extends AppCompatActivity
 
 
         }
-        // Set the student's schedule up to be displayed
-        setStudent();
+
         //code that implements  the map button
         ImageButton mapButton = (ImageButton) findViewById(R.id.mapsButton);
 
@@ -146,10 +145,14 @@ public class StartActivity extends AppCompatActivity
         //Gets the current day
         Date date = new Date();
 
-        currDay = (String) android.text.format.DateFormat.format("EEEE", date);
+        //currDay = (String) android.text.format.DateFormat.format("EEEE", date);
+        currDay = "Monday";
         System.out.println(currDay);
         TextView myTextView = (TextView) findViewById(R.id.textView);
         myTextView.setText(currDay);
+
+        // Set the student's schedule up to be displayed
+        setStudent();
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -169,105 +172,104 @@ public class StartActivity extends AppCompatActivity
 
     private void setStudent() {
         Firebase.setAndroidContext(this);
-        Firebase ref = new Firebase("https://purduescheduler.firebaseio.com/Students/" + Integer.toString(-1));
-        final Student currentStudent = new Student();
+        final Student currentStudent = ((MyApplication) getApplication()).getStudent();
+        final Firebase ref = new Firebase("https://purduescheduler.firebaseio.com/Students/" + currentStudent.getId());
         final ArrayList<Classes> currentStudentClasses = new ArrayList<Classes>();
-        final ArrayList<String> classList = new ArrayList<String>();
-        final ArrayList<HashMap<String, String>> databaseAdapterList = new ArrayList<HashMap<String, String>>();
+        final ArrayList<HashMap<String, String>> databaseAdapterList = new ArrayList();
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 //System.out.println(snapshot);
                 HashMap<String, Object> val = (HashMap) snapshot.getValue();
-                ArrayList<HashMap<String, String>> databaseClasses = null;
-                for (HashMap.Entry<String, Object> entry : val.entrySet()) {
-                    if (entry.getKey().equals("lastName")) {
-                        currentStudent.setLastName((String) entry.getValue());
-                    } else if (entry.getKey().equals("firstName")) {
-                        currentStudent.setFirstName((String) entry.getValue());
-                    } else if (entry.getKey().equals("Schedule")) {
-                        databaseClasses = (ArrayList<HashMap<String, String>>) entry.getValue();
-                    } else if (entry.getKey().equals("id")) {
-                        currentStudent.setId((Long) entry.getValue());
-                    }
+                if (val == null) {
+                    HashMap<String, String> dataBaseStudent = new HashMap();
+                    dataBaseStudent.put("id", currentStudent.getId());
+                    ref.setValue(dataBaseStudent);
                 }
+                else {
 
-                if (databaseClasses != null) {
-                    for (int i = 0; i < databaseClasses.size(); i++) {
-                        if ( databaseClasses.get(i) != null) {
-                            final HashMap<String, String> currentDBClass = databaseClasses.get(i);
-                            String major = currentDBClass.get("Major");
-                            String course = currentDBClass.get("Course");
-                            String section = currentDBClass.get("Section");
-                            //System.out.println(major + " " + course + " " + section);
-                            Firebase ref = new Firebase("https://purduescheduler.firebaseio.com/Classes/" + major + "/" +
-                                    course + "/" + section);
-                            //System.out.println(ref.getRoot());
-                            ref.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot snapshot) {
-                                    //System.out.println(snapshot);
-                                    Classes currentClass = new Classes();
-                                    HashMap<String, String> val = (HashMap) snapshot.getValue();
-                                    currentClass.setCourseNum(val.get("courseNum"));
-                                    currentClass.setCredits(val.get("credits"));
-                                    currentClass.setCRN(val.get("crn"));
-                                    currentClass.setDays(val.get("days"));
-                                    currentClass.setEndDate(val.get("endDate"));
-                                    currentClass.setEndTime(val.get("endTime"));
-                                    currentClass.setInstructor(val.get("instructor"));
-                                    currentClass.setInstructorEmail(val.get("instructorEmail"));
-                                    currentClass.setLocation(val.get("location"));
-                                    currentClass.setMajor(val.get("major"));
-                                    currentClass.setSectionNum(val.get("sectionNum"));
-                                    currentClass.setStartDate(val.get("startDate"));
-                                    currentClass.setStartTime(val.get("startTime"));
-                                    currentClass.setTitle(val.get("title"));
-                                    currentClass.setType(val.get("type"));
-                                    currentStudentClasses.add(currentClass);
-                                    boolean addClassForDay = false;
-                                    if (currentClass.getDays().contains("M") && currDay.equals("Monday")) {
-                                        addClassForDay = true;
-                                    }
-                                    if (currentClass.getDays().contains("T") && currDay.equals("Tuesday")) {
-                                        addClassForDay = true;
-                                    }
-                                    if (currentClass.getDays().contains("W") && currDay.equals("Wednesday")) {
-                                        addClassForDay = true;
-                                    }
-                                    if (currentClass.getDays().contains("R") && currDay.equals("Thursday")) {
-                                        addClassForDay = true;
-                                    }
-                                    if (currentClass.getDays().contains("F") && currDay.equals("Friday")) {
-                                        addClassForDay = true;
+                    ArrayList<HashMap<String, String>> databaseClasses = null;
+                    for (HashMap.Entry<String, Object> entry : val.entrySet()) {
+                        if (entry.getKey().equals("lastName")) {
+                            currentStudent.setLastName((String) entry.getValue());
+                        } else if (entry.getKey().equals("firstName")) {
+                            currentStudent.setFirstName((String) entry.getValue());
+                        } else if (entry.getKey().equals("Schedule")) {
+                            databaseClasses = (ArrayList<HashMap<String, String>>) entry.getValue();
+                        } else if (entry.getKey().equals("id")) {
+                            currentStudent.setId((String) entry.getValue());
+                        }
+                    }
+
+                    if (databaseClasses != null) {
+                        for (int i = 0; i < databaseClasses.size(); i++) {
+                            if (databaseClasses.get(i) != null) {
+                                final HashMap<String, String> currentDBClass = databaseClasses.get(i);
+                                String major = currentDBClass.get("Major");
+                                String course = currentDBClass.get("Course");
+                                String section = currentDBClass.get("Section");
+                                //System.out.println(major + " " + course + " " + section);
+                                Firebase ref = new Firebase("https://purduescheduler.firebaseio.com/Classes/" + major + "/" +
+                                        course + "/" + section);
+                                //System.out.println(ref.getRoot());
+                                ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot snapshot) {
+                                        //System.out.println(snapshot);
+                                        Classes currentClass = new Classes();
+                                        HashMap<String, String> val = (HashMap) snapshot.getValue();
+                                        currentClass.setCourseNum(val.get("courseNum"));
+                                        currentClass.setCredits(val.get("credits"));
+                                        currentClass.setCRN(val.get("crn"));
+                                        currentClass.setDays(val.get("days"));
+                                        currentClass.setEndDate(val.get("endDate"));
+                                        currentClass.setEndTime(val.get("endTime"));
+                                        currentClass.setInstructor(val.get("instructor"));
+                                        currentClass.setInstructorEmail(val.get("instructorEmail"));
+                                        currentClass.setLocation(val.get("location"));
+                                        currentClass.setMajor(val.get("major"));
+                                        currentClass.setSectionNum(val.get("sectionNum"));
+                                        currentClass.setStartDate(val.get("startDate"));
+                                        currentClass.setStartTime(val.get("startTime"));
+                                        currentClass.setTitle(val.get("title"));
+                                        currentClass.setType(val.get("type"));
+                                        currentStudentClasses.add(currentClass);
+                                        boolean addClassForDay = false;
+                                        if (currentClass.getDays().contains("M") && currDay.equals("Monday")) {
+                                            addClassForDay = true;
+                                        }
+                                        if (currentClass.getDays().contains("T") && currDay.equals("Tuesday")) {
+                                            addClassForDay = true;
+                                        }
+                                        if (currentClass.getDays().contains("W") && currDay.equals("Wednesday")) {
+                                            addClassForDay = true;
+                                        }
+                                        if (currentClass.getDays().contains("R") && currDay.equals("Thursday")) {
+                                            addClassForDay = true;
+                                        }
+                                        if (currentClass.getDays().contains("F") && currDay.equals("Friday")) {
+                                            addClassForDay = true;
+                                        }
+
+                                        if (addClassForDay) {
+                                            databaseAdapterList.add(currentDBClass);
+                                            Comparator<HashMap<String, String>> hashMapComparator = new Comparator<HashMap<String, String>>() {
+                                                public int compare(HashMap<String, String> h1, HashMap<String, String> h2) {
+                                                    return (h1.get("Major") + h1.get("Course") + h1.get("Section")).compareTo(h2.get("Major") + h2.get("Course") + h2.get("Section"));
+                                                }
+                                            };
+                                            Collections.sort(databaseAdapterList, hashMapComparator);
+                                            ((customAdapter) dayListView.getAdapter()).notifyDataSetChanged();
+                                        }
+
                                     }
 
-                                    if (addClassForDay) {
-                                        classList.add(currentClass.getMajor() + " " + currentClass.getCourseNum());
-                                        Comparator<String> comparator = new Comparator<String>() {
-                                            public int compare(String s1, String s2) {
-                                                return s1.compareTo(s2);
-                                            }
+                                    @Override
+                                    public void onCancelled(FirebaseError firebaseError) {
 
-                                        };
-                                        Collections.sort(classList, comparator);
-                                        databaseAdapterList.add(currentDBClass);
-                                        Comparator<HashMap<String, String>> hashMapComparator = new Comparator<HashMap<String, String>>() {
-                                            public int compare(HashMap<String,String> h1, HashMap<String, String> h2) {
-                                                return (h1.get("Major") + h1.get("Course")).compareTo(h2.get("Major") + h2.get("Course"));
-                                            }
-                                        };
-                                        Collections.sort(databaseAdapterList, hashMapComparator);
-                                        ((customAdapter) dayListView.getAdapter()).notifyDataSetChanged();
                                     }
-
-                                }
-
-                                @Override
-                                public void onCancelled(FirebaseError firebaseError) {
-
-                                }
-                            });
+                                });
+                            }
                         }
                     }
                 }
@@ -281,7 +283,7 @@ public class StartActivity extends AppCompatActivity
                 //arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, testArray);
                 //arrayAdapter.set
 
-                customAdapter arrayAdapter = new customAdapter(classList, databaseAdapterList, getApplicationContext());
+                customAdapter arrayAdapter = new customAdapter(databaseAdapterList, getApplicationContext());
                 dayListView.setAdapter(arrayAdapter);
             }
 
@@ -337,7 +339,9 @@ public class StartActivity extends AppCompatActivity
 
         if (id == R.id.nav_login) {
             // Handle the login action
-            startActivity(new Intent(StartActivity.this, LoginActivity.class));
+            Intent init = new Intent(StartActivity.this, LoginActivity.class);
+            init.putExtra("FromNavMenu", true);
+            startActivity(init);
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
@@ -357,8 +361,8 @@ public class StartActivity extends AppCompatActivity
 
     @Override
     public void onRestart() {
-        ArrayList<String> classList = new ArrayList<>();
-        ArrayList<HashMap<String, String>> databaseAdapterList = new ArrayList<HashMap<String, String>>();
+        ArrayList<HashMap<String, String>> databaseAdapterList = new ArrayList();
+        System.out.println(studentsClasses);
         for (int i = 0; i < studentsClasses.size(); i++) {
             Classes currentClass = studentsClasses.get(i);
             boolean addClassForDay = false;
@@ -383,29 +387,20 @@ public class StartActivity extends AppCompatActivity
                 addClassForDay = true;
             }
             if (addClassForDay) {
-                classList.add(currentClass.getMajor() + " " + currentClass.getCourseNum());
-                HashMap<String, String> currentDatabaseClass = new HashMap<String, String>();
-                currentDatabaseClass.put("Major", currentClass.getMajor());
-                currentDatabaseClass.put("Course", currentClass.getCourseNum());
-                currentDatabaseClass.put("Section", currentClass.getSectionNum());
-                databaseAdapterList.add(currentDatabaseClass);
+                HashMap<String, String> currentDBClass = new HashMap();
+                currentDBClass.put("Major", currentClass.getMajor());
+                currentDBClass.put("Course", currentClass.getCourseNum());
+                currentDBClass.put("Section", currentClass.getSectionNum());
+                databaseAdapterList.add(currentDBClass);
             }
         }
-        Comparator<String> comparator = new Comparator<String>() {
-            public int compare(String s1, String s2) {
-                return s1.compareTo(s2);
-            }
-
-        };
-        Collections.sort(classList, comparator);
         Comparator<HashMap<String, String>> hashMapComparator = new Comparator<HashMap<String, String>>() {
             public int compare(HashMap<String,String> h1, HashMap<String, String> h2) {
-                return (h1.get("Major") + h1.get("Course")).compareTo(h2.get("Major") + h2.get("Course"));
+                return (h1.get("Major") + h1.get("Course") + h1.get("Section")).compareTo(h2.get("Major") + h2.get("Course") + h2.get("Section"));
             }
         };
         Collections.sort(databaseAdapterList, hashMapComparator);
-        ((customAdapter) dayListView.getAdapter()).notifyDataSetChanged();
-        customAdapter arrayAdapter = new customAdapter(classList, databaseAdapterList, this);
+        customAdapter arrayAdapter = new customAdapter(databaseAdapterList, this);
         dayListView.setAdapter(arrayAdapter);
         super.onRestart();
     }

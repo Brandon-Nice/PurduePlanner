@@ -26,13 +26,11 @@ import java.util.HashMap;
  * Created by Kenny on 10/17/2015.
  */
 public class customAdapter extends BaseAdapter implements ListAdapter {
-    private ArrayList<String> list = new ArrayList<String>();
-    private ArrayList<HashMap<String, String>> databaseList = new ArrayList<HashMap<String, String>>();
+    private ArrayList<HashMap<String, String>> list = new ArrayList();
     private Context context;
     private View view;
-    public customAdapter(ArrayList<String> list, ArrayList<HashMap<String, String>> databaseList, Context context) {
+    public customAdapter(ArrayList<HashMap<String, String>> list, Context context) {
         this.list = list;
-        this.databaseList = databaseList;
         this.context = context;
     }
 
@@ -62,7 +60,8 @@ public class customAdapter extends BaseAdapter implements ListAdapter {
 
         //Handle TextView and display string from your list
         final TextView listItemText = (TextView)view.findViewById(R.id.list_item_string);
-        listItemText.setText(list.get(position));
+        String listText = list.get(position).get("Major") + " "  + list.get(position).get("Course");
+        listItemText.setText(listText);
 
         //Handle buttons and add onClickListeners
         Button moreInfoBtn = (Button)view.findViewById(R.id.moreInfo_btn);
@@ -70,12 +69,9 @@ public class customAdapter extends BaseAdapter implements ListAdapter {
         moreInfoBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                System.out.println("Hello");
-                System.out.println(listItemText.getText());
-                System.out.println(databaseList.get(position));
                 Intent init = new Intent(context, ClassInformationActivity.class);
                 init.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                init.putExtra("Database Info", databaseList.get(position));
+                init.putExtra("Database Info", list.get(position));
                 context.startActivity(init);
                 //view.getContext().startActivity(new Intent(this, ClassInfo.class));
                 //System.out.println("HERE");

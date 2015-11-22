@@ -59,6 +59,11 @@ public class ClassInformationActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
         }
+        else if (id == android.R.id.home)
+        {
+            System.out.println("Back Pressed");
+            onBackPressed();
+        }
 
         return super.onOptionsItemSelected(item);
     }

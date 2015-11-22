@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class Student {
 
     // Stores the student's unique identification number
-    private long id;
+    private String id;
     // Stores the student's first name
     private String firstName;
     // Stores the student's last name
@@ -25,7 +25,7 @@ public class Student {
     }
 
     // Declare a complete student
-    public Student(int id, String firstName, String lastName, ArrayList<Classes> schedule)
+    public Student(String id, String firstName, String lastName, ArrayList<Classes> schedule)
     {
         this.id = id;
         this.firstName = firstName;
@@ -34,13 +34,13 @@ public class Student {
     }
 
     // Get the student's unique identification number
-    public long getId()
+    public String getId()
     {
         return id;
     }
 
     // Set the student's unique identification number
-    public void setId(long id)
+    public void setId(String id)
     {
         this.id = id;
     }

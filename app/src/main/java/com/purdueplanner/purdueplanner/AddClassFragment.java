@@ -228,8 +228,9 @@ public class AddClassFragment extends Fragment {
     View.OnClickListener addClass = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            Student currentStudent = ((MyApplication) getActivity().getApplication()).getStudent();
             // Get the current student's schedule
-            ArrayList<Classes> studentClasses = ((MyApplication) getActivity().getApplication()).getStudent().getSchedule();
+            ArrayList<Classes> studentClasses = currentStudent.getSchedule();
             // Track if the student already has the class they are trying to add in their schedule
             boolean classAlreadyAdded = false;
             // Loop to check if student already has the class they are trying to add in their schedule
@@ -275,7 +276,7 @@ public class AddClassFragment extends Fragment {
                     databaseClasses.add(directory);
                 }
                 // Go to the current student in the firebase databse
-                Firebase ref = new Firebase("https://purduescheduler.firebaseio.com/Students/" + Integer.toString(-1));
+                Firebase ref = new Firebase("https://purduescheduler.firebaseio.com/Students/" + currentStudent.getId());
                 // Go to the current student's schedule in the firebase data
                 Firebase scheduleRef = ref.child("Schedule");
                 // Put all of the classes in the database for the students
