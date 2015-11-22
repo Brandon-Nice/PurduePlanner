@@ -72,7 +72,8 @@ public class LoginActivity extends Activity {
         callbackManager = CallbackManager.Factory.create();
         //gets the login button from activity_login.xml
         loginButton = (LoginButton) findViewById(R.id.fb_button);
-        loginButton.setReadPermissions(Arrays.asList("public_profile", "user_friends", "email"));
+        loginButton.setReadPermissions("public_profile");
+        loginButton.setReadPermissions("user_friends");
         //gets the textview from activity_login.xml
         info = (TextView) findViewById(R.id.fb_info);
 

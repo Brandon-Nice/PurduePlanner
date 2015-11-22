@@ -1,7 +1,11 @@
 package com.purdueplanner.purdueplanner;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -22,7 +26,9 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookException;
 import com.facebook.FacebookCallback;
 import com.facebook.GraphRequest;
+import com.facebook.GraphRequestAsyncTask;
 import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.firebase.client.DataSnapshot;
@@ -35,6 +41,8 @@ import com.firebase.client.ValueEventListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -53,6 +61,7 @@ public class StartActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -60,56 +69,32 @@ public class StartActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Purdue Planner");
 
+        System.out.println("before isLoggedIn()");
         //sets the name in the nav_header
         if(isLoggedIn()) {
+            System.out.println("after isLoggedIn()");
             final TextView user_name = (TextView) findViewById(R.id.usertextView);
-            final TextView user_email = (TextView) findViewById(R.id.useremailtextView);
             final ImageView user_pic = (ImageView) findViewById(R.id.userimageView);
             //TODO: get the user name, email, and picture of person logged in
             loginButton = LoginActivity.getLoginButton();
             callbackManager = LoginActivity.getCallbackManager();
-            loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-                        @Override
-                        public void onSuccess(LoginResult loginResult) {
-                            GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(),
-                                    new GraphRequest.GraphJSONObjectCallback() {
-                                        @Override
-                                        public void onCompleted(JSONObject object, GraphResponse response) {
-                                            try {
-                                                object = response.getJSONObject();
-                                                Log.d("LoginActivity", response.toString());
-                                                String id = object.getString("id");
-                                                String name = object.getString("name");
-                                                String email = object.getString("email");
-                                                //TODO: get picture
 
-                                                user_name.setText(name);
-                                                user_email.setText(email);
-                                            }
-                                            catch (JSONException e) {
-                                                e.printStackTrace();
-                                            }
-
-                                        }
-                                    });
-                            Bundle parameters = new Bundle();
-                            parameters.putString("fields", "id,name,email,picture");
-                            request.setParameters(parameters);
-                            request.executeAsync();
-                            }
-
-                            @Override
-                            public void onCancel() {
-
-                            }
-
-                            @Override
-                            public void onError(FacebookException e) {
-                                e.printStackTrace();
-                            }
-                        });
-
-
+            new GraphRequest(AccessToken.getCurrentAccessToken(), "/me", null,
+                    HttpMethod.GET, new GraphRequest.Callback() {
+                public void onCompleted(GraphResponse response) {
+                    //handle the response
+                    final JSONObject jsonObject = response.getJSONObject();
+                    String name = "";
+                    try {
+                        name = jsonObject.getString("name");
+                        System.out.println(name);
+                        user_name.setText(name);
+                    }
+                    catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).executeAsync();
         }
 
         //code that implements  the map button
@@ -145,8 +130,7 @@ public class StartActivity extends AppCompatActivity
         //Gets the current day
         Date date = new Date();
 
-        //currDay = (String) android.text.format.DateFormat.format("EEEE", date);
-        currDay = "Monday";
+        currDay = (String) android.text.format.DateFormat.format("EEEE", date);
         System.out.println(currDay);
         TextView myTextView = (TextView) findViewById(R.id.textView);
         myTextView.setText(currDay);

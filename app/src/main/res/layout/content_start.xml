@@ -53,14 +53,6 @@
         android:layout_above="@+id/scheduleButton"
         android:layout_below="@+id/textView" />
 
-    <!--<com.facebook.login.widget.LoginButton-->
-        <!--android:id="@+id/login_button"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="center_horizontal"-->
-        <!--android:layout_toRightOf="@+id/scheduleButton"-->
-        <!--android:layout_toEndOf="@+id/scheduleButton"-->
-        <!--android:layout_alignTop="@+id/friendButton" />-->
 
     <TextView
         android:layout_width="wrap_content"
