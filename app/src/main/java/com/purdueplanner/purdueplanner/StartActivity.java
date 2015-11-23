@@ -175,7 +175,9 @@ public class StartActivity extends AppCompatActivity
                 else {
 
                     ArrayList<HashMap<String, String>> databaseClasses = null;
-                    for (HashMap.Entry<String, Object> entry : val.entrySet()) {
+                    currentStudent.setId((String) val.get("id"));
+                    databaseClasses = (ArrayList<HashMap<String, String>>) val.get("Schedule");
+                    /*for (HashMap.Entry<String, Object> entry : val.entrySet()) {
                         if (entry.getKey().equals("lastName")) {
                             currentStudent.setLastName((String) entry.getValue());
                         } else if (entry.getKey().equals("firstName")) {
@@ -185,7 +187,7 @@ public class StartActivity extends AppCompatActivity
                         } else if (entry.getKey().equals("id")) {
                             currentStudent.setId((String) entry.getValue());
                         }
-                    }
+                    }*/
 
                     if (databaseClasses != null) {
                         for (int i = 0; i < databaseClasses.size(); i++) {
