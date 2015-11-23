@@ -31,6 +31,7 @@ import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.facebook.login.widget.ProfilePictureView;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 
@@ -69,16 +70,13 @@ public class StartActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Purdue Planner");
 
-        System.out.println("before isLoggedIn()");
         //sets the name in the nav_header
         if(isLoggedIn()) {
-            System.out.println("after isLoggedIn()");
             final TextView user_name = (TextView) findViewById(R.id.usertextView);
-            final ImageView user_pic = (ImageView) findViewById(R.id.userimageView);
-            //TODO: get the user name, email, and picture of person logged in
             loginButton = LoginActivity.getLoginButton();
             callbackManager = LoginActivity.getCallbackManager();
 
+            //Gets the name of the user
             new GraphRequest(AccessToken.getCurrentAccessToken(), "/me", null,
                     HttpMethod.GET, new GraphRequest.Callback() {
                 public void onCompleted(GraphResponse response) {
@@ -89,65 +87,69 @@ public class StartActivity extends AppCompatActivity
                         name = jsonObject.getString("name");
                         System.out.println(name);
                         user_name.setText(name);
-                    }
-                    catch (JSONException e) {
+                    } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
             }).executeAsync();
+
+            //Gets the picture of the user
+            final ProfilePictureView profilePictureView;
+            profilePictureView = (ProfilePictureView) findViewById(R.id.userimageView);
+            profilePictureView.setCropped(true);
+            profilePictureView.setProfileId(AccessToken.getCurrentAccessToken().getUserId());
         }
+            //code that implements  the map button
+            ImageButton mapButton = (ImageButton) findViewById(R.id.mapsButton);
 
-        //code that implements  the map button
-        ImageButton mapButton = (ImageButton) findViewById(R.id.mapsButton);
+            mapButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(StartActivity.this, MapsActivity.class));
+                }
+            });
 
-        mapButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(StartActivity.this, MapsActivity.class));
-            }
-        });
+            //code that implements the friends button
+            ImageButton friendButton = (ImageButton) findViewById(R.id.friendButton);
 
-        //code that implements the friends button
-        ImageButton friendButton = (ImageButton) findViewById(R.id.friendButton);
+            friendButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(StartActivity.this, FriendsActivity.class));
+                }
+            });
 
-        friendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(StartActivity.this, FriendsActivity.class));
-            }
-        });
+            //code that implements the schedule button
+            ImageButton scheduleButton = (ImageButton) findViewById(R.id.scheduleButton);
 
-        //code that implements the schedule button
-        ImageButton scheduleButton = (ImageButton) findViewById(R.id.scheduleButton);
+            scheduleButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(StartActivity.this, ScheduleActivity.class));
+                }
+            });
 
-        scheduleButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(StartActivity.this, ScheduleActivity.class));
-            }
-        });
+            //Gets the current day
+            Date date = new Date();
 
-        //Gets the current day
-        Date date = new Date();
+            currDay = (String) android.text.format.DateFormat.format("EEEE", date);
+            System.out.println(currDay);
+            TextView myTextView = (TextView) findViewById(R.id.textView);
+            myTextView.setText(currDay);
 
-        currDay = (String) android.text.format.DateFormat.format("EEEE", date);
-        System.out.println(currDay);
-        TextView myTextView = (TextView) findViewById(R.id.textView);
-        myTextView.setText(currDay);
-
-        // Set the student's schedule up to be displayed
-        setStudent();
+            // Set the student's schedule up to be displayed
+            setStudent();
 
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawer.setDrawerListener(toggle);
+            toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-    }
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            navigationView.setNavigationItemSelectedListener(this);
+        }
 
     public boolean isLoggedIn() {
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
@@ -173,7 +175,9 @@ public class StartActivity extends AppCompatActivity
                 else {
 
                     ArrayList<HashMap<String, String>> databaseClasses = null;
-                    for (HashMap.Entry<String, Object> entry : val.entrySet()) {
+                    currentStudent.setId((String) val.get("id"));
+                    databaseClasses = (ArrayList<HashMap<String, String>>) val.get("Schedule");
+                    /*for (HashMap.Entry<String, Object> entry : val.entrySet()) {
                         if (entry.getKey().equals("lastName")) {
                             currentStudent.setLastName((String) entry.getValue());
                         } else if (entry.getKey().equals("firstName")) {
@@ -183,7 +187,7 @@ public class StartActivity extends AppCompatActivity
                         } else if (entry.getKey().equals("id")) {
                             currentStudent.setId((String) entry.getValue());
                         }
-                    }
+                    }*/
 
                     if (databaseClasses != null) {
                         for (int i = 0; i < databaseClasses.size(); i++) {
