@@ -24,14 +24,7 @@ public class DayScheduleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_day_schedule);
 
         Intent myIntent = getIntent(); // gets the previously created intent
-//        String currentDate = myIntent.getStringExtra("currdate_key");
         String dayLetter = myIntent.getStringExtra("dayletter_key"); // will return the value associated with this key, i.e. the day letter string
-
-//         Debugging shiz!
-//        TextView dateText = (TextView)findViewById(R.id.displayDate); //sets the date text to the one on our xml file
-//        dateText.setText(currentDate);
-//        TextView dayText = (TextView)findViewById(R.id.displayDay); //sets the day text to the one on our xml file
-//        dayText.setText(dayLetter);
 
         //Get the actual classes for each day
         ArrayList<Classes> classList = ((MyApplication) getApplication()).getStudent().getSchedule(); //total classes for the student

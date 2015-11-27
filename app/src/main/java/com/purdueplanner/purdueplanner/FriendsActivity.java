@@ -1,13 +1,18 @@
 package com.purdueplanner.purdueplanner;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.facebook.FacebookGraphResponseException;
 import com.facebook.GraphRequestAsyncTask;
@@ -125,14 +130,47 @@ public class FriendsActivity extends AppCompatActivity {
                                 friendsArrayList.add(k, classesPreSortList.get(k).get("firstName") + classesPreSortList.get(k).get("lastName"));
                             }
 
+
+
                             ListView tempFriendsList = (ListView) findViewById(R.id.friendsList);   /* Sets names of friends to view */
                             ArrayAdapter friendAdapter;
                             friendAdapter = new ArrayAdapter(FriendsActivity.this, android.R.layout.simple_list_item_1, friendsArrayList);
-
                             tempFriendsList.setAdapter(friendAdapter);
+
+                            //Added functionality to open a new activity for each friend clicked
+                            tempFriendsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                   String name = (String)parent.getItemAtPosition(position); //gets name?
+                                    Log.i("nametest", "this is the name: " + name);
+
+                                    //Goes to a new activity once a button is pressed
+                                    Intent myIntent = new Intent(FriendsActivity.this, FriendClickedActivity.class);
+                                    myIntent.putExtra("name_key", name); //adds the string to a HashMap like object
+                                    startActivity(myIntent); //goes to new activity once the button is pressed
+                                }
+
+                            });
                         } catch (JSONException e) {
                             e.printStackTrace();
+                        } catch (NullPointerException n){ //means that the user is offline
+                            //TODO: Implement actions for button
+                            Toast.makeText(getApplicationContext(), "Lost connect.", Toast.LENGTH_LONG).show();
+                            AlertDialog alertDialog = new AlertDialog.Builder(FriendsActivity.this).create();
+                            alertDialog.setTitle("Alert");
+                            alertDialog.setMessage("Oops! Looks like you aren't connected to Wifi or a mobile network at the moment. Would you like to connect or exit?");
+                            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                            alertDialog.show();
+
+                            n.printStackTrace();
                         }
+
+
                         //Log.i("OKAY", yo.toString());
                     }
 

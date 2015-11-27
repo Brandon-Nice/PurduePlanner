@@ -1,11 +1,18 @@
 package com.purdueplanner.purdueplanner;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.util.Base64;
+import android.content.BroadcastReceiver;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -20,6 +27,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import static android.content.Context.WIFI_SERVICE;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -50,28 +60,46 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 
+
 public class StartActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
-    private String[] testArray = {"CS 354", "CS 252", "CS 348", "CS 391"};
+        implements NavigationView.OnNavigationItemSelectedListener, NetworkStateReceiver.NetworkStateReceiverListener {
     private ListView dayListView;
-    private customAdapter arrayAdapter;
     private ArrayList<Classes> studentsClasses;
     private String currDay;
     static LoginButton loginButton;
     static CallbackManager callbackManager;
+    private NetworkStateReceiver networkStateReceiver;
+    public static Boolean isConnected; //boolean that can be accessed via any class to see if connection is lost or not
+
+
+   //WifiManager w = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+//    public static int connected(Context context) {
+//        ConnectivityManager cm =
+//                (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+//
+//        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+//         boolean isConnected = activeNetwork != null &&
+//                activeNetwork.isConnected();
+//
+//
+//        if(isConnected) {
+//            Toast.makeText(context, "Connected.", Toast.LENGTH_LONG).show();
+//            return 1;
+//        }
+//        else{
+//            Toast.makeText(context, "Lost connect.", Toast.LENGTH_LONG).show();
+//        }
+//            return 0;
+//    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void networkAvailable() { //Function that is called when the network is available == aka the onCreate stuff
+        Log.d("logTest", "Network is available!"); //debugging
+        isConnected = true;
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_start);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        FacebookSdk.sdkInitialize(this.getApplicationContext());
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Purdue Planner");
-
+        Toast.makeText(getApplicationContext(), "Connected.", Toast.LENGTH_LONG).show();
         //sets the name in the nav_header
-        if(isLoggedIn()) {
+        if (isLoggedIn()) {
             final TextView user_name = (TextView) findViewById(R.id.usertextView);
             loginButton = LoginActivity.getLoginButton();
             callbackManager = LoginActivity.getCallbackManager();
@@ -99,57 +127,189 @@ public class StartActivity extends AppCompatActivity
             profilePictureView.setCropped(true);
             profilePictureView.setProfileId(AccessToken.getCurrentAccessToken().getUserId());
         }
-            //code that implements  the map button
-            ImageButton mapButton = (ImageButton) findViewById(R.id.mapsButton);
+        //code that implements  the map button
+        ImageButton mapButton = (ImageButton) findViewById(R.id.mapsButton);
 
-            mapButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(StartActivity.this, MapsActivity.class));
-                }
-            });
+        mapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(StartActivity.this, MapsActivity.class));
+            }
+        });
 
-            //code that implements the friends button
-            ImageButton friendButton = (ImageButton) findViewById(R.id.friendButton);
+        //code that implements the friends button
+        ImageButton friendButton = (ImageButton) findViewById(R.id.friendButton);
 
-            friendButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(StartActivity.this, FriendsActivity.class));
-                }
-            });
+        friendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(StartActivity.this, FriendsActivity.class));
+            }
+        });
 
-            //code that implements the schedule button
-            ImageButton scheduleButton = (ImageButton) findViewById(R.id.scheduleButton);
+        //code that implements the schedule button
+        ImageButton scheduleButton = (ImageButton) findViewById(R.id.scheduleButton);
 
-            scheduleButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(StartActivity.this, ScheduleActivity.class));
-                }
-            });
+        scheduleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(StartActivity.this, ScheduleActivity.class));
+            }
+        });
 
-            //Gets the current day
-            Date date = new Date();
+        //Gets the current day
+        Date date = new Date();
 
-            currDay = (String) android.text.format.DateFormat.format("EEEE", date);
-            System.out.println(currDay);
-            TextView myTextView = (TextView) findViewById(R.id.textView);
-            myTextView.setText(currDay);
+        currDay = (String) android.text.format.DateFormat.format("EEEE", date);
+        System.out.println(currDay);
+        TextView myTextView = (TextView) findViewById(R.id.textView);
+        myTextView.setText(currDay);
 
-            // Set the student's schedule up to be displayed
-            setStudent();
+        // Set the student's schedule up to be displayed
+        setStudent();
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar); //added from oncreate
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+    }
+
+    @Override
+    public void networkUnavailable() { //Function that is called when user loses connection. TODO: Implement more functionality maybe?
+        Log.d("logTest", "Network is unavailable"); //debugging
+        isConnected = false;
+        //TODO: Implement actions for button
+        Toast.makeText(getApplicationContext(), "Lost connect.", Toast.LENGTH_LONG).show();
+        AlertDialog alertDialog = new AlertDialog.Builder(StartActivity.this).create();
+        alertDialog.setTitle("Alert");
+        alertDialog.setMessage("Oops! Looks like you aren't connected to Wifi or a mobile network at the moment. Would you like to connect or exit?");
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+        //TODO: Which buttons should still be accessible to users when they're immediately offline (ie opening the app first and not having a connection)?
+        // Copy & paste them below..
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_start);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        FacebookSdk.sdkInitialize(this.getApplicationContext());
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Purdue Planner");
+
+        //Registers our Connectivity receiver and adds a listener to it
+        networkStateReceiver = new NetworkStateReceiver();
+        networkStateReceiver.addListener(this);
+        this.registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
 
 
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-            drawer.setDrawerListener(toggle);
-            toggle.syncState();
+//            //sets the name in the nav_header
+//            if (isLoggedIn()) {
+//                final TextView user_name = (TextView) findViewById(R.id.usertextView);
+//                loginButton = LoginActivity.getLoginButton();
+//                callbackManager = LoginActivity.getCallbackManager();
+//
+//                //Gets the name of the user
+//                new GraphRequest(AccessToken.getCurrentAccessToken(), "/me", null,
+//                        HttpMethod.GET, new GraphRequest.Callback() {
+//                    public void onCompleted(GraphResponse response) {
+//                        //handle the response
+//                        final JSONObject jsonObject = response.getJSONObject();
+//                        String name = "";
+//                        try {
+//                            name = jsonObject.getString("name");
+//                            System.out.println(name);
+//                            user_name.setText(name);
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }).executeAsync();
+//
+//                //Gets the picture of the user
+//                final ProfilePictureView profilePictureView;
+//                profilePictureView = (ProfilePictureView) findViewById(R.id.userimageView);
+//                profilePictureView.setCropped(true);
+//                profilePictureView.setProfileId(AccessToken.getCurrentAccessToken().getUserId());
+//            }
+//            //code that implements  the map button
+//            ImageButton mapButton = (ImageButton) findViewById(R.id.mapsButton);
+//
+//            mapButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    startActivity(new Intent(StartActivity.this, MapsActivity.class));
+//                }
+//            });
+//
+//            //code that implements the friends button
+//            ImageButton friendButton = (ImageButton) findViewById(R.id.friendButton);
+//
+//            friendButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    startActivity(new Intent(StartActivity.this, FriendsActivity.class));
+//                }
+//            });
+//
+//            //code that implements the schedule button
+//            ImageButton scheduleButton = (ImageButton) findViewById(R.id.scheduleButton);
+//
+//            scheduleButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    startActivity(new Intent(StartActivity.this, ScheduleActivity.class));
+//                }
+//            });
+//
+//            //Gets the current day
+//            Date date = new Date();
+//
+//            currDay = (String) android.text.format.DateFormat.format("EEEE", date);
+//            System.out.println(currDay);
+//            TextView myTextView = (TextView) findViewById(R.id.textView);
+//            myTextView.setText(currDay);
+//
+//            // Set the student's schedule up to be displayed
+//            setStudent();
+//
+//
+//            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+//                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+//            drawer.setDrawerListener(toggle);
+//            toggle.syncState();
+//
+//            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+//            navigationView.setNavigationItemSelectedListener(this);
+//        }
+    }
 
-            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-            navigationView.setNavigationItemSelectedListener(this);
-        }
+    // Was used for just wifi
+//    public static int getState(Context cont){
+//        WifiManager wifi;
+//        wifi = (WifiManager) cont.getSystemService(Context.WIFI_SERVICE);
+//        int s = wifi.getWifiState();
+//        if(s == 0 || s == 1 || s == 4 || s == 5 ){
+//            Log.i(Integer.toString(s),"Fail!!");
+//            return 0;
+//        }
+//        else
+//            Log.i(Integer.toString(s),"Success :-)");
+//            return 1;
+//    }
 
     public boolean isLoggedIn() {
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
@@ -349,48 +509,61 @@ public class StartActivity extends AppCompatActivity
 
     @Override
     public void onRestart() {
-        ArrayList<HashMap<String, String>> databaseAdapterList = new ArrayList();
-        System.out.println(studentsClasses);
-        for (int i = 0; i < studentsClasses.size(); i++) {
-            Classes currentClass = studentsClasses.get(i);
-            boolean addClassForDay = false;
-            if (currentClass.getDays().contains("M") && currDay.equals("Monday"))
-            {
-                addClassForDay = true;
+        try {
+            ArrayList<HashMap<String, String>> databaseAdapterList = new ArrayList();
+            System.out.println(studentsClasses);
+            for (int i = 0; i < studentsClasses.size(); i++) {
+                Classes currentClass = studentsClasses.get(i);
+                boolean addClassForDay = false;
+                if (currentClass.getDays().contains("M") && currDay.equals("Monday")) {
+                    addClassForDay = true;
+                }
+                if (currentClass.getDays().contains("T") && currDay.equals("Tuesday")) {
+                    addClassForDay = true;
+                }
+                if (currentClass.getDays().contains("W") && currDay.equals("Wednesday")) {
+                    addClassForDay = true;
+                }
+                if (currentClass.getDays().contains("R") && currDay.equals("Thursday")) {
+                    addClassForDay = true;
+                }
+                if (currentClass.getDays().contains("F") && currDay.equals("Friday")) {
+                    addClassForDay = true;
+                }
+                if (addClassForDay) {
+                    HashMap<String, String> currentDBClass = new HashMap();
+                    currentDBClass.put("Major", currentClass.getMajor());
+                    currentDBClass.put("Course", currentClass.getCourseNum());
+                    currentDBClass.put("Section", currentClass.getSectionNum());
+                    databaseAdapterList.add(currentDBClass);
+                }
             }
-            if (currentClass.getDays().contains("T") && currDay.equals("Tuesday"))
-            {
-                addClassForDay = true;
-            }
-            if (currentClass.getDays().contains("W") && currDay.equals("Wednesday"))
-            {
-                addClassForDay = true;
-            }
-            if (currentClass.getDays().contains("R") && currDay.equals("Thursday"))
-            {
-                addClassForDay = true;
-            }
-            if (currentClass.getDays().contains("F") && currDay.equals("Friday"))
-            {
-                addClassForDay = true;
-            }
-            if (addClassForDay) {
-                HashMap<String, String> currentDBClass = new HashMap();
-                currentDBClass.put("Major", currentClass.getMajor());
-                currentDBClass.put("Course", currentClass.getCourseNum());
-                currentDBClass.put("Section", currentClass.getSectionNum());
-                databaseAdapterList.add(currentDBClass);
-            }
+            Comparator<HashMap<String, String>> hashMapComparator = new Comparator<HashMap<String, String>>() {
+                public int compare(HashMap<String, String> h1, HashMap<String, String> h2) {
+                    return (h1.get("Major") + h1.get("Course") + h1.get("Section")).compareTo(h2.get("Major") + h2.get("Course") + h2.get("Section"));
+                }
+            };
+            Collections.sort(databaseAdapterList, hashMapComparator);
+            customAdapter arrayAdapter = new customAdapter(databaseAdapterList, this);
+            dayListView.setAdapter(arrayAdapter);
+            super.onRestart();
+
+        } catch (NullPointerException n){ //means that the user is offline
+            //TODO: Implement actions for button
+            Toast.makeText(getApplicationContext(), "Lost connect.", Toast.LENGTH_LONG).show();
+            AlertDialog alertDialog = new AlertDialog.Builder(StartActivity.this).create();
+            alertDialog.setTitle("Alert");
+            alertDialog.setMessage("Oops! Looks like you aren't connected to Wifi or a mobile network at the moment. Would you like to connect or exit?");
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            alertDialog.show();
+
+            super.onRestart();
         }
-        Comparator<HashMap<String, String>> hashMapComparator = new Comparator<HashMap<String, String>>() {
-            public int compare(HashMap<String,String> h1, HashMap<String, String> h2) {
-                return (h1.get("Major") + h1.get("Course") + h1.get("Section")).compareTo(h2.get("Major") + h2.get("Course") + h2.get("Section"));
-            }
-        };
-        Collections.sort(databaseAdapterList, hashMapComparator);
-        customAdapter arrayAdapter = new customAdapter(databaseAdapterList, this);
-        dayListView.setAdapter(arrayAdapter);
-        super.onRestart();
     }
 
 }
