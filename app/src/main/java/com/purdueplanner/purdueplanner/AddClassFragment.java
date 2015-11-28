@@ -85,17 +85,19 @@ public class AddClassFragment extends Fragment {
                 // Sort the button texts in alphabetical order
                 Collections.sort(btnWord);
                 // Add all the buttons to the screen in this loop
-                for (int i = 0; i < btnWord.size(); i++) {
-                    // Create a button
-                    Button currentButton = new Button(getActivity());
-                    // Set the button's text
-                    currentButton.setText(btnWord.get(i));
-                    // Set it's onclickListener
-                    currentButton.setOnClickListener(clicked);
-                    // Set it's style
-                    currentButton.setBackgroundResource(R.drawable.buttonstyle);
-                    // Add it to the interface
-                    rl.addView(currentButton);
+                if (getActivity() != null) {
+                    for (int i = 0; i < btnWord.size(); i++) {
+                        // Create a button
+                        Button currentButton = new Button(getActivity());
+                        // Set the button's text
+                        currentButton.setText(btnWord.get(i));
+                        // Set it's onclickListener
+                        currentButton.setOnClickListener(clicked);
+                        // Set it's style
+                        currentButton.setBackgroundResource(R.drawable.buttonstyle);
+                        // Add it to the interface
+                        rl.addView(currentButton);
+                    }
                 }
 
             }
@@ -118,7 +120,9 @@ public class AddClassFragment extends Fragment {
             // Remove all previous buttons
             rl.removeAllViews();
             // Set the action bar to reflect what the user will be selecting next
-            ((AddClassActivity) getActivity()).setActionBarTitle("Select Course");
+            if (getActivity() != null) {
+                ((AddClassActivity) getActivity()).setActionBarTitle("Select Course");
+            }
             // Load the buttons to select the course
             loadView(majorName, btnClickedCourse);
         }
@@ -134,7 +138,9 @@ public class AddClassFragment extends Fragment {
             // Remove all previous buttons
             rl.removeAllViews();
             // Set the action bar to reflect what the user will be selecting next
-            ((AddClassActivity) getActivity()).setActionBarTitle("Select Section");
+            if (getActivity() != null) {
+                ((AddClassActivity) getActivity()).setActionBarTitle("Select Section");
+            }
             // Load the buttons to select the section
             loadView(majorName + "/" + courseNum, btnClickedSection);
 
@@ -151,7 +157,9 @@ public class AddClassFragment extends Fragment {
             // Remove all previous buttons
             rl.removeAllViews();
             // Set the action bar to reflect what the user will see on the screen
-            ((AddClassActivity) getActivity()).setActionBarTitle("Class Information");
+            if (getActivity() != null) {
+                ((AddClassActivity) getActivity()).setActionBarTitle("Class Information");
+            }
             // Load the class information on the screen for confirmation to add class
             loadClass(majorName + "/" + courseNum + "/" + sectionName);
         }
@@ -200,13 +208,19 @@ public class AddClassFragment extends Fragment {
                 // Get the type
                 currentClass.setType(val.get("type"));
                 // Create a new text view that will store the class information
-                TextView textView = new TextView(getActivity());
+                TextView textView = null;
+                if (getActivity() != null) {
+                    textView = new TextView(getActivity());
+                }
                 // Put the class information in the text view
                 textView.setText(currentClass.toString());
                 // Display the class information on the interface
                 rl.addView(textView);
                 // Create a button so the user can add the class
-                Button addClassButton = new Button(getActivity());
+                Button addClassButton = null;
+                if (getActivity() != null) {
+                    addClassButton = new Button(getActivity());
+                }
                 // Set the text of the button
                 addClassButton.setText("Add Class");
                 // Set the on click listener
@@ -228,7 +242,11 @@ public class AddClassFragment extends Fragment {
     View.OnClickListener addClass = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Student currentStudent = ((MyApplication) getActivity().getApplication()).getStudent();
+            Student currentStudent = null;
+            if (getActivity() != null)
+            {
+                currentStudent = ((MyApplication) getActivity().getApplication()).getStudent();
+            }
             // Get the current student's schedule
             ArrayList<Classes> studentClasses = currentStudent.getSchedule();
             // Track if the student already has the class they are trying to add in their schedule
@@ -239,8 +257,12 @@ public class AddClassFragment extends Fragment {
                 // If the CRN's of the class they are trying to add is the same as one in their schedule
                 if (currentClass.getCRN().equals(studentClasses.get(i).getCRN()))
                 {
+                    Toast toast = null;
                     // Tell the user they already has that class
-                    Toast toast = Toast.makeText(getActivity(), "Classes already exists in schedule.", Toast.LENGTH_LONG);
+                    if (getActivity() != null)
+                    {
+                        toast = Toast.makeText(getActivity(), "Classes already exists in schedule.", Toast.LENGTH_LONG);
+                    }
                     toast.show();
                     // Track that they already have that class in their schedule
                     classAlreadyAdded = true;
@@ -252,7 +274,9 @@ public class AddClassFragment extends Fragment {
             if (classAlreadyAdded == false) {
                 // Add the class to the student's schedule
                 studentClasses.add(currentClass);
-                ((MyApplication) getActivity().getApplication()).getStudent().setSchedule(studentClasses);
+                if (getActivity() != null) {
+                    ((MyApplication) getActivity().getApplication()).getStudent().setSchedule(studentClasses);
+                }
                 // This is where the student's classes for the database will be stored
                 ArrayList<HashMap<String, String>> databaseClasses = new ArrayList<HashMap<String, String>>();
                 // Go through all the student's classes and add them to the above list in the from of hashmaps
@@ -283,7 +307,9 @@ public class AddClassFragment extends Fragment {
                 scheduleRef.setValue(databaseClasses);
             }
             // Go back to screen that displays the schedule of classes for the student
-            getActivity().onBackPressed();
+            if (getActivity() != null) {
+                getActivity().onBackPressed();
+            }
         }
     };
 }
