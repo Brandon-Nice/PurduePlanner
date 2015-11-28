@@ -19,6 +19,7 @@ import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -53,8 +54,24 @@ public class AddClassFragment extends Fragment {
         Firebase.setAndroidContext(getActivity());
         // Find the layout that the interface will be displayed in
         rl = (LinearLayout) v.findViewById(R.id.linear);
+        ArrayList<String> majors = new ArrayList(Arrays.asList("AAE","AAS","ABE","AD","AFT","AGEC","AGR","AGRY","AMST","ANSC","ANTH","ARAB","ASAM","ASL","ASM","ASTR","AT","BAND","BCHM","BCM","BIOL","BME","BMS","BTNY","CAND","CE","CEM","CGT","CHE","CHM","CHNS","CLCS","CLPH","CMPL","CNIT","COM","CPB","CS","CSR","DANC","EAPS","ECE","ECET","ECON","EDCI","EDPS","EDST","EEE","ENE","ENGL","ENGR","ENTM","ENTR","EPCS","EXPL","FNR","FR","FS","FVS","GEP","GER","GRAD","GREK","GS","HDFS","HEBR","HIST","HK","HONR","HORT","HSCI","HTM","IDE","IDIS","IE","IET","IPPH","IT","ITAL","JPNS","JWST","LA","LALS","LATN","LC","LING","MA","MARS","MCMP","ME","MET","MFET","MGMT","MSE","MSL","MUS","NRES","NS","NUCL","NUPH","NUR","NUTR","OBHR","OLS","PES","PHAD","PHIL","PHPR","PHRM","PHYS","POL","PSY","PTGS","REL","RUSS","SA","SCI","SFS","SLHS","SOC","SPAN","STAT","TECH","THTR","TLI","VCS","VM","WGSS","YDAE"));
         // Load the buttons to select the course
-        loadView("", btnClickedMajor);
+        for (int i = 0; i < majors.size(); i++)
+        {
+            // Create a button
+            if (getActivity() != null) {
+                Button currentButton = new Button(getActivity());
+                // Set the button's text
+                currentButton.setText(majors.get(i));
+                // Set it's onclickListener
+                currentButton.setOnClickListener(btnClickedMajor);
+                // Set it's style
+                currentButton.setBackgroundResource(R.drawable.buttonstyle);
+                // Add it to the interface
+                rl.addView(currentButton);
+            }
+
+        }
         return v;
     }
 
@@ -85,9 +102,10 @@ public class AddClassFragment extends Fragment {
                 // Sort the button texts in alphabetical order
                 Collections.sort(btnWord);
                 // Add all the buttons to the screen in this loop
-                if (getActivity() != null) {
-                    for (int i = 0; i < btnWord.size(); i++) {
-                        // Create a button
+
+                for (int i = 0; i < btnWord.size(); i++) {
+                    // Create a button
+                    if (getActivity() != null) {
                         Button currentButton = new Button(getActivity());
                         // Set the button's text
                         currentButton.setText(btnWord.get(i));
