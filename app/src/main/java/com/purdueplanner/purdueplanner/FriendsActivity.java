@@ -56,6 +56,7 @@ public class FriendsActivity extends AppCompatActivity {
 
     static LoginButton loginButton;
     static CallbackManager callbackManager;
+    String previousText = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +64,7 @@ public class FriendsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_friends);
         final ArrayList<String> friendsArrayList = new ArrayList<String>();
         final ArrayAdapter friendAdapter = new ArrayAdapter(FriendsActivity.this, android.R.layout.simple_list_item_1, friendsArrayList);
-
+        final ArrayList<String> removedFriends = new ArrayList();
         new GraphRequest(
                 AccessToken.getCurrentAccessToken(),
                 "/me/friends",
@@ -188,7 +189,29 @@ public class FriendsActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
                 // When user changed the Text
-                friendAdapter.getFilter().filter(cs);
+                String currentText = cs.toString();
+                if (currentText.length() > previousText.length())
+                {
+                    for (int i = 0; i < friendsArrayList.size(); i++) {
+                        if (!friendsArrayList.get(i).toLowerCase().startsWith(currentText.toLowerCase())) {
+                            removedFriends.add(friendsArrayList.get(i));
+                            friendsArrayList.remove(i);
+                            i--;
+                        }
+                    }
+                }
+                else {
+                    for (int i = 0; i < removedFriends.size(); i++) {
+                        if (removedFriends.get(i).toLowerCase().startsWith(currentText.toLowerCase())) {
+                            friendsArrayList.add(removedFriends.get(i));
+                            removedFriends.remove(i);
+                            i--;
+                        }
+                    }
+                }
+                Collections.sort(friendsArrayList);
+                friendAdapter.notifyDataSetChanged();
+                previousText = currentText;
             }
 
             @Override
