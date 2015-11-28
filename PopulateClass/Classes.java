@@ -44,6 +44,10 @@ public class Classes {
 	private String location;
 	// Stores the type of class
 	private String type;
+	// Stores the latitude
+	private String latitude;
+	// Stores the longitude
+	private String longitude;
 
 	// Default constructor
 	public Classes()
@@ -146,6 +150,18 @@ public class Classes {
 	}
 	public void setInstructorEmail(String instructorsEmail) {
 		this.instructorEmail = instructorsEmail;
+	}
+	public String getLatitude() {
+		return latitude;
+	}
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
+	}
+	public String getLongitude() {
+		return longitude;
+	}
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
 	}
 
 	/*// Adds a class to the database
@@ -376,23 +392,26 @@ public class Classes {
 		String startTime = "Start Time: " +  getStartTime() + "\n";
 		String endTime = "End Time : " + getEndTime() + "\n";
 		String startDate = "Start Date: " +  getStartDate() + "\n";
-		String endDate = "End Date : " + getEndDate() + "\n";
+		String endDate = "End Date: " + getEndDate() + "\n";
 		String crn = "CRN: " + getCRN() + "\n";
 		String major = "Major: " + getMajor() + "\n";
 		String courseNum = "Course Number: " + getCourseNum() + "\n";
-		String sectionNum = "Section NUmber: " + getSectionNum() + "\n";
+		String sectionNum = "Section Number: " + getSectionNum() + "\n";
 		String credits = "Credits: " + getCredits() + "\n";
 		String title = "Title: " + getTitle() + "\n";
 		String days = "Days: " + getDays() + "\n";
 		String instructor = "Primary instructor: " + getInstructor() + "\n";
 		String instructorEmail = "Primary instructor email: " + getInstructorEmail() + "\n";
 		String location = "Location: " + getLocation() + "\n";
-		String type = "Type: " + getType();
+		String type = "Type: " + getType() + "\n";
+		String latitude = "Latitude: " + getLatitude() + "\n";
+		String longitude = "Longitude: " + getLongitude() + "\n";
 
 		String total = startTime + endTime + startDate + endDate + crn + major +
 				courseNum + sectionNum + credits + title + days + instructor +
-				instructorEmail + location + type;
+				instructorEmail + location + type + latitude + longitude;
 		return total;
 
 	}
+	
 }

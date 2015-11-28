@@ -1,4 +1,11 @@
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -13,17 +20,133 @@ import org.openqa.selenium.support.ui.Select;
 public class ExampleWebPage {
 	public static void main (String[] args)  {
 		ArrayList<Classes> classes = new ArrayList<Classes>();
-		classes = readClassesFromWebPage(1);
+		classes = readClassesFromWebPage();
 
-		Classes.writeClassesToFile(classes, "classesForAAE.txt");
-		ArrayList<Classes> readClasses = Classes.readClassesFromFile("classesForAAE.txt");
+		Classes.writeClassesToFile(classes, "classesForAll.txt");
+		ArrayList<Classes> readClasses = Classes.readClassesFromFile("classesForAll.txt");
 
+		ArrayList<HashMap<String, String>> locationsSingle = new ArrayList();
+		try (BufferedReader br = new BufferedReader(new FileReader("locationsSingle.txt"))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		       HashMap<String, String> loc = new HashMap();
+		       int firstParen = line.indexOf("(");
+		       int secondParen = line.indexOf(")", firstParen + 1);
+		       int comma = line.indexOf(",", firstParen);
+		       loc.put("Location", line.substring(0, firstParen - 1));
+		       loc.put("Latitude", line.substring(firstParen + 1, comma));
+		       loc.put("Longitude", line.substring(comma + 2, secondParen));
+		       locationsSingle.add(loc);
+		    }
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		for (int i = 0; i < readClasses.size(); i++)
 		{
-			System.out.println(readClasses.get(i));
-			System.out.println();
+			String CCL = readClasses.get(i).getLocation();
+			for (int j = 0; j < locationsSingle.size(); j++)
+			{
+				String loc = locationsSingle.get(j).get("Location");
+				if (CCL.contains(loc))
+				{
+					if (locationsSingle.get(j).get("Latitude").equals("null"))
+					{
+						
+					}
+					else
+					{
+						readClasses.get(i).setLatitude(locationsSingle.get(j).get("Latitude"));
+						readClasses.get(i).setLongitude(locationsSingle.get(j).get("Longitude"));
+				
+					}
+				}
+			}
 		}
-
+		
+		
+		
+		try {
+		PrintWriter out = new PrintWriter("locations.txt");
+		ArrayList<String> locations = new ArrayList();
+		for (int i = 0; i < readClasses.size(); i++)
+		{
+			Boolean alreadyInLocations = false;
+			for (int j = 0; j < locations.size(); j++)
+			{
+				if (readClasses.get(i).getLocation().equals(locations.get(j)))
+				{
+					alreadyInLocations = true;
+					break;
+				}
+			}
+			if (alreadyInLocations == false && readClasses.get(i).getLatitude() == null)
+			{
+				locations.add(readClasses.get(i).getLocation());
+			}
+			
+		}
+		Collections.sort(locations);
+		for (int i = 0; i < locations.size(); i++)
+		{
+			out.println(locations.get(i));
+		}
+		out.close();		
+		} catch (FileNotFoundException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		}
+		
+		/*try {
+			PrintWriter out = new PrintWriter("locations.txt");
+			ArrayList<String> locations = new ArrayList();
+			for (int i = 0; i < readClasses.size(); i++)
+			{
+				Boolean alreadyInLocations = false;
+				for (int j = 0; j < locations.size(); j++)
+				{
+					if (readClasses.get(i).getLocation().equals(locations.get(j)))
+					{
+						alreadyInLocations = true;
+						break;
+					}
+				}
+				if (alreadyInLocations == false)
+				{
+					locations.add(readClasses.get(i).getLocation());
+				}
+				
+			}
+			Collections.sort(locations);
+			for (int i = 0; i < locations.size(); i++)
+			{
+				out.println(locations.get(i));
+			}
+			out.close();		
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+		
+		
+		try {
+			PrintWriter out = new PrintWriter("classesForAllOutput.txt");
+			for (int i = 0; i < readClasses.size(); i++)
+			{
+				out.print(readClasses.get(i) + "\n");
+			}
+			out.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
 		System.out.println("Completeted");
 	}
 
@@ -72,6 +195,7 @@ public class ExampleWebPage {
 		// majorsOptions.size() is the max and will get all majors
 		for (int i = 0; i < numMajors; i++)
 		{
+			
 			// This block of code is the same as above and needs to be done every iteration
 			// of the loop because every webpage after the base webpage expires after
 			// navigating away from it
@@ -84,6 +208,7 @@ public class ExampleWebPage {
 			majorsOptions = majors.getOptions();
 			majorsOptions.get(i).click();
 			majorsOptions.get(i).submit();
+			System.out.println(majorsOptions.get(i));
 
 			// This will store the current section of a class
 			Classes currentClass;
@@ -102,7 +227,7 @@ public class ExampleWebPage {
 				// Get the html code for the current class
 				String sub = driver.getPageSource().substring(firstOccurenceofDDLABEL + 1, secondOccurenceofDDLABEL);
 
-				extractClass(currentClass, sub);
+				extractClass(currentClass, sub.replace("&amp;", "&"));
 				readClasses.add(currentClass);
 
 				// Set the firstOccurenceofDDLABEL to the seoncdOccurenecofDDLABEL
@@ -115,7 +240,7 @@ public class ExampleWebPage {
 			int secondOccureneceofDATADISPLAYTABLE = driver.getPageSource().indexOf("datadisplaytable", firstOccureneceofDATADISPLAYTABLE + 1);
 			currentClass = new Classes();
 			String sub = driver.getPageSource().substring(firstOccurenceofDDLABEL + 1, secondOccureneceofDATADISPLAYTABLE);
-			extractClass(currentClass, sub);
+			extractClass(currentClass, sub.replace("&amp;", "&"));
 			readClasses.add(currentClass);
 		}
 		// Close the driver to stop loading webpages
@@ -133,7 +258,6 @@ public class ExampleWebPage {
 	 */ 
 	public static void extractClass(Classes currentClass, String sub)
 	{
-
 		// The title of each class starts at the second occurrence >, which ends
 		// an html tag
 		int startTitle = sub.indexOf(">", sub.indexOf(">") + 1);
@@ -142,9 +266,14 @@ public class ExampleWebPage {
 		// This string contains the title, crn, major, course number, 
 		// and section id
 		String tCMCS = sub.substring(startTitle + 1, endTitle).trim();
+		int i = 0;
+		while (Character.isDigit(tCMCS.charAt(i)) == false)
+		{
+			i++;
+		}
 		// Each " - " separates a part of the title we want to break down
 		// This first " - " separates the class name and the CRN
-		int firstTCMCSDash = tCMCS.indexOf(" - ");
+		int firstTCMCSDash = tCMCS.indexOf(" - ", i - 3);
 		// The second " - " separates the CRN and Major/Course Number 
 		int secondTCMCSDash = tCMCS.indexOf(" - ", firstTCMCSDash + 1);
 		// The third " - " separates the Major/Course Number and Section Number
@@ -317,18 +446,26 @@ public class ExampleWebPage {
 			totalInstructor = totalInstructor.substring(0, totalInstructor.length() - 2);
 			// Get rid of any extra white space
 			totalInstructor = totalInstructor.replaceAll("\\s+", " ");
-			// The email is between the word "mailto" and the seventh DDDEFAULT
-			int emailPlace = sub.indexOf("mailto", seventhDDDEFAULT);
-			// The actual email start after the : after mailto
-			int startOfEmail = sub.indexOf(":", emailPlace);
-			// The email ends right before \ in the html
-			int endOfEmail = sub.indexOf("\"", startOfEmail + 1);
-			// Extract the total email from the two points
-			totalEmail = sub.substring(startOfEmail + 1, endOfEmail);
+			if (sub.contains("mailto:"))
+			{
+				// The actual email start after the : after mailto
+				int startOfEmail = sub.indexOf("mailto:") + 7;
+				// The email ends right before \ in the html
+				int endOfEmail = sub.indexOf("\"", startOfEmail + 1);
+				// Extract the total email from the two points
+				totalEmail = sub.substring(startOfEmail + 1, endOfEmail);
+			}
+			else
+			{
+				totalEmail = "TBA";
+			}
+			
 		}
 		// Set the instructor's name of the class
 		currentClass.setInstructor(totalInstructor);
 		// Set the instructor's email of the class
 		currentClass.setInstructorEmail(totalEmail);
+		currentClass.setLatitude(null);
+		currentClass.setLongitude(null);
 	}
 }
