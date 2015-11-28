@@ -7,11 +7,15 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.FacebookGraphResponseException;
@@ -57,6 +61,8 @@ public class FriendsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends);
+        final ArrayList<String> friendsArrayList = new ArrayList<String>();
+        final ArrayAdapter friendAdapter = new ArrayAdapter(FriendsActivity.this, android.R.layout.simple_list_item_1, friendsArrayList);
 
         new GraphRequest(
                 AccessToken.getCurrentAccessToken(),
@@ -71,7 +77,6 @@ public class FriendsActivity extends AppCompatActivity {
                         JSONObject test = response.getJSONObject();
                         try {
                             JSONArray friendsList = test.getJSONArray("data");
-                            ArrayList<String> friendsArrayList = new ArrayList<String>();
                             ArrayList<HashMap<String, String>> classesPreSortList = new ArrayList<HashMap<String, String>>();
                             for(int i = 0; i < friendsList.length(); i++) {             /* Loop to go through every friend that the user has and collect their classes */
                                 Log.i("User:  " + i, friendsList.get(i).toString());
@@ -133,8 +138,7 @@ public class FriendsActivity extends AppCompatActivity {
 
 
                             ListView tempFriendsList = (ListView) findViewById(R.id.friendsList);   /* Sets names of friends to view */
-                            ArrayAdapter friendAdapter;
-                            friendAdapter = new ArrayAdapter(FriendsActivity.this, android.R.layout.simple_list_item_1, friendsArrayList);
+                            friendAdapter.notifyDataSetChanged();
                             tempFriendsList.setAdapter(friendAdapter);
 
                             //Added functionality to open a new activity for each friend clicked
@@ -176,6 +180,27 @@ public class FriendsActivity extends AppCompatActivity {
 
                 }
         ).executeAsync();
+
+        EditText inputSearch = (EditText) findViewById(R.id.inputSearch);
+
+        inputSearch.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
+                // When user changed the Text
+                friendAdapter.getFilter().filter(cs);
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+                                          int arg3) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable arg0) {
+            }
+        });
 
     }
 
