@@ -381,6 +381,8 @@ public class StartActivity extends AppCompatActivity
                                         currentClass.setStartTime(val.get("startTime"));
                                         currentClass.setTitle(val.get("title"));
                                         currentClass.setType(val.get("type"));
+                                        currentClass.setLatitude(val.get("latitude"));
+                                        currentClass.setLongitude(val.get("longitude"));
                                         currentStudentClasses.add(currentClass);
                                         boolean addClassForDay = false;
                                         if (currentClass.getDays().contains("M") && currDay.equals("Monday")) {

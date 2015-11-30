@@ -263,6 +263,10 @@ public class AddClassFragment extends Fragment {
                 currentClass.setTitle(val.get("title"));
                 // Get the type
                 currentClass.setType(val.get("type"));
+                // Get the latitude
+                currentClass.setLatitude(val.get("latitude"));
+                // Get the longitude
+                currentClass.setLongitude(val.get("longitude"));
                 // Create a new text view that will store the class information
                 TextView textView = null;
                 if (getActivity() != null) {
