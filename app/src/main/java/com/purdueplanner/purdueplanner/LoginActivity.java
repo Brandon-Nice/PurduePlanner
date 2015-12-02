@@ -83,9 +83,6 @@ public class LoginActivity extends Activity {
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                info.setText("User ID: " + loginResult.getAccessToken().getUserId() +
-                        "\n" +
-                        "Auth Token: " + loginResult.getAccessToken().getToken());
                 loginStudent(loginResult.getAccessToken().getUserId());
             }
 

@@ -7,6 +7,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -17,6 +18,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,6 +26,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        //Tried setting a on long click listener, but gets null pointer exception
+//        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+//            @Override
+//            public void onMapLongClick(LatLng point) {
+//                mMap.addMarker(new MarkerOptions()
+//                        .position(point)
+//                        .title("Home")
+//                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+//            }
+//        });
+
     }
 
 
@@ -63,41 +77,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if(specClass.getDays().contains(dayLetter)) {
                 //add a marker and building name if lat & long is not null
                 if (!specClass.getLatitude().equals("Null") && !specClass.getLongitude().equals("Null")) {
-                    mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(specClass.getLatitude())
-                            , Double.parseDouble(specClass.getLongitude()))).title(specClass.getLocation()));
+                    mMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(Double.parseDouble(specClass.getLatitude())
+                            , Double.parseDouble(specClass.getLongitude())))
+                            .title(specClass.getLocation())
+                            .snippet("Class: " + specClass.getMajor() + " " + specClass.getCourseNum()));
                 }
 
             }
         }
-
-
-        // Adds markers at important buildings
-//        LatLng Lawson = new LatLng(40.427735, -86.917002);
-//        LatLng Elliot = new LatLng(40.427931, -86.914915);
-//        LatLng Forney = new LatLng(40.429507, -86.913933);
-//        LatLng Physics = new LatLng(40.430079, -86.913262);
-//        LatLng Armstrong = new LatLng(40.430961, -86.914684);
-//        LatLng Stewart = new LatLng(40.425045, -86.912638);
-//        LatLng Hicks = new LatLng(40.424514, -86.912686);
-//        LatLng Math = new LatLng(40.426137, -86.915768);
-//        LatLng Recitation = new LatLng(40.425834, -86.915202);
-//        LatLng StanleyCoulter = new LatLng(40.426417, -86.914431);
-//        LatLng MSEE = new LatLng(40.429353, -86.912628);
-//        LatLng ElectricalEngin = new LatLng(40.428574, -86.911958);
-//
-//        mMap.addMarker(new MarkerOptions().position(Lawson).title("Lawson"));
-//        mMap.addMarker(new MarkerOptions().position(Elliot));
-//        mMap.addMarker(new MarkerOptions().position(Forney));
-//        mMap.addMarker(new MarkerOptions().position(Physics));
-//        mMap.addMarker(new MarkerOptions().position(Armstrong));
-//        mMap.addMarker(new MarkerOptions().position(Stewart));
-//        mMap.addMarker(new MarkerOptions().position(Hicks));
-//        mMap.addMarker(new MarkerOptions().position(Math));
-//        mMap.addMarker(new MarkerOptions().position(Recitation));
-//        mMap.addMarker(new MarkerOptions().position(StanleyCoulter));
-//        mMap.addMarker(new MarkerOptions().position(MSEE));
-//        mMap.addMarker(new MarkerOptions().position(ElectricalEngin));
-
     }
 
     //getLetter code "requisitioned" from menane
@@ -122,4 +110,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         return letter;
     }
+
 }
