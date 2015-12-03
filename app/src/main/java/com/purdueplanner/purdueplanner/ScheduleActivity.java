@@ -29,6 +29,8 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import com.facebook.FacebookRequestError;
+import com.roomorama.caldroid.CaldroidFragment;
+import com.roomorama.caldroid.CaldroidListener;
 
 
 /**
@@ -37,12 +39,60 @@ import com.facebook.FacebookRequestError;
 
 public class ScheduleActivity extends FragmentActivity {
 
+    Date prevDate = new Date();
+
     @Override
     //provide the onCreate method to apply the Schedule layout to the activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule);
-        CalendarView v = (CalendarView)findViewById(R.id.calendarView); //gets the calendar
+        //CalendarView v = (CalendarView)findViewById(R.id.calendarView); //gets the calendar
+        final CaldroidFragment caldroidFragment = new CaldroidFragment();
+        Bundle args = new Bundle();
+        Calendar cal = Calendar.getInstance();
+        args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
+        args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
+        caldroidFragment.setArguments(args);
+        prevDate = new Date();
+        System.out.println("prevdate: " + prevDate);
+        final CaldroidListener listener = new CaldroidListener() {
+
+            @Override
+            public void onSelectDate(Date date, View view) {
+                System.out.println("Date: " + date);
+                caldroidFragment.setBackgroundResourceForDate(R.color.caldroid_white, prevDate);
+                prevDate = date;
+                caldroidFragment.setBackgroundResourceForDate(R.drawable.red_border, date);
+                caldroidFragment.refreshView();
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy"); //makes the date format for the date - month, day, and year
+                Calendar c = Calendar.getInstance(); //makes an instance of a calendar object
+                c.set(date.getYear(), date.getMonth(), date.getDay()); //sets the year, month and date based on what the user selected
+                String currdate = dateFormat.format(c.getTime()); //formats the date based on our date format
+                TextView dateText = (TextView) findViewById(R.id.selected_date); //sets the date text to the one on our xml file
+                dateText.setText(currdate);
+                System.out.println("Currdate: " + currdate);
+
+                //Gets the day from the date
+                TextView dayText = (TextView) findViewById(R.id.selected_day); //sets the day to the first letter abbreviation
+                SimpleDateFormat newDateFormat = new SimpleDateFormat("EEEEE", Locale.getDefault()); //Formats the day to display the full word.. i.e. "Monday"
+                String actualDay = newDateFormat.format(c.getTime()); //gets the time to adhere to the format
+
+                dayText.setText(actualDay);
+
+
+                //in order to pass the 'currdate' (and the day letter) string in using a new Activity, we have to do this
+                Intent myIntent = new Intent(ScheduleActivity.this, DayScheduleActivity.class);
+                myIntent.putExtra("dayletter_key", actualDay); //adds the string to a HashMap like object
+                startActivity(myIntent); //goes to new activity once the button is pressed
+            }
+        };
+
+        caldroidFragment.setCaldroidListener(listener);
+
+        android.support.v4.app.FragmentTransaction t = getSupportFragmentManager().beginTransaction();
+        t.replace(R.id.calendarView, caldroidFragment);
+        t.commit();
 
 
 
@@ -73,7 +123,7 @@ public class ScheduleActivity extends FragmentActivity {
 
 
         //listens to see the selected date from the user
-        v.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+        /*v.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
 
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
                 //Gets NUMERICAL date
@@ -104,7 +154,7 @@ public class ScheduleActivity extends FragmentActivity {
 
 
         });
-
+*/
     }
 
     public void buttonOnClick(View v) {

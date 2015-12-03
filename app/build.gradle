@@ -39,4 +39,5 @@ dependencies {
     compile 'com.google.android.gms:play-services-location:8.1.0'
     compile 'com.firebase:firebase-client-android:2.4.0'
     compile 'com.facebook.android:facebook-android-sdk:4.8.1'
+    compile 'com.roomorama:caldroid:2.3.1'
 }

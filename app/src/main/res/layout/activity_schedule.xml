@@ -18,13 +18,13 @@
         android:text="Calendar View"
         android:editable="false" />
 
-    <CalendarView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="352dp"
         android:id="@+id/calendarView"
         android:layout_gravity="center_horizontal"
         android:layout_below="@+id/calendarTitle"
-
+        android:orientation="vertical"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
