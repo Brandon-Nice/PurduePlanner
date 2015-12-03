@@ -27,6 +27,8 @@ public class DayScheduleActivity extends AppCompatActivity {
         String dayLetter = myIntent.getStringExtra("dayletter_key"); // will return the value associated with this key, i.e. the day letter string
 
         //Get the actual classes for each day
+        System.out.println("DayLetter: " + "\"" + dayLetter + "\"");
+        System.out.println("Hello");
         ArrayList<Classes> classList = ((MyApplication) getApplication()).getStudent().getSchedule(); //total classes for the student
         ArrayList<String> classPerDayList = new ArrayList<>(); //classes per each day for the student
         int size = classList.size();
