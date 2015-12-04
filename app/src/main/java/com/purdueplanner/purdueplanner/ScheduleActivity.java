@@ -69,16 +69,16 @@ public class ScheduleActivity extends FragmentActivity {
                 Calendar c = Calendar.getInstance(); //makes an instance of a calendar object
                 c.set(date.getYear(), date.getMonth(), date.getDay()); //sets the year, month and date based on what the user selected
                 String currdate = dateFormat.format(c.getTime()); //formats the date based on our date format
-                TextView dateText = (TextView) findViewById(R.id.selected_date); //sets the date text to the one on our xml file
-                dateText.setText(currdate);
+               // TextView dateText = (TextView) findViewById(R.id.selected_date); //sets the date text to the one on our xml file
+               // dateText.setText(currdate);
                 System.out.println("Currdate: " + currdate);
 
                 //Gets the day from the date
-                TextView dayText = (TextView) findViewById(R.id.selected_day); //sets the day to the first letter abbreviation
+                //TextView dayText = (TextView) findViewById(R.id.selected_day); //sets the day to the first letter abbreviation
                 SimpleDateFormat newDateFormat = new SimpleDateFormat("EEEEE", Locale.getDefault()); //Formats the day to display the full word.. i.e. "Monday"
                 String actualDay = newDateFormat.format(c.getTime()); //gets the time to adhere to the format
 
-                dayText.setText(actualDay);
+                //dayText.setText(actualDay);
 
 
                 //in order to pass the 'currdate' (and the day letter) string in using a new Activity, we have to do this
@@ -149,9 +149,6 @@ public class ScheduleActivity extends FragmentActivity {
                 myIntent.putExtra("dayletter_key", actualDay); //adds the string to a HashMap like object
                 startActivity(myIntent); //goes to new activity once the button is pressed
             }
-
-
-
 
         });
 */

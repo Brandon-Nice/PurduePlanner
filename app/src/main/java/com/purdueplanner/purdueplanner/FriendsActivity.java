@@ -49,14 +49,15 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-
-
 public class FriendsActivity extends AppCompatActivity {
-
 
     static LoginButton loginButton;
     static CallbackManager callbackManager;
     String previousText = "";
+
+    ArrayList<String> globalFriends = new ArrayList<>();
+    ArrayList<String> globalClasses = new ArrayList<>();
+    ArrayList<String> globalIDs = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,12 +81,13 @@ public class FriendsActivity extends AppCompatActivity {
                             JSONArray friendsList = test.getJSONArray("data");
                             ArrayList<HashMap<String, String>> classesPreSortList = new ArrayList<HashMap<String, String>>();
                             for(int i = 0; i < friendsList.length(); i++) {             /* Loop to go through every friend that the user has and collect their classes */
-                                Log.i("User:  " + i, friendsList.get(i).toString());
+                                Log.i("User:  " + i, friendsList.get(i).toString());       /* Prints the name of each friend in the friendsList */
                                 JSONObject friendMap = (JSONObject)friendsList.get(i);
                                 friendsArrayList.add(i, friendMap.getString("name"));       /* ArrayList to store the name of every friend      */
                                 JSONObject a = friendsList.getJSONObject(i);
 
                                 final Firebase tempRef = new Firebase("https://purduescheduler.firebaseio.com/Students/" + a.get("id").toString());     /* Firebase reference to a user's friend    */
+
                                 tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                     public void onDataChange(DataSnapshot snapshot) {
                                         Log.i("Snapshot: ", snapshot.toString());
@@ -99,6 +101,7 @@ public class FriendsActivity extends AppCompatActivity {
                                                 testList.get(j).get("Course");       /* Major, Course, Section of each class    */
                                                 testList.get(j).get("Major");
                                                 testList.get(j).get("Section");
+                                                globalClasses.add(j, testList.get(j).get("Course") + testList.get(j).get("Major") + testList.get(j).get("Section"));
                                             }
                                         }
                                     }
@@ -134,11 +137,13 @@ public class FriendsActivity extends AppCompatActivity {
                             friendsArrayList.clear();                                   /* Clears old ArrayList and adds the sorted entries from Hashmap */
                             for(int k = 0; k < classesPreSortList.size(); k++) {
                                 friendsArrayList.add(k, classesPreSortList.get(k).get("firstName") + classesPreSortList.get(k).get("lastName"));
+
+                                globalFriends.add(k, classesPreSortList.get(k).toString());
+
+                                Log.i("checklist", "ARRAYLIST = " + friendsArrayList.get(k));
                             }
 
-
-
-                            ListView tempFriendsList = (ListView) findViewById(R.id.friendsList);   /* Sets names of friends to view */
+                            final ListView tempFriendsList = (ListView) findViewById(R.id.friendsList);   /* Sets names of friends to view */
                             friendAdapter.notifyDataSetChanged();
                             tempFriendsList.setAdapter(friendAdapter);
 
@@ -146,12 +151,22 @@ public class FriendsActivity extends AppCompatActivity {
                             tempFriendsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                   String name = (String)parent.getItemAtPosition(position); //gets name?
+                                   String name = (String)parent.getItemAtPosition(position); //gets name
+                                    /* Print position number */
+                                    Log.i("positionTest", "position = " + position);
                                     Log.i("nametest", "this is the name: " + name);
+                                    Log.i("GLOBAL_FRIENDS_TEST", "globalfriends at position - " + position + " = " + globalFriends.get(position));
+                                    Log.i("GLOBAL_CLASSES_TEST", "globalclasses at position - " + position + " = " + globalClasses.get(position));
+                                    //String idNumber = (String)parent.getItemAtPosition(position);
+                                    //Log.i("idtest", "this is the id: " + idNumber);
+                                    //Log.i("arraylist check", "arrayList content = " + );
 
                                     //Goes to a new activity once a button is pressed
                                     Intent myIntent = new Intent(FriendsActivity.this, FriendClickedActivity.class);
-                                    myIntent.putExtra("name_key", name); //adds the string to a HashMap like object
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("name_key", name);
+                                    myIntent.putExtras(bundle);
+                                    //myIntent.putExtra("name_key", name); //adds the string to a HashMap like object
                                     startActivity(myIntent); //goes to new activity once the button is pressed
                                 }
 
@@ -174,8 +189,6 @@ public class FriendsActivity extends AppCompatActivity {
 
                             n.printStackTrace();
                         }
-
-
                         //Log.i("OKAY", yo.toString());
                     }
 

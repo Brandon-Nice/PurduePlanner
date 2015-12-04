@@ -3,6 +3,7 @@ package com.purdueplanner.purdueplanner;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -32,11 +33,24 @@ public class DayScheduleActivity extends AppCompatActivity {
         ArrayList<Classes> classList = ((MyApplication) getApplication()).getStudent().getSchedule(); //total classes for the student
         ArrayList<String> classPerDayList = new ArrayList<>(); //classes per each day for the student
         int size = classList.size();
+
+        int classLength;
+        int lengthBuffer = 11;
+        String spaces = "";
+
         for (int i = 0; i < size; i++) { //iterates through the classes
-            if(classList.get(i).getDays().contains(dayLetter)){ //match by the day
-                classPerDayList.add(classList.get(i).getMajor() + " " + classList.get(i).getCourseNum() + " " + classList.get(i).getStartTime()
-                        + " - " + classList.get(i).getEndTime());
+            classLength = (classList.get(i).getMajor() + " " + classList.get(i).getCourseNum()).length();
+            spaces = "";
+            Log.i("CLASS LENGTH", "classLength = " + classLength);
+            for (int s = classLength; s < lengthBuffer; s++) {
+                spaces += " ";
             }
+                Log.i("SPACES", "spaces = |" + spaces + "|");
+                if(classList.get(i).getDays().contains(dayLetter)){ //match by the day
+                    classPerDayList.add(classList.get(i).getMajor() + " " + classList.get(i).getCourseNum() + spaces + classList.get(i).getStartTime()
+                            + " - " + classList.get(i).getEndTime());
+                }
+            classLength = 0;
         }
 
         //now add the list to the xml file

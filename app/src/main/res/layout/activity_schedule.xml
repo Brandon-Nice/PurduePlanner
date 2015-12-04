@@ -20,13 +20,17 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="352dp"
+        android:layout_height="248dp"
         android:id="@+id/calendarView"
         android:layout_gravity="center_horizontal"
         android:layout_below="@+id/calendarTitle"
         android:orientation="vertical"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/viewClassesButton"
+        android:layout_marginBottom="67dp" >
+
+    </LinearLayout>
 
     <Button
         android:layout_width="wrap_content"
@@ -34,28 +38,10 @@
         android:text="View All Classes"
         android:id="@+id/viewClassesButton"
         android:onClick="buttonOnClick"
-        android:layout_below="@+id/calendarView"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Selected date goes here"
-        android:id="@+id/selected_date"
-        android:layout_below="@+id/viewClassesButton"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Selected day goes here"
-        android:id="@+id/selected_day"
-        android:layout_below="@+id/selected_date"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_gravity="center_horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="67dp" />
 
 
 </RelativeLayout>

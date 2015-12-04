@@ -26,10 +26,11 @@ public class viewClasses extends AppCompatActivity {
         //classList.add(currentClass);
         int size = classList.size();
         for (int i = 0; i < size; i++) {
-            stringList.add(classList.get(i).getMajor() + " " + classList.get(i).getCourseNum() + "\t\t\t" +
-                    classList.get(i).getDays() + "\n"+
+            stringList.add(classList.get(i).getMajor() + " " + classList.get(i).getCourseNum() + "\n" +
+                    classList.get(i).getDays() + "\t" +
                     classList.get(i).getStartTime()
-                     + " - " + classList.get(i).getEndTime());
+                     + " - " + classList.get(i).getEndTime() + "\n" +
+                    classList.get(i).getLocation());
         }
 
         // 3 lines below work!
