@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class viewClasses extends AppCompatActivity {
 
-    private String[] testArray = {"A", "B", "C", "D"};
+   // private String[] testArray = {"A", "B", "C", "D"};
     private ListView classListView;
     private ArrayAdapter adapter;
     @Override
