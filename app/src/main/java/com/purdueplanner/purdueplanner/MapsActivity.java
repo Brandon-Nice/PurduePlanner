@@ -1,5 +1,7 @@
 package com.purdueplanner.purdueplanner;
 
+import android.location.Address;
+import android.location.Geocoder;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -11,6 +13,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -54,12 +57,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-        mMap.setMyLocationEnabled(true);
+        //mMap.setMyLocationEnabled(true);
+        //TODO: fix bug that makes the phone keep searching for GPS, not being able to navigate to a marker
 
         // Add a marker at Purdue University and move the camera
         LatLng purdueUni = new LatLng(40.427976, -86.915479);
         //mMap.addMarker(new MarkerOptions().position(purdueUni).title("Marker at Purdue"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(purdueUni, 15));
+
+
+        //TODO: Code will go here if a user enters a home location. Have the user add their home address in the settings
+        //Get the user's home address from the settings page, then use getLatLng(streetAddress, false); to convert it and add a marker
+       // if(!((MyApplication) getApplication()).getStudent().getHomeLocation.contains("null")) {
+        Geocoder coder = new Geocoder(this);
+        try {
+            ArrayList<Address> addresses = (ArrayList<Address>) coder.getFromLocationName("Address",50);
+            for(Address add: addresses) {
+               // if(statement) {
+               //     add.getLongitude();
+               //     add.getLatitude();
+               // }
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        //}
 
         Date date = new Date();
         String currDay = (String) android.text.format.DateFormat.format("EEEE", date);
