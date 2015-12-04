@@ -54,6 +54,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        mMap.setMyLocationEnabled(true);
 
         // Add a marker at Purdue University and move the camera
         LatLng purdueUni = new LatLng(40.427976, -86.915479);
@@ -71,7 +72,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ArrayList<Classes> currentStudentClasses = new ArrayList<Classes>();
         currentStudentClasses = currentStudent.getSchedule();
 
-        //iterates through every class and determines the day
+        //iterates through every class and de termines the day
         for(Classes specClass : currentStudentClasses) {
             //does the class meet on the current day
             if(specClass.getDays().contains(dayLetter)) {
