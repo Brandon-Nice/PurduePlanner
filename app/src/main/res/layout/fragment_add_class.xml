@@ -55,6 +55,7 @@
         android:layout_height="wrap_content"
         android:hint="Search majors.."
         android:inputType="textVisiblePassword"
+        android:imeOptions="actionDone"
         android:paddingTop="50dp"/>
 
     <ListView

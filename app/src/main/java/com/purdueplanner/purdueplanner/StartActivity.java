@@ -492,13 +492,11 @@ public class StartActivity extends AppCompatActivity
             Intent init = new Intent(StartActivity.this, LoginActivity.class);
             init.putExtra("FromNavMenu", true);
             startActivity(init);
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_home) {
+            // Handle the Home Location
+            startActivity(new Intent(StartActivity.this, HomeLocationActivity.class));
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_contact) {
+        }else if (id == R.id.nav_contact) {
             startActivity(new Intent(StartActivity.this, ContactActivity.class));
         } else if (id == R.id.nav_about) {
             startActivity(new Intent(StartActivity.this, AboutActivity.class));

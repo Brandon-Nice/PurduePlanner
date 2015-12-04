@@ -67,23 +67,24 @@ public class ScheduleActivity extends FragmentActivity {
 
                 SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy"); //makes the date format for the date - month, day, and year
                 Calendar c = Calendar.getInstance(); //makes an instance of a calendar object
+                System.out.println(date.getTime());
                 c.set(date.getYear(), date.getMonth(), date.getDay()); //sets the year, month and date based on what the user selected
-                String currdate = dateFormat.format(c.getTime()); //formats the date based on our date format
-               // TextView dateText = (TextView) findViewById(R.id.selected_date); //sets the date text to the one on our xml file
-               // dateText.setText(currdate);
-                System.out.println("Currdate: " + currdate);
+                String currdate = dateFormat.format(date.getTime()); //formats the date based on our date format
+                TextView dateText = (TextView) findViewById(R.id.selected_date); //sets the date text to the one on our xml file
+                dateText.setText(currdate);
 
                 //Gets the day from the date
-                //TextView dayText = (TextView) findViewById(R.id.selected_day); //sets the day to the first letter abbreviation
-                SimpleDateFormat newDateFormat = new SimpleDateFormat("EEEEE", Locale.getDefault()); //Formats the day to display the full word.. i.e. "Monday"
-                String actualDay = newDateFormat.format(c.getTime()); //gets the time to adhere to the format
+                TextView dayText = (TextView) findViewById(R.id.selected_day); //sets the day to the first letter abbreviation
+                SimpleDateFormat newDateFormat = new SimpleDateFormat("EEEE", Locale.US); //Formats the day to display the full word.. i.e. "Monday"
+                String actualDay = newDateFormat.format(date.getTime()); //gets the time to adhere to the format
+                String letterDay = getLetter(actualDay);
 
-                //dayText.setText(actualDay);
+                dayText.setText(actualDay);
 
 
                 //in order to pass the 'currdate' (and the day letter) string in using a new Activity, we have to do this
                 Intent myIntent = new Intent(ScheduleActivity.this, DayScheduleActivity.class);
-                myIntent.putExtra("dayletter_key", actualDay); //adds the string to a HashMap like object
+                myIntent.putExtra("dayletter_key", letterDay); //adds the string to a HashMap like object
                 startActivity(myIntent); //goes to new activity once the button is pressed
             }
         };
@@ -149,6 +150,9 @@ public class ScheduleActivity extends FragmentActivity {
                 myIntent.putExtra("dayletter_key", actualDay); //adds the string to a HashMap like object
                 startActivity(myIntent); //goes to new activity once the button is pressed
             }
+
+
+
 
         });
 */
