@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    //TODO: Change the rest of the text, create icons for the actions
     <group android:checkableBehavior="single">
         <item android:id="@+id/nav_login" android:icon="@android:drawable/ic_menu_camera"
             android:title="Log Out" />
-        <item android:id="@+id/nav_gallery" android:icon="@android:drawable/ic_menu_gallery"
-            android:title="Gallery" />
-        <item android:id="@+id/nav_slideshow" android:icon="@android:drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
-        <item android:id="@+id/nav_manage" android:icon="@android:drawable/ic_menu_manage"
-            android:title="Tools" />
+        <item android:id="@+id/nav_home" android:icon="@android:drawable/ic_menu_gallery"
+            android:title="Home Location" />
     </group>
 
     <item android:title="About">
