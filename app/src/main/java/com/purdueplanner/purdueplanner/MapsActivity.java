@@ -1,9 +1,11 @@
 package com.purdueplanner.purdueplanner;
 
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -16,6 +18,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.jar.Manifest;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -57,7 +60,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-        //mMap.setMyLocationEnabled(true);
+        if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mMap.setMyLocationEnabled(true);
+        }
         //TODO: fix bug that makes the phone keep searching for GPS, not being able to navigate to a marker
 
         // Add a marker at Purdue University and move the camera
@@ -100,8 +105,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             , currentStudent.getLongitude()))
                     .title("Home"));
         }
+        //mMap.setMyLocationEnabled(false);
     }
-
     //getLetter code "requisitioned" from menane
     public String getLetter(String day){
         String letter = "";
