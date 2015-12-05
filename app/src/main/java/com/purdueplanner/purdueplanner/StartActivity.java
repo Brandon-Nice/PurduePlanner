@@ -335,8 +335,14 @@ public class StartActivity extends AppCompatActivity
                 else {
 
                     ArrayList<HashMap<String, String>> databaseClasses = null;
+                    HashMap<String, Double> homeLocation = null;
                     currentStudent.setId((String) val.get("id"));
                     databaseClasses = (ArrayList<HashMap<String, String>>) val.get("Schedule");
+                    homeLocation = (HashMap<String, Double>) val.get("HomeLocation");
+                    if(homeLocation != null) {
+                        currentStudent.setLongitude(homeLocation.get("Longitude"));
+                        currentStudent.setLatitude(homeLocation.get("Latitude"));
+                    }
                     /*for (HashMap.Entry<String, Object> entry : val.entrySet()) {
                         if (entry.getKey().equals("lastName")) {
                             currentStudent.setLastName((String) entry.getValue());

@@ -66,9 +66,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(purdueUni, 15));
 
 
-        //TODO: Code will go here if a user enters a home location. Have the user add their home address in the settings
-        //Get the user's home address from the settings page, then use getLatLng(streetAddress, false); to convert it and add a marker
-
 
         Date date = new Date();
         String currDay = (String) android.text.format.DateFormat.format("EEEE", date);
@@ -95,6 +92,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
 
             }
+        }
+
+        if (currentStudent.getLatitude() != 0) {
+            mMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(currentStudent.getLatitude()
+                            , currentStudent.getLongitude()))
+                    .title("Home"));
         }
     }
 

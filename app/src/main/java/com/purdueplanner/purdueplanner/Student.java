@@ -16,6 +16,10 @@ public class Student {
     private String lastName;
     // Stores the student's schedule of classes
     private ArrayList<Classes> schedule;
+    // Stores the student's Latitude
+    private double Latitude;
+    // Stores the student's Longitude
+    private double Longitude;
 
 
     // Declare an empty student
@@ -80,5 +84,16 @@ public class Student {
         this.schedule = schedule;
     }
 
+    // Set the student's Latitude
+    public void setLatitude(double Latitude) { this.Latitude = Latitude;}
+
+    // Set the student's Latitude
+    public void setLongitude(double Longitude) { this.Longitude = Longitude;}
+
+    // Get the student's Latitude
+    public double getLatitude() { return Latitude;}
+
+    // Get the student's Longitude
+    public double getLongitude() { return Longitude;}
 
 }

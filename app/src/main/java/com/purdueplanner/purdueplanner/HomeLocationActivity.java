@@ -15,6 +15,7 @@ import com.firebase.client.Firebase;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class HomeLocationActivity extends AppCompatActivity {
 
@@ -40,14 +41,14 @@ public class HomeLocationActivity extends AppCompatActivity {
                 addressInput.setText("");
                 zipInput.setText("");
                 countryInput.setText("");
-                startActivity(new Intent(HomeLocationActivity.this, StartActivity.class));
+                //Finish activity
+                finish();
             }
         });
 
         setButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("Inside onClick");
                 if (addressInput.toString().matches("") || zipInput.toString().matches("") || countryInput.toString().matches("")) {
                     Toast.makeText(getApplicationContext(), "Please enter all information", Toast.LENGTH_LONG).show();
                 }
@@ -55,26 +56,38 @@ public class HomeLocationActivity extends AppCompatActivity {
                     String fullAddress = addressInput.getText().toString()
                             + " " + zipInput.getText().toString() + " " + countryInput.getText().toString();
                     System.out.println(fullAddress);
-                    //TODO: Fix this
                     Geocoder coder = new Geocoder(getApplicationContext());
                     try {
                         ArrayList<Address> addresses = (ArrayList<Address>) coder.getFromLocationName(fullAddress, 1);
                         for (Address add : addresses) {
-                           if (fullAddress.equals("")) {
+                           if (addresses == null) {
                                 Toast.makeText(getApplicationContext(), "Location Not Found \n Please Try Again", Toast.LENGTH_LONG).show();
                             } else {
                                 double lat = add.getLatitude();
                                 double lon = add.getLongitude();
                                 Toast.makeText(getApplicationContext(), "Lat " + lat + "\n" + "Long " + lon, Toast.LENGTH_LONG).show();
 
-//                               //Add the lat and long to the student in database
-//                               Firebase.setAndroidContext(getActivity());
-//                               // Go to the current student in the firebase databse
-//                               Firebase ref = new Firebase("https://purduescheduler.firebaseio.com/Students/" + currentStudent.getId());
-//                               // Go to the current student's schedule in the firebase data
-//                               Firebase scheduleRef = ref.child("Schedule");
-//                               // Put all of the classes in the database for the students
-//                               scheduleRef.setValue(databaseClasses);
+                               //Add the lat and long to the student in database
+                               Firebase.setAndroidContext(getApplicationContext());
+                               Student currentStudent = null;
+                               if (getApplication() != null) {
+                                   currentStudent = ((MyApplication) getApplication()).getStudent();
+                               }
+                               // Go to the current student in the firebase databse
+                               Firebase ref = new Firebase("https://purduescheduler.firebaseio.com/Students/" + currentStudent.getId());
+                               // Go to the current student's home location in the firebase data
+                               Firebase scheduleRef = ref.child("HomeLocation");
+                               HashMap<String, Double> homelocation = new HashMap<String, Double>();
+                               homelocation.put("Latitude", lat);
+                               homelocation.put("Longitude", lon);
+                               // Put all of the classes in the database for the students
+                               scheduleRef.setValue(homelocation);
+
+                               currentStudent.setLatitude(lat);
+                               currentStudent.setLongitude(lon);
+                                System.out.println("done");
+                               //Finish activity
+                               finish();
                            }
                         }
                     } catch (IOException e) {
