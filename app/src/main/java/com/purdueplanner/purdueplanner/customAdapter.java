@@ -65,6 +65,7 @@ public class customAdapter extends BaseAdapter implements ListAdapter {
 
         //Handle buttons and add onClickListeners
         Button moreInfoBtn = (Button)view.findViewById(R.id.moreInfo_btn);
+        moreInfoBtn.setBackgroundResource(android.R.drawable.btn_default);
 
         moreInfoBtn.setOnClickListener(new View.OnClickListener(){
             @Override
