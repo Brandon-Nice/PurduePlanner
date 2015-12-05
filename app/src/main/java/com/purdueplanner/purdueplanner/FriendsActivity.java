@@ -55,17 +55,14 @@ public class FriendsActivity extends AppCompatActivity {
     static CallbackManager callbackManager;
     String previousText = "";
 
-    ArrayList<String> globalFriends = new ArrayList<>();
-    ArrayList<String> globalClasses = new ArrayList<>();
-    ArrayList<String> globalIDs = new ArrayList<>();
+    ArrayList<HashMap<String, String>> friends = new ArrayList();
+    ArrayList<HashMap<String, String>> removedFriends = new ArrayList();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends);
-        final ArrayList<String> friendsArrayList = new ArrayList<String>();
-        final ArrayAdapter friendAdapter = new ArrayAdapter(FriendsActivity.this, android.R.layout.simple_list_item_1, friendsArrayList);
-        final ArrayList<String> removedFriends = new ArrayList();
+        final FriendsAdapter friendAdapter = new FriendsAdapter(friends, FriendsActivity.this);
         new GraphRequest(
                 AccessToken.getCurrentAccessToken(),
                 "/me/friends",
@@ -79,69 +76,20 @@ public class FriendsActivity extends AppCompatActivity {
                         JSONObject test = response.getJSONObject();
                         try {
                             JSONArray friendsList = test.getJSONArray("data");
-                            ArrayList<HashMap<String, String>> classesPreSortList = new ArrayList<HashMap<String, String>>();
-                            for(int i = 0; i < friendsList.length(); i++) {             /* Loop to go through every friend that the user has and collect their classes */
-                                Log.i("User:  " + i, friendsList.get(i).toString());       /* Prints the name of each friend in the friendsList */
-                                JSONObject friendMap = (JSONObject)friendsList.get(i);
-                                friendsArrayList.add(i, friendMap.getString("name"));       /* ArrayList to store the name of every friend      */
-                                JSONObject a = friendsList.getJSONObject(i);
-
-                                final Firebase tempRef = new Firebase("https://purduescheduler.firebaseio.com/Students/" + a.get("id").toString());     /* Firebase reference to a user's friend    */
-
-                                tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                    public void onDataChange(DataSnapshot snapshot) {
-                                        Log.i("Snapshot: ", snapshot.toString());
-                                        HashMap<String, Object> tempHash = (HashMap) snapshot.getValue();        /* Hashmap of a Student's content   */
-                                        Log.i("Hashmap: ", tempHash.toString());
-                                        ArrayList<HashMap<String, String>> testList = (ArrayList<HashMap<String, String>>) tempHash.get("Schedule");     /* ArrayList of Hashmaps containing the */
-                                        if (testList != null) {
-                                            Log.i("ArrayList: ", testList.toString());
-
-                                            for (int j = 0; j < testList.size(); j++) {
-                                                testList.get(j).get("Course");       /* Major, Course, Section of each class    */
-                                                testList.get(j).get("Major");
-                                                testList.get(j).get("Section");
-                                                globalClasses.add(j, testList.get(j).get("Course") + testList.get(j).get("Major") + testList.get(j).get("Section"));
-                                            }
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onCancelled(FirebaseError firebaseError) {
-
-                                    }
-                                });
-
-                            }
-                            Comparator<HashMap<String, String>> classSorter = new Comparator<HashMap<String, String>>() {       /* Custom comparator to sort Hashmap of friends*/
-                                @Override
-                                public int compare(HashMap<String, String> lhs, HashMap<String, String> rhs) {
-                                    return lhs.get("lastName").compareTo(rhs.get("lastName"));
-                                }
-                            };
-
-                            for(int h = 0; h < friendsArrayList.size(); h++) {
-                                HashMap<String, String> classesPreSort = new HashMap<String, String>();
-                                String name = friendsArrayList.get(h);
+                            for (int i = 0; i < friendsList.length(); i++) {             /* Loop to go through every friend that the user has and collect their classes */
+                                JSONObject friendMap = (JSONObject)friendsList.get(i);String name = friendMap.getString("name");
                                 String firstName = name.substring(0, name.indexOf(" "));
-                                String lastName = name.substring(name.indexOf(" "));
-                                classesPreSort.put("firstName", firstName);
-                                classesPreSort.put("lastName", lastName);
-                                classesPreSortList.add(h, classesPreSort);
+                                String lastName = name.substring(name.indexOf(" ") + 1);
+                                String id = friendMap.getString("id");
+                                HashMap<String, String> friend = new HashMap();
+                                friend.put("firstName", firstName);
+                                friend.put("lastName", lastName);
+                                friend.put("id", id);
+                                friends.add(friend);
                             }
-                            Log.i("Unsorted hashmap: ", classesPreSortList.toString());
-                            Log.i("Friends Arraylist: ", friendsArrayList.toString());
-                            Collections.sort(classesPreSortList, classSorter);          /* Sorts hashmap of classes */
-                            Log.i("Sorted hashmap: ", classesPreSortList.toString());
+                            System.out.println(friends);
 
-                            friendsArrayList.clear();                                   /* Clears old ArrayList and adds the sorted entries from Hashmap */
-                            for(int k = 0; k < classesPreSortList.size(); k++) {
-                                friendsArrayList.add(k, classesPreSortList.get(k).get("firstName") + classesPreSortList.get(k).get("lastName"));
-
-                                globalFriends.add(k, classesPreSortList.get(k).toString());
-
-                                Log.i("checklist", "ARRAYLIST = " + friendsArrayList.get(k));
-                            }
+                            sortFriends(friends);
 
                             final ListView tempFriendsList = (ListView) findViewById(R.id.friendsList);   /* Sets names of friends to view */
                             friendAdapter.notifyDataSetChanged();
@@ -151,20 +99,12 @@ public class FriendsActivity extends AppCompatActivity {
                             tempFriendsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                   String name = (String)parent.getItemAtPosition(position); //gets name
-                                    /* Print position number */
-                                    Log.i("positionTest", "position = " + position);
-                                    Log.i("nametest", "this is the name: " + name);
-                                    Log.i("GLOBAL_FRIENDS_TEST", "globalfriends at position - " + position + " = " + globalFriends.get(position));
-                                    Log.i("GLOBAL_CLASSES_TEST", "globalclasses at position - " + position + " = " + globalClasses.get(position));
-                                    //String idNumber = (String)parent.getItemAtPosition(position);
-                                    //Log.i("idtest", "this is the id: " + idNumber);
-                                    //Log.i("arraylist check", "arrayList content = " + );
-
+                                    HashMap<String, String> friend = (HashMap) parent.getItemAtPosition(position);
+                                    String friendID = friend.get("id");
                                     //Goes to a new activity once a button is pressed
                                     Intent myIntent = new Intent(FriendsActivity.this, FriendClickedActivity.class);
                                     Bundle bundle = new Bundle();
-                                    bundle.putString("name_key", name);
+                                    bundle.putString("friendID", friendID);
                                     myIntent.putExtras(bundle);
                                     //myIntent.putExtra("name_key", name); //adds the string to a HashMap like object
                                     startActivity(myIntent); //goes to new activity once the button is pressed
@@ -205,24 +145,26 @@ public class FriendsActivity extends AppCompatActivity {
                 String currentText = cs.toString();
                 if (currentText.length() > previousText.length())
                 {
-                    for (int i = 0; i < friendsArrayList.size(); i++) {
-                        if (!friendsArrayList.get(i).toLowerCase().startsWith(currentText.toLowerCase())) {
-                            removedFriends.add(friendsArrayList.get(i));
-                            friendsArrayList.remove(i);
+                    for (int i = 0; i < friends.size(); i++) {
+                        String name = friends.get(i).get("firstName") + " "  + friends.get(i).get("lastName");
+                        if (!name.toLowerCase().contains(currentText.toLowerCase())) {
+                            removedFriends.add(friends.get(i));
+                            friends.remove(i);
                             i--;
                         }
                     }
                 }
                 else {
                     for (int i = 0; i < removedFriends.size(); i++) {
-                        if (removedFriends.get(i).toLowerCase().startsWith(currentText.toLowerCase())) {
-                            friendsArrayList.add(removedFriends.get(i));
+                        String name = removedFriends.get(i).get("firstName") + " "  + removedFriends.get(i).get("lastName");
+                        if (name.toLowerCase().contains(currentText.toLowerCase())) {
+                            friends.add(removedFriends.get(i));
                             removedFriends.remove(i);
                             i--;
                         }
                     }
                 }
-                Collections.sort(friendsArrayList);
+                sortFriends(friends);
                 friendAdapter.notifyDataSetChanged();
                 previousText = currentText;
             }
@@ -237,6 +179,21 @@ public class FriendsActivity extends AppCompatActivity {
             public void afterTextChanged(Editable arg0) {
             }
         });
+
+
+
+    }
+
+    public void sortFriends(ArrayList<HashMap<String, String>> list)
+    {
+        Comparator<HashMap<String, String>> classSorter = new Comparator<HashMap<String, String>>() {       /* Custom comparator to sort Hashmap of friends*/
+            @Override
+            public int compare(HashMap<String, String> lhs, HashMap<String, String> rhs) {
+                return lhs.get("lastName").compareTo(rhs.get("lastName"));
+            }
+        };
+
+        Collections.sort(list, classSorter);
 
     }
 

@@ -24,8 +24,8 @@ public class FriendClickedActivity extends AppCompatActivity {
 
         ArrayList<String> test = new ArrayList<>();
         Bundle extras = getIntent().getExtras();
-        String name = extras.getString("name_key");
-        test.add(0, name);
+        String id = extras.getString("friendID");
+        test.add(0, id);
 
         friendView = (ListView) findViewById(R.id.friendClassView);
         adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, test);
