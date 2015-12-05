@@ -2,6 +2,7 @@ package com.purdueplanner.purdueplanner;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -21,6 +22,7 @@ public class ClassInformationActivity extends AppCompatActivity {
         // It sets the content to activity_add_class because I want to reuse and its easier than making its own layout
         // when its just going to be the same
         setContentView(R.layout.activity_class_information);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Class Information");

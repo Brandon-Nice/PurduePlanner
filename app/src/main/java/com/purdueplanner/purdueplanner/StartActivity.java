@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -204,6 +205,7 @@ public class StartActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         FacebookSdk.sdkInitialize(this.getApplicationContext());
         setSupportActionBar(toolbar);
@@ -362,6 +364,7 @@ public class StartActivity extends AppCompatActivity
                                 String major = currentDBClass.get("Major");
                                 String course = currentDBClass.get("Course");
                                 String section = currentDBClass.get("Section");
+
                                 //System.out.println(major + " " + course + " " + section);
                                 Firebase ref = new Firebase("https://purduescheduler.firebaseio.com/Classes/" + major + "/" +
                                         course + "/" + section);
@@ -408,13 +411,9 @@ public class StartActivity extends AppCompatActivity
                                         }
 
                                         if (addClassForDay) {
+                                            currentDBClass.put("StartTime", currentClass.getStartTime());
                                             databaseAdapterList.add(currentDBClass);
-                                            Comparator<HashMap<String, String>> hashMapComparator = new Comparator<HashMap<String, String>>() {
-                                                public int compare(HashMap<String, String> h1, HashMap<String, String> h2) {
-                                                    return (h1.get("Major") + h1.get("Course") + h1.get("Section")).compareTo(h2.get("Major") + h2.get("Course") + h2.get("Section"));
-                                                }
-                                            };
-                                            Collections.sort(databaseAdapterList, hashMapComparator);
+                                            sortClasses(databaseAdapterList);
                                             ((customAdapter) dayListView.getAdapter()).notifyDataSetChanged();
                                         }
 
@@ -541,15 +540,11 @@ public class StartActivity extends AppCompatActivity
                     currentDBClass.put("Major", currentClass.getMajor());
                     currentDBClass.put("Course", currentClass.getCourseNum());
                     currentDBClass.put("Section", currentClass.getSectionNum());
+                    currentDBClass.put("StartTime", currentClass.getStartTime());
                     databaseAdapterList.add(currentDBClass);
                 }
             }
-            Comparator<HashMap<String, String>> hashMapComparator = new Comparator<HashMap<String, String>>() {
-                public int compare(HashMap<String, String> h1, HashMap<String, String> h2) {
-                    return (h1.get("Major") + h1.get("Course") + h1.get("Section")).compareTo(h2.get("Major") + h2.get("Course") + h2.get("Section"));
-                }
-            };
-            Collections.sort(databaseAdapterList, hashMapComparator);
+            sortClasses(databaseAdapterList);
             customAdapter arrayAdapter = new customAdapter(databaseAdapterList, this);
             dayListView.setAdapter(arrayAdapter);
             super.onRestart();
@@ -570,6 +565,32 @@ public class StartActivity extends AppCompatActivity
 
             super.onRestart();
         }
+    }
+
+    private void sortClasses(ArrayList<HashMap<String, String>> classes)
+    {
+        Comparator<HashMap<String, String>> byTime = new Comparator<HashMap<String, String>>() {
+            public int compare(HashMap<String, String> h1, HashMap<String, String> h2) {
+                int firstColon = h1.get("StartTime").indexOf(":");
+                int firstSpace = h1.get("StartTime").indexOf(" ");
+                int firstStartTime = Integer.parseInt(h1.get("StartTime").substring(0, firstColon) +
+                        h1.get("StartTime").substring(firstColon + 1, firstSpace));
+                if (h1.get("StartTime").contains("pm") && firstStartTime < 1200)
+                {
+                    firstStartTime += 1200;
+                }
+                int secondColon = h2.get("StartTime").indexOf(":");
+                int secondSpace = h2.get("StartTime").indexOf(" ");
+                int secondStartTime = Integer.parseInt(h2.get("StartTime").substring(0, secondColon) +
+                        h2.get("StartTime").substring(secondColon + 1, secondSpace));
+                if (h2.get("StartTime").contains("pm") && secondStartTime < 1200)
+                {
+                    secondStartTime += 1200;
+                }
+                return (firstStartTime - secondStartTime);
+            }
+        };
+        Collections.sort(classes, byTime);
     }
 
 }

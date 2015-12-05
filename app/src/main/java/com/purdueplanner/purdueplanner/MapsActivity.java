@@ -1,5 +1,6 @@
 package com.purdueplanner.purdueplanner;
 
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -7,17 +8,20 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 
+import com.firebase.client.Firebase;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.jar.Manifest;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -29,20 +33,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        //Tried setting a on long click listener, but gets null pointer exception
-//        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-//            @Override
-//            public void onMapLongClick(LatLng point) {
-//                mMap.addMarker(new MarkerOptions()
-//                        .position(point)
-//                        .title("Home")
-//                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
-//            }
-//        });
+
 
     }
 
@@ -63,11 +59,42 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
         }
-        //TODO: fix bug that makes the phone keep searching for GPS, not being able to navigate to a marker
+        mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+            @Override
+            public void onMarkerDragStart(Marker marker) {
 
-        // Add a marker at Purdue University and move the camera
+            }
+            @Override
+            public void onMarkerDrag(Marker marker) {
+
+            }
+            @Override
+            public void onMarkerDragEnd(Marker marker) {
+                LatLng latlng = marker.getPosition();
+                double lat = latlng.latitude;
+                double lon = latlng.longitude;
+                //Add the lat and long to the student in database
+                Firebase.setAndroidContext(getApplicationContext());
+                Student currentStudent = null;
+                if (getApplication() != null) {
+                    currentStudent = ((MyApplication) getApplication()).getStudent();
+                }
+                // Go to the current student in the firebase databse
+                Firebase ref = new Firebase("https://purduescheduler.firebaseio.com/Students/" + currentStudent.getId());
+                // Go to the current student's home location in the firebase data
+                Firebase scheduleRef = ref.child("HomeLocation");
+                HashMap<String, Double> homelocation = new HashMap<String, Double>();
+                homelocation.put("Latitude", lat);
+                homelocation.put("Longitude", lon);
+                // Put all of the classes in the database for the students
+                scheduleRef.setValue(homelocation);
+
+                currentStudent.setLatitude(lat);
+                currentStudent.setLongitude(lon);
+            }
+        });
+        // Set the view to Purdue University and move the camera
         LatLng purdueUni = new LatLng(40.427976, -86.915479);
-        //mMap.addMarker(new MarkerOptions().position(purdueUni).title("Marker at Purdue"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(purdueUni, 15));
 
 
@@ -100,12 +127,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         if (currentStudent.getLatitude() != 0) {
-            mMap.addMarker(new MarkerOptions()
+            Marker homeMarker = mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(currentStudent.getLatitude()
                             , currentStudent.getLongitude()))
-                    .title("Home"));
+                    .title("Home")
+                    .draggable(true)
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
         }
-        //mMap.setMyLocationEnabled(false);
+
     }
     //getLetter code "requisitioned" from menane
     public String getLetter(String day){
