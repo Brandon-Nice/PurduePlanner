@@ -68,21 +68,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //TODO: Code will go here if a user enters a home location. Have the user add their home address in the settings
         //Get the user's home address from the settings page, then use getLatLng(streetAddress, false); to convert it and add a marker
-       // if(!((MyApplication) getApplication()).getStudent().getHomeLocation.contains("null")) {
-        Geocoder coder = new Geocoder(this);
-        try {
-            ArrayList<Address> addresses = (ArrayList<Address>) coder.getFromLocationName("Address",50);
-            for(Address add: addresses) {
-               // if(statement) {
-               //     add.getLongitude();
-               //     add.getLatitude();
-               // }
-            }
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        //}
+
 
         Date date = new Date();
         String currDay = (String) android.text.format.DateFormat.format("EEEE", date);

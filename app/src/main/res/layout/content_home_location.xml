@@ -11,4 +11,100 @@
     tools:context="com.purdueplanner.purdueplanner.HomeLocationActivity">
 
 
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPostalAddress"
+        android:ems="10"
+        android:id="@+id/address"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="85dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/zip"
+        android:layout_below="@+id/address"
+        android:layout_alignLeft="@+id/address"
+        android:layout_alignStart="@+id/address"
+        android:layout_marginTop="57dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/country"
+        android:ems="10"
+        android:layout_below="@+id/zip"
+        android:layout_alignLeft="@+id/zip"
+        android:layout_alignStart="@+id/zip"
+        android:layout_marginTop="57dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="false" />
+
+    <TextView
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Address:"
+        android:id="@+id/addressText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/address"
+        android:layout_alignBottom="@id/address"/>
+
+    <TextView
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Zip Code:"
+        android:id="@+id/zipText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@id/zip"
+        android:layout_alignBottom="@id/zip"/>
+
+    <TextView
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Country:"
+        android:id="@+id/countryText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@id/country"
+        android:layout_alignBottom="@id/country"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Enter your home address"
+        android:id="@+id/homeaddressText"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancel"
+        android:id="@+id/cancelButton"
+        android:layout_marginTop="55dp"
+        android:layout_below="@+id/country"
+        android:layout_alignRight="@+id/homeaddressText"
+        android:layout_alignEnd="@+id/homeaddressText" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Set Address"
+        android:id="@+id/setButton"
+        android:layout_alignTop="@+id/cancelButton"
+        android:layout_alignLeft="@+id/homeaddressText"
+        android:layout_alignStart="@+id/homeaddressText" />
+
 </RelativeLayout>
