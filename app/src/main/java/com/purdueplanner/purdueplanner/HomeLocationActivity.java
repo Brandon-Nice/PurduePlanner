@@ -4,17 +4,14 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
+import com.firebase.client.Firebase;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -53,22 +50,31 @@ public class HomeLocationActivity extends AppCompatActivity {
                 System.out.println("Inside onClick");
                 if (addressInput.toString().matches("") || zipInput.toString().matches("") || countryInput.toString().matches("")) {
                     Toast.makeText(getApplicationContext(), "Please enter all information", Toast.LENGTH_LONG).show();
-                    System.out.println("Inside if empty");
                 }
                 else {
-                    System.out.println("Inside else");
+                    String fullAddress = addressInput.getText().toString()
+                            + " " + zipInput.getText().toString() + " " + countryInput.getText().toString();
+                    System.out.println(fullAddress);
                     //TODO: Fix this
                     Geocoder coder = new Geocoder(getApplicationContext());
                     try {
-                        ArrayList<Address> addresses = (ArrayList<Address>) coder.getFromLocationName(addressInput.toString()
-                                + " " + zipInput.toString() + " " + countryInput.toString(), 1);
+                        ArrayList<Address> addresses = (ArrayList<Address>) coder.getFromLocationName(fullAddress, 1);
                         for (Address add : addresses) {
-                           if (addresses == null) {
+                           if (fullAddress.equals("")) {
                                 Toast.makeText(getApplicationContext(), "Location Not Found \n Please Try Again", Toast.LENGTH_LONG).show();
                             } else {
                                 double lat = add.getLatitude();
                                 double lon = add.getLongitude();
-                                Toast.makeText(getApplicationContext(), "Lat" + lat + "\n" + "Long" + lon, Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), "Lat " + lat + "\n" + "Long " + lon, Toast.LENGTH_LONG).show();
+
+//                               //Add the lat and long to the student in database
+//                               Firebase.setAndroidContext(getActivity());
+//                               // Go to the current student in the firebase databse
+//                               Firebase ref = new Firebase("https://purduescheduler.firebaseio.com/Students/" + currentStudent.getId());
+//                               // Go to the current student's schedule in the firebase data
+//                               Firebase scheduleRef = ref.child("Schedule");
+//                               // Put all of the classes in the database for the students
+//                               scheduleRef.setValue(databaseClasses);
                            }
                         }
                     } catch (IOException e) {
