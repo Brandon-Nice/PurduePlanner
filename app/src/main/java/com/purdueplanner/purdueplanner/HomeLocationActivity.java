@@ -1,5 +1,6 @@
 package com.purdueplanner.purdueplanner;
 
+import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
@@ -7,6 +8,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -34,6 +37,7 @@ public class HomeLocationActivity extends AppCompatActivity {
         final EditText zipInput = (EditText) findViewById(R.id.zip);
         final EditText countryInput = (EditText) findViewById(R.id.country);
 
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
