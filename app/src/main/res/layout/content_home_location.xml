@@ -20,6 +20,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:imeOptions="actionNext"
         android:layout_marginTop="85dp" />
 
     <EditText
@@ -31,6 +32,7 @@
         android:layout_below="@+id/address"
         android:layout_alignLeft="@+id/address"
         android:layout_alignStart="@+id/address"
+        android:imeOptions="actionNext"
         android:layout_marginTop="57dp" />
 
     <EditText
@@ -108,5 +110,12 @@
         android:layout_alignTop="@+id/cancelButton"
         android:layout_alignLeft="@+id/homeaddressText"
         android:layout_alignStart="@+id/homeaddressText" />
+
+    <View
+        android:id="@+id/focus_thief"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true" />
 
 </RelativeLayout>

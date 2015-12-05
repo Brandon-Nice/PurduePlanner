@@ -5,9 +5,12 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -84,47 +87,83 @@ public class AddClassFragment extends Fragment {
 
         inputSearch = (EditText) v.findViewById(R.id.inputSearch);
 
-        inputSearch.addTextChangedListener(new TextWatcher() {
 
+        classListView.setFocusable(false);
+        classListView.setFocusableInTouchMode(false);
+        inputSearch.setFocusable(true);
+        inputSearch.setFocusableInTouchMode(true);
+
+        inputSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
-                // When user changed the Text
-                String currentText = cs.toString();
-                if (currentText.length() > previousText.length())
-                {
-                    for (int i = 0; i < classArrayList.size(); i++) {
-                        if (!classArrayList.get(i).toLowerCase().startsWith(currentText.toLowerCase())) {
-                            removedClasses.add(classArrayList.get(i));
-                            classArrayList.remove(i);
-                            i--;
-                        }
-                    }
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    System.out.println("hello");
+                    hideKeyboard(v);
+                    inputSearch.setFocusable(false);
+                    inputSearch.setFocusableInTouchMode(false);
+                    classListView.setFocusable(true);
+                    classListView.setFocusableInTouchMode(true);
+
+
+                    return true;
                 }
-                else {
-                    for (int i = 0; i < removedClasses.size(); i++) {
-                        if (removedClasses.get(i).toLowerCase().startsWith(currentText.toLowerCase())) {
-                            classArrayList.add(removedClasses.get(i));
-                            removedClasses.remove(i);
-                            i--;
-                        }
-                    }
-                }
-                Collections.sort(classArrayList);
-                classAdapter.notifyDataSetChanged();
-                previousText = currentText;
-
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
-                                          int arg3) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable arg0) {
+                return false;
             }
         });
+
+        inputSearch.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                classListView.setFocusable(false);
+                classListView.setFocusableInTouchMode(false);
+                inputSearch.setFocusable(true);
+                inputSearch.setFocusableInTouchMode(true);
+                return false;
+            }
+        });
+
+
+        inputSearch.addTextChangedListener(new TextWatcher() {
+           @Override
+           public void onTextChanged (CharSequence cs,int arg1, int arg2, int arg3){
+               // When user changed the Text
+               String currentText = cs.toString();
+               if (currentText.length() > previousText.length()) {
+                   for (int i = 0; i < classArrayList.size(); i++) {
+                       if (!classArrayList.get(i).toLowerCase().startsWith(currentText.toLowerCase())) {
+                           removedClasses.add(classArrayList.get(i));
+                           classArrayList.remove(i);
+                           i--;
+                       }
+                   }
+               } else {
+                   for (int i = 0; i < removedClasses.size(); i++) {
+                       if (removedClasses.get(i).toLowerCase().startsWith(currentText.toLowerCase())) {
+                           classArrayList.add(removedClasses.get(i));
+                           removedClasses.remove(i);
+                           i--;
+                       }
+                   }
+               }
+               Collections.sort(classArrayList);
+               classAdapter.notifyDataSetChanged();
+               previousText = currentText;
+
+           }
+
+           @Override
+           public void beforeTextChanged (CharSequence arg0,int arg1, int arg2,
+                                          int arg3){
+
+           }
+
+           @Override
+           public void afterTextChanged (Editable arg0){
+           }
+        }
+
+        );
         return v;
     }
 

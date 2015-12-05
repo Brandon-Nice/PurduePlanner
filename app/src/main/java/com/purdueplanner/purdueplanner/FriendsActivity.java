@@ -1,5 +1,6 @@
 package com.purdueplanner.purdueplanner;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,7 +11,11 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -63,6 +68,7 @@ public class FriendsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends);
         final FriendsAdapter friendAdapter = new FriendsAdapter(friends, FriendsActivity.this);
+        final ListView tempFriendsList = (ListView) findViewById(R.id.friendsList);   /* Sets names of friends to view */
         new GraphRequest(
                 AccessToken.getCurrentAccessToken(),
                 "/me/friends",
@@ -91,7 +97,6 @@ public class FriendsActivity extends AppCompatActivity {
 
                             sortFriends(friends);
 
-                            final ListView tempFriendsList = (ListView) findViewById(R.id.friendsList);   /* Sets names of friends to view */
                             friendAdapter.notifyDataSetChanged();
                             tempFriendsList.setAdapter(friendAdapter);
 
@@ -135,7 +140,42 @@ public class FriendsActivity extends AppCompatActivity {
                 }
         ).executeAsync();
 
-        EditText inputSearch = (EditText) findViewById(R.id.inputSearch);
+        final EditText inputSearch = (EditText) findViewById(R.id.inputSearch);
+
+        tempFriendsList.setFocusable(false);
+        tempFriendsList.setFocusableInTouchMode(false);
+        inputSearch.setFocusable(true);
+        inputSearch.setFocusableInTouchMode(true);
+
+        inputSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    System.out.println("hello");
+                    hideKeyboard(v);
+                    inputSearch.setFocusable(false);
+                    inputSearch.setFocusableInTouchMode(false);
+                    tempFriendsList.setFocusable(true);
+                    tempFriendsList.setFocusableInTouchMode(true);
+
+
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        inputSearch.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                tempFriendsList.setFocusable(false);
+                tempFriendsList.setFocusableInTouchMode(false);
+                inputSearch.setFocusable(true);
+                inputSearch.setFocusableInTouchMode(true);
+                return false;
+            }
+        });
 
         inputSearch.addTextChangedListener(new TextWatcher() {
 
@@ -195,6 +235,11 @@ public class FriendsActivity extends AppCompatActivity {
 
         Collections.sort(list, classSorter);
 
+    }
+
+    public void hideKeyboard(View view) {
+        InputMethodManager inputMethodManager =(InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
 }

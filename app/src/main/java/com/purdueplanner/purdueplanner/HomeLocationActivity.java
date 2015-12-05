@@ -1,5 +1,6 @@
 package com.purdueplanner.purdueplanner;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
@@ -7,11 +8,15 @@ import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.client.Firebase;
@@ -31,13 +36,91 @@ public class HomeLocationActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Home Location");
 
-        Button setButton = (Button) findViewById(R.id.setButton);
+        final Button setButton = (Button) findViewById(R.id.setButton);
         Button cancelButton = (Button) findViewById(R.id.cancelButton);
         final EditText addressInput = (EditText) findViewById(R.id.address);
         final EditText zipInput = (EditText) findViewById(R.id.zip);
         final EditText countryInput = (EditText) findViewById(R.id.country);
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+
+        final View focusTheif = findViewById(R.id.focus_thief);
+
+        addressInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                    System.out.println("hello");
+                    addressInput.clearFocus();
+                    zipInput.requestFocus(zipInput.FOCUS_DOWN);
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        addressInput.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (getCurrentFocus() != null)
+                {
+                    getCurrentFocus().clearFocus();
+                }
+                addressInput.requestFocus(addressInput.FOCUS_DOWN);
+                return false;
+            }
+        });
+
+        zipInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                    zipInput.clearFocus();
+                    countryInput.requestFocus(addressInput.FOCUS_DOWN);
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        zipInput.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (getCurrentFocus() != null)
+                {
+                    getCurrentFocus().clearFocus();
+                }
+                zipInput.requestFocus(zipInput.FOCUS_DOWN);
+                return false;
+            }
+        });
+
+        countryInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    hideKeyboard(v);
+                    countryInput.clearFocus();
+                    focusTheif.requestFocus(focusTheif.FOCUS_DOWN);
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        countryInput.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                countryInput.clearFocus();
+                focusTheif.requestFocus(focusTheif.FOCUS_DOWN);
+                return false;
+            }
+        });
+
+
 
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,6 +184,11 @@ public class HomeLocationActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void hideKeyboard(View view) {
+        InputMethodManager inputMethodManager =(InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
 }
