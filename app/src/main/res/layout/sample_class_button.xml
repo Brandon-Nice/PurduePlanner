@@ -10,7 +10,7 @@
         android:paddingLeft="8dp"
         android:textSize="30dp"
         android:textStyle="bold"
-        android:text=""
+        android:textColor="@color/caldroid_black"
         android:layout_alignBottom="@+id/moreInfo_btn"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
@@ -22,10 +22,13 @@
         android:id="@+id/moreInfo_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
         android:text=". . ."
         android:layout_alignParentLeft="false"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="false" />
+        android:layout_alignParentEnd="false"
+        android:textColor="@color/caldroid_black"/>
 
 
 

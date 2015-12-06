@@ -1,5 +1,6 @@
 package com.purdueplanner.purdueplanner;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ListView;
@@ -14,6 +15,7 @@ public class ClassInfo extends AppCompatActivity {
         Firebase ref = new Firebase("https://purduescheduler.firebaseio.com/Classes/CS/CS 307000 : Software Engineering");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         ListView dayListView = (ListView) findViewById(R.id.dayList);
         ArrayList<String> classList = new ArrayList<>();
         //classList.add(ref.getKey(courseNum));

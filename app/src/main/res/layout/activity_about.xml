@@ -7,12 +7,47 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.purdueplanner.purdueplanner.AboutActivity">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="The Purdue Planner application was created by CS 307 students Milia Enane, Jacob Losin, Brandon Nice, Michael Rollberg, and Kenny Tam"
+        android:id="@+id/textView2"
+        android:textColor="#020202"
+        android:layout_below="@+id/textView5"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="About Purdue Planner"
-        android:id="@+id/textView2"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="About Us"
+        android:id="@+id/textView5"
+        android:textSize="26dp"
+        android:layout_below="@+id/textView6"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="43dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="This application allows Purdue students to keep track of their schedule, navigate to classes, and compare their schedules with their friends. "
+        android:id="@+id/textView6"
+        android:textColor="#000000"
+        android:layout_below="@+id/textView7"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="About The App"
+        android:id="@+id/textView7"
+        android:textSize="26dp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
 </RelativeLayout>
