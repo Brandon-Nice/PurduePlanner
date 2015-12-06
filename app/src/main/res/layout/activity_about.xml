@@ -59,8 +59,8 @@
         android:id="@+id/textView9"
         android:textStyle="italic"
         android:textSize="15dp"
-        android:layout_marginBottom="41dp"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>
