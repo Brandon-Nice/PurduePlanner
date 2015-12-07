@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#cc6699</color>
     <color name="colorAccent">#edbe00</color>
     <color name="actionBarText">#ff0066</color>
+    <color name="ScheduleColor">#ab9316</color>
 </resources>

@@ -77,20 +77,12 @@ public class viewClasses extends AppCompatActivity implements WeekView.MonthChan
         final String currDay = (String) android.text.format.DateFormat.format("EEEE", new Date());
 
         System.out.println(visibleDays);
+        int minTime = 100;
         if (visibleDays == 7)
         {
             mWeekView.setFirstDayOfWeek(Calendar.SUNDAY);
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        }
-        else
-        {
-            Calendar day = Calendar.getInstance();
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            day.set(Calendar.DAY_OF_WEEK, ((Date) intent.getExtras().get("Day")).getDay() + 1);
-            mWeekView.goToDate(day);
-        }
-        int minTime = 100;
-        if (visibleDays == 7) {
+
             for (int i = 0; i < classList.size(); i++) {
                 if (!classList.get(i).getStartTime().equals("TBA")) {
                     HashMap<String, Integer> times = interpretTime(classList.get(i).getStartTime());
@@ -104,34 +96,36 @@ public class viewClasses extends AppCompatActivity implements WeekView.MonthChan
         else
         {
             Calendar day = Calendar.getInstance();
-            day.set(Calendar.DAY_OF_WEEK, ((Date) intent.getExtras().get("Day")).getDay());
-            System.out.println(day.get(Calendar.DAY_OF_WEEK));
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            day.set(Calendar.DAY_OF_WEEK, ((Date) intent.getExtras().get("Day")).getDay() + 1);
+            mWeekView.goToDate(day);
+
             String letter = null;
-            if (day.get(Calendar.DAY_OF_WEEK) == 0 || day.get(Calendar.DAY_OF_WEEK) == 7)
+            if (day.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)
             {
                 letter = "U";
             }
-            else if (day.get(Calendar.DAY_OF_WEEK) == 1)
+            else if (day.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY)
             {
                 letter = "M";
             }
-            else if (day.get(Calendar.DAY_OF_WEEK) == 2)
+            else if (day.get(Calendar.DAY_OF_WEEK) == Calendar.TUESDAY)
             {
                 letter = "T";
             }
-            else if (day.get(Calendar.DAY_OF_WEEK) == 3)
+            else if (day.get(Calendar.DAY_OF_WEEK) == Calendar.WEDNESDAY)
             {
                 letter = "W";
             }
-            else if (day.get(Calendar.DAY_OF_WEEK) == 4)
+            else if (day.get(Calendar.DAY_OF_WEEK) == Calendar.THURSDAY)
             {
                 letter = "R";
             }
-            else if (day.get(Calendar.DAY_OF_WEEK) == 5)
+            else if (day.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY)
             {
                 letter = "F";
             }
-            else if (day.get(Calendar.DAY_OF_WEEK) == 6)
+            else if (day.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)
             {
                 letter = "S";
             }
