@@ -128,203 +128,57 @@ public class FriendClickedActivity extends AppCompatActivity implements WeekView
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                //System.out.println(parent.getItemAtPosition(position));
+                System.out.println(parent.getItemAtPosition(position));
                 if (parent.getItemAtPosition(position).equals("Sunday")) {
                     Calendar day = Calendar.getInstance();
                     day.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
                     mWeekView.goToDate(day);
 
-                    int minTime = 100;
-                    for (int i = 0; i < currentStudentClasses.size(); i++) {
-                        if (currentStudentClasses.get(i).getDays().contains("U")) {
-                            if (!currentStudentClasses.get(i).getStartTime().equals("TBA")) {
-                                HashMap<String, Integer> times = interpretTime(currentStudentClasses.get(i).getStartTime());
-                                if (minTime > times.get("Hour")) {
-                                    minTime = times.get("Hour");
-                                }
-                            }
-                        }
-                    }
-                    for (int i = 0; i < friendsClasses.size(); i++) {
-                        if (friendsClasses.get(i).getDays().contains("U")) {
-                            if (!friendsClasses.get(i).getStartTime().equals("TBA")) {
-                                HashMap<String, Integer> times = interpretTime(friendsClasses.get(i).getStartTime());
-                                if (minTime > times.get("Hour")) {
-                                    minTime = times.get("Hour");
-                                }
-                            }
-                        }
-                    }
-                    mWeekView.goToHour(minTime);
+                    setMinTime("Sunday");
                 }
                 else if (parent.getItemAtPosition(position).equals("Monday")) {
                     Calendar day = Calendar.getInstance();
                     day.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
                     mWeekView.goToDate(day);
 
-                    int minTime = 100;
-                    for (int i = 0; i < currentStudentClasses.size(); i++) {
-                        if (currentStudentClasses.get(i).getDays().contains("M")) {
-                            if (!currentStudentClasses.get(i).getStartTime().equals("TBA")) {
-                                HashMap<String, Integer> times = interpretTime(currentStudentClasses.get(i).getStartTime());
-                                if (minTime > times.get("Hour")) {
-                                    minTime = times.get("Hour");
-                                }
-                            }
-                        }
-                    }
-                    for (int i = 0; i < friendsClasses.size(); i++) {
-                        if (friendsClasses.get(i).getDays().contains("M")) {
-                            if (!friendsClasses.get(i).getStartTime().equals("TBA")) {
-                                HashMap<String, Integer> times = interpretTime(friendsClasses.get(i).getStartTime());
-                                if (minTime > times.get("Hour")) {
-                                    minTime = times.get("Hour");
-                                }
-                            }
-                        }
-                    }
-                    mWeekView.goToHour(minTime);
+                    setMinTime("Monday");
                 }
                 else if (parent.getItemAtPosition(position).equals("Tuesday")) {
                     Calendar day = Calendar.getInstance();
                     day.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);
                     mWeekView.goToDate(day);
 
-                    int minTime = 100;
-                    for (int i = 0; i < currentStudentClasses.size(); i++) {
-                        if (currentStudentClasses.get(i).getDays().contains("T")) {
-                            if (!currentStudentClasses.get(i).getStartTime().equals("TBA")) {
-                                HashMap<String, Integer> times = interpretTime(currentStudentClasses.get(i).getStartTime());
-                                if (minTime > times.get("Hour")) {
-                                    minTime = times.get("Hour");
-                                }
-                            }
-                        }
-                    }
-                    for (int i = 0; i < friendsClasses.size(); i++) {
-                        if (friendsClasses.get(i).getDays().contains("T")) {
-                            if (!friendsClasses.get(i).getStartTime().equals("TBA")) {
-                                HashMap<String, Integer> times = interpretTime(friendsClasses.get(i).getStartTime());
-                                if (minTime > times.get("Hour")) {
-                                    minTime = times.get("Hour");
-                                }
-                            }
-                        }
-                    }
-                    mWeekView.goToHour(minTime);
+                    setMinTime("Tuesday");
                 }
                 else if (parent.getItemAtPosition(position).equals("Wednesday")) {
                     Calendar day = Calendar.getInstance();
                     day.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
                     mWeekView.goToDate(day);
 
-                    int minTime = 100;
-                    for (int i = 0; i < currentStudentClasses.size(); i++) {
-                        if (currentStudentClasses.get(i).getDays().contains("W")) {
-                            if (!currentStudentClasses.get(i).getStartTime().equals("TBA")) {
-                                HashMap<String, Integer> times = interpretTime(currentStudentClasses.get(i).getStartTime());
-                                if (minTime > times.get("Hour")) {
-                                    minTime = times.get("Hour");
-                                }
-                            }
-                        }
-                    }
-                    for (int i = 0; i < friendsClasses.size(); i++) {
-                        if (friendsClasses.get(i).getDays().contains("W")) {
-                            if (!friendsClasses.get(i).getStartTime().equals("TBA")) {
-                                HashMap<String, Integer> times = interpretTime(friendsClasses.get(i).getStartTime());
-                                if (minTime > times.get("Hour")) {
-                                    minTime = times.get("Hour");
-                                }
-                            }
-                        }
-                    }
-                    mWeekView.goToHour(minTime);
+                    setMinTime("Wednesday");
                 }
                 else if (parent.getItemAtPosition(position).equals("Thursday")) {
                     Calendar day = Calendar.getInstance();
                     day.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
                     mWeekView.goToDate(day);
 
-                    int minTime = 100;
-                    for (int i = 0; i < currentStudentClasses.size(); i++) {
-                        if (currentStudentClasses.get(i).getDays().contains("R")) {
-                            if (!currentStudentClasses.get(i).getStartTime().equals("TBA")) {
-                                HashMap<String, Integer> times = interpretTime(currentStudentClasses.get(i).getStartTime());
-                                if (minTime > times.get("Hour")) {
-                                    minTime = times.get("Hour");
-                                }
-                            }
-                        }
-                    }
-                    for (int i = 0; i < friendsClasses.size(); i++) {
-                        if (friendsClasses.get(i).getDays().contains("R")) {
-                            if (!friendsClasses.get(i).getStartTime().equals("TBA")) {
-                                HashMap<String, Integer> times = interpretTime(friendsClasses.get(i).getStartTime());
-                                if (minTime > times.get("Hour")) {
-                                    minTime = times.get("Hour");
-                                }
-                            }
-                        }
-                    }
-                    mWeekView.goToHour(minTime);
+                    setMinTime("Thursday");
                 }
                 else if (parent.getItemAtPosition(position).equals("Friday")) {
                     Calendar day = Calendar.getInstance();
                     day.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
                     mWeekView.goToDate(day);
 
-                    int minTime = 100;
-                    for (int i = 0; i < currentStudentClasses.size(); i++) {
-                        if (currentStudentClasses.get(i).getDays().contains("F")) {
-                            if (!currentStudentClasses.get(i).getStartTime().equals("TBA")) {
-                                HashMap<String, Integer> times = interpretTime(currentStudentClasses.get(i).getStartTime());
-                                if (minTime > times.get("Hour")) {
-                                    minTime = times.get("Hour");
-                                }
-                            }
-                        }
-                    }
-                    for (int i = 0; i < friendsClasses.size(); i++) {
-                        if (friendsClasses.get(i).getDays().contains("F")) {
-                            if (!friendsClasses.get(i).getStartTime().equals("TBA")) {
-                                HashMap<String, Integer> times = interpretTime(friendsClasses.get(i).getStartTime());
-                                if (minTime > times.get("Hour")) {
-                                    minTime = times.get("Hour");
-                                }
-                            }
-                        }
-                    }
-                    mWeekView.goToHour(minTime);
+                    setMinTime("Friday");
                 }
                 else if (parent.getItemAtPosition(position).equals("Saturday")) {
                     Calendar day = Calendar.getInstance();
                     day.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
                     mWeekView.goToDate(day);
 
-                    int minTime = 100;
-                    for (int i = 0; i < currentStudentClasses.size(); i++) {
-                        if (currentStudentClasses.get(i).getDays().contains("S")) {
-                            if (!currentStudentClasses.get(i).getStartTime().equals("TBA")) {
-                                HashMap<String, Integer> times = interpretTime(currentStudentClasses.get(i).getStartTime());
-                                if (minTime > times.get("Hour")) {
-                                    minTime = times.get("Hour");
-                                }
-                            }
-                        }
-                    }
-                    for (int i = 0; i < friendsClasses.size(); i++) {
-                        if (friendsClasses.get(i).getDays().contains("S")) {
-                            if (!friendsClasses.get(i).getStartTime().equals("TBA")) {
-                                HashMap<String, Integer> times = interpretTime(friendsClasses.get(i).getStartTime());
-                                if (minTime > times.get("Hour")) {
-                                    minTime = times.get("Hour");
-                                }
-                            }
-                        }
-                    }
-                    mWeekView.goToHour(minTime);
+                    setMinTime("Saturday");
                 }
+
             }
 
 
@@ -386,7 +240,7 @@ public class FriendClickedActivity extends AppCompatActivity implements WeekView
                                     currentClass.setLatitude(val.get("latitude"));
                                     currentClass.setLongitude(val.get("longitude"));
                                     friendsClasses.add(currentClass);
-                                    spinner.setSelection(spinner.getSelectedItemPosition());
+                                    setMinTime((String) spinner.getSelectedItem());
                                     mWeekView.notifyDatasetChanged();
                                 }
 
@@ -486,7 +340,7 @@ public class FriendClickedActivity extends AppCompatActivity implements WeekView
 
     public HashMap<String, Integer> interpretTime(String time)
     {
-        System.out.println("Time: " + time);
+        //System.out.println("Time: " + time);
         int firstColon = time.indexOf(":");
         int firstSpace = time.indexOf(" ");
         int hour = Integer.parseInt(time.substring(0, firstColon));
@@ -533,6 +387,204 @@ public class FriendClickedActivity extends AppCompatActivity implements WeekView
             classDays.add(Calendar.SUNDAY);
         }
         return classDays;
+    }
+
+    public void setMinTime(String daySelected)
+    {
+        if (daySelected.equals("Sunday")) {
+            int minTime = 100;
+            for (int i = 0; i < currentStudentClasses.size(); i++) {
+                if (currentStudentClasses.get(i).getDays().contains("U")) {
+                    if (!currentStudentClasses.get(i).getStartTime().equals("TBA")) {
+                        HashMap<String, Integer> times = interpretTime(currentStudentClasses.get(i).getStartTime());
+                        if (minTime > times.get("Hour")) {
+                            minTime = times.get("Hour");
+                        }
+                    }
+                }
+            }
+            for (int i = 0; i < friendsClasses.size(); i++) {
+                if (friendsClasses.get(i).getDays().contains("U")) {
+                    if (!friendsClasses.get(i).getStartTime().equals("TBA")) {
+                        HashMap<String, Integer> times = interpretTime(friendsClasses.get(i).getStartTime());
+                        if (minTime > times.get("Hour")) {
+                            minTime = times.get("Hour");
+                        }
+                    }
+                }
+            }
+            mWeekView.goToHour(minTime);
+        }
+        else if (daySelected.equals("Monday")) {
+            Calendar day = Calendar.getInstance();
+            day.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+            mWeekView.goToDate(day);
+
+            int minTime = 100;
+            for (int i = 0; i < currentStudentClasses.size(); i++) {
+                if (currentStudentClasses.get(i).getDays().contains("M")) {
+                    if (!currentStudentClasses.get(i).getStartTime().equals("TBA")) {
+                        HashMap<String, Integer> times = interpretTime(currentStudentClasses.get(i).getStartTime());
+                        if (minTime > times.get("Hour")) {
+                            minTime = times.get("Hour");
+                        }
+                    }
+                }
+            }
+            for (int i = 0; i < friendsClasses.size(); i++) {
+                if (friendsClasses.get(i).getDays().contains("M")) {
+                    if (!friendsClasses.get(i).getStartTime().equals("TBA")) {
+                        HashMap<String, Integer> times = interpretTime(friendsClasses.get(i).getStartTime());
+                        if (minTime > times.get("Hour")) {
+                            minTime = times.get("Hour");
+                        }
+                    }
+                }
+            }
+            mWeekView.goToHour(minTime);
+            System.out.println("MinTime: " + minTime);
+        }
+        else if (daySelected.equals("Tuesday")) {
+            Calendar day = Calendar.getInstance();
+            day.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);
+            mWeekView.goToDate(day);
+
+            int minTime = 100;
+            for (int i = 0; i < currentStudentClasses.size(); i++) {
+                if (currentStudentClasses.get(i).getDays().contains("T")) {
+                    if (!currentStudentClasses.get(i).getStartTime().equals("TBA")) {
+                        HashMap<String, Integer> times = interpretTime(currentStudentClasses.get(i).getStartTime());
+                        if (minTime > times.get("Hour")) {
+                            minTime = times.get("Hour");
+                        }
+                    }
+                }
+            }
+            for (int i = 0; i < friendsClasses.size(); i++) {
+                if (friendsClasses.get(i).getDays().contains("T")) {
+                    if (!friendsClasses.get(i).getStartTime().equals("TBA")) {
+                        HashMap<String, Integer> times = interpretTime(friendsClasses.get(i).getStartTime());
+                        if (minTime > times.get("Hour")) {
+                            minTime = times.get("Hour");
+                        }
+                    }
+                }
+            }
+            mWeekView.goToHour(minTime);
+        }
+        else if (daySelected.equals("Wednesday")) {
+            Calendar day = Calendar.getInstance();
+            day.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
+            mWeekView.goToDate(day);
+
+            int minTime = 100;
+            for (int i = 0; i < currentStudentClasses.size(); i++) {
+                if (currentStudentClasses.get(i).getDays().contains("W")) {
+                    if (!currentStudentClasses.get(i).getStartTime().equals("TBA")) {
+                        HashMap<String, Integer> times = interpretTime(currentStudentClasses.get(i).getStartTime());
+                        if (minTime > times.get("Hour")) {
+                            minTime = times.get("Hour");
+                        }
+                    }
+                }
+            }
+            for (int i = 0; i < friendsClasses.size(); i++) {
+                if (friendsClasses.get(i).getDays().contains("W")) {
+                    if (!friendsClasses.get(i).getStartTime().equals("TBA")) {
+                        HashMap<String, Integer> times = interpretTime(friendsClasses.get(i).getStartTime());
+                        if (minTime > times.get("Hour")) {
+                            minTime = times.get("Hour");
+                        }
+                    }
+                }
+            }
+            mWeekView.goToHour(minTime);
+        }
+        else if (daySelected.equals("Thursday")) {
+            Calendar day = Calendar.getInstance();
+            day.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
+            mWeekView.goToDate(day);
+
+            int minTime = 100;
+            for (int i = 0; i < currentStudentClasses.size(); i++) {
+                if (currentStudentClasses.get(i).getDays().contains("R")) {
+                    if (!currentStudentClasses.get(i).getStartTime().equals("TBA")) {
+                        HashMap<String, Integer> times = interpretTime(currentStudentClasses.get(i).getStartTime());
+                        if (minTime > times.get("Hour")) {
+                            minTime = times.get("Hour");
+                        }
+                    }
+                }
+            }
+            for (int i = 0; i < friendsClasses.size(); i++) {
+                if (friendsClasses.get(i).getDays().contains("R")) {
+                    if (!friendsClasses.get(i).getStartTime().equals("TBA")) {
+                        HashMap<String, Integer> times = interpretTime(friendsClasses.get(i).getStartTime());
+                        if (minTime > times.get("Hour")) {
+                            minTime = times.get("Hour");
+                        }
+                    }
+                }
+            }
+            mWeekView.goToHour(minTime);
+        }
+        else if (daySelected.equals("Friday")) {
+            Calendar day = Calendar.getInstance();
+            day.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
+            mWeekView.goToDate(day);
+
+            int minTime = 100;
+            for (int i = 0; i < currentStudentClasses.size(); i++) {
+                if (currentStudentClasses.get(i).getDays().contains("F")) {
+                    if (!currentStudentClasses.get(i).getStartTime().equals("TBA")) {
+                        HashMap<String, Integer> times = interpretTime(currentStudentClasses.get(i).getStartTime());
+                        if (minTime > times.get("Hour")) {
+                            minTime = times.get("Hour");
+                        }
+                    }
+                }
+            }
+            for (int i = 0; i < friendsClasses.size(); i++) {
+                if (friendsClasses.get(i).getDays().contains("F")) {
+                    if (!friendsClasses.get(i).getStartTime().equals("TBA")) {
+                        HashMap<String, Integer> times = interpretTime(friendsClasses.get(i).getStartTime());
+                        if (minTime > times.get("Hour")) {
+                            minTime = times.get("Hour");
+                        }
+                    }
+                }
+            }
+            mWeekView.goToHour(minTime);
+        }
+        else if (daySelected.equals("Saturday")) {
+            Calendar day = Calendar.getInstance();
+            day.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+            mWeekView.goToDate(day);
+
+            int minTime = 100;
+            for (int i = 0; i < currentStudentClasses.size(); i++) {
+                if (currentStudentClasses.get(i).getDays().contains("S")) {
+                    if (!currentStudentClasses.get(i).getStartTime().equals("TBA")) {
+                        HashMap<String, Integer> times = interpretTime(currentStudentClasses.get(i).getStartTime());
+                        if (minTime > times.get("Hour")) {
+                            minTime = times.get("Hour");
+                        }
+                    }
+                }
+            }
+            for (int i = 0; i < friendsClasses.size(); i++) {
+                if (friendsClasses.get(i).getDays().contains("S")) {
+                    if (!friendsClasses.get(i).getStartTime().equals("TBA")) {
+                        HashMap<String, Integer> times = interpretTime(friendsClasses.get(i).getStartTime());
+                        if (minTime > times.get("Hour")) {
+                            minTime = times.get("Hour");
+                        }
+                    }
+                }
+            }
+            mWeekView.goToHour(minTime);
+            System.out.println("MinTime: " + minTime);
+        }
     }
 
 }
