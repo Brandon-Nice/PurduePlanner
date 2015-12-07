@@ -117,11 +117,15 @@ public class ClassInformationFragment extends Fragment {
                                 break;
                             }
                         }
-                        Intent init = new Intent(getActivity(), viewClasses.class);
-                        init.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        init.putExtra("VisibleDays", (int) getActivity().getIntent().getExtras().get("VisibleDays"));
-                        init.putExtra("Day", (Date) getActivity().getIntent().getExtras().get("Day"));
-                        startActivity(init);
+                        if (getActivity().getIntent().hasExtra("VisibleDays") && getActivity().getIntent().hasExtra("Day")) {
+                            Intent init = new Intent(getActivity(), viewClasses.class);
+                            init.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                            init.putExtra("VisibleDays", (int) getActivity().getIntent().getExtras().get("VisibleDays"));
+                            init.putExtra("Day", (Date) getActivity().getIntent().getExtras().get("Day"));
+
+                            startActivity(init);
+                        }
                         getActivity().finish();
 
 
