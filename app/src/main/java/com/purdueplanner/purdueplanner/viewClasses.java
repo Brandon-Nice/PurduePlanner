@@ -171,6 +171,8 @@ public class viewClasses extends AppCompatActivity implements WeekView.MonthChan
         databaseClassInfo.put("Major", classList.get((int) event.getId()).getMajor());
         databaseClassInfo.put("Course", classList.get((int) event.getId()).getCourseNum());
         databaseClassInfo.put("Section", classList.get((int) event.getId()).getSectionNum());
+        databaseClassInfo.put("Start Time", classList.get((int) event.getId()).getStartTime());
+        databaseClassInfo.put("End Time", classList.get((int) event.getId()).getEndTime());
         init.putExtra("Database Info", databaseClassInfo);
         init.putExtra("VisibleDays", (int) getIntent().getExtras().get("VisibleDays"));
         init.putExtra("Day", (Date) getIntent().getExtras().get("Day"));
@@ -208,7 +210,9 @@ public class viewClasses extends AppCompatActivity implements WeekView.MonthChan
                     endTime.set(Calendar.DAY_OF_WEEK, classDays.get(j));
                     WeekViewEvent event = null;
                     if (visibleDays == 7) {
-                        event = new WeekViewEvent(i, classList.get(i).getMajor() + " " + classList.get(i).getCourseNum(), startTime, endTime);
+                        event = new WeekViewEvent(i, classList.get(i).getMajor() + " " + classList.get(i).getCourseNum()
+                                + "\n" + classList.get(i).getStartTime() + " - "
+                                + classList.get(i).getEndTime() + "\n", startTime, endTime);
                     } else {
                         event = new WeekViewEvent(i, classList.get(i).getMajor() + " " + classList.get(i).getCourseNum()
                                 + "\n" + classList.get(i).getLocation() + "\n" + classList.get(i).getStartTime() + " - "
