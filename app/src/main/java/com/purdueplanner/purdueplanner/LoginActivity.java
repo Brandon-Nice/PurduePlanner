@@ -3,12 +3,11 @@ package com.purdueplanner.purdueplanner;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.ActionBar;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
@@ -16,21 +15,10 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
-import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 
 /**
  * Created by menane on 10/13/15.
@@ -51,6 +39,45 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
+
+        VideoView vv = (VideoView)this.findViewById(R.id.videoView);
+        String uri = "android.resource://" + getPackageName() + "/" + R.raw.login_page_2;
+        vv.setVideoURI(Uri.parse(uri));
+        vv.start();
+
+        vv.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.setLooping(true);
+            }
+        });
+//        WebView wView = (WebView)findViewById(R.id.webView); //sets the lovely video
+//        String x = "<!DOCTYPE html><html><body><img src=\"https://drive.google.com/file/d/0B7P7W8dYm7KxVktRQ2pDdTdzaUU/view?usp=sharing\"  width=\"100%\" height=\"100%\"></body></html>";
+//
+//        wView.loadData(x, "text/html", "utf-8");
+
+
+
+//        wView.setInitialScale(1);
+//        wView.getSettings().setJavaScriptEnabled(true);
+//        wView.getSettings().setLoadWithOverviewMode(true);
+//        wView.getSettings().setUseWideViewPort(true);
+//        wView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+//        wView.setScrollbarFadingEnabled(false);
+        //wView.loadUrl("file:///android_asset/pics/loginpage.gif");
+        //String html = "<html><body><img src=\"" + "file:///android_asset/pics/loginpage.gif" + "\" width=\"100%\" height=\"100%\"\"/></body></html>";
+        //wView.loadData(html, "text/html", null);
+        //wView.loadDataWithBaseURL(null, "<style>img{display: inline;height: auto;max-width: 100%;}</style>" + "file:///android_asset/pics/loginpage.gif" + "text/html", "UTF-8", null, null);
+
+
+        //RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT);
+        //wView.setLayoutParams(params);
+        //wView.loadUrl("file:///android_asset/pics/loginpage2.gif");
+
+
+        //wView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+        //wView.loadUrl("file:///android_asset/pics/loginpage2.gif");
+
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setupActionBar();
 
