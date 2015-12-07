@@ -20,7 +20,7 @@
         android:layout_width="72dp"
         android:layout_height="72dp"
         android:id="@+id/scheduleButton"
-        android:background="@mipmap/schedule_icon"
+        android:background="@drawable/stockcalendar"
         android:contentDescription="scheduleImage"
         android:clickable="true"
         android:layout_alignParentBottom="true"
@@ -32,7 +32,7 @@
         android:layout_width="72dp"
         android:layout_height="72dp"
         android:id="@+id/mapsButton"
-        android:background="@drawable/maps"
+        android:background="@drawable/stockmap"
         android:clickable="true"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
@@ -44,7 +44,7 @@
         android:layout_width="72dp"
         android:layout_height="72dp"
         android:id="@+id/friendButton"
-        android:background="@drawable/friend"
+        android:background="@drawable/stockfriend"
         android:cropToPadding="false"
         android:contextClickable="false"
         android:layout_below="@+id/dayList"
@@ -70,6 +70,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:textSize="35dp"
+        android:textStyle="normal" />
 
 </RelativeLayout>

@@ -108,10 +108,14 @@ public class FriendsActivity extends AppCompatActivity {
                                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                     HashMap<String, String> friend = (HashMap) parent.getItemAtPosition(position);
                                     String friendID = friend.get("id");
+                                    String first = friend.get("firstName");
+                                    String last = friend.get("lastName");
                                     //Goes to a new activity once a button is pressed
                                     Intent myIntent = new Intent(FriendsActivity.this, FriendClickedActivity.class);
                                     Bundle bundle = new Bundle();
                                     bundle.putString("friendID", friendID);
+                                    bundle.putString("first", first);
+                                    bundle.putString("last", last);
                                     myIntent.putExtras(bundle);
                                     //myIntent.putExtra("name_key", name); //adds the string to a HashMap like object
                                     startActivity(myIntent); //goes to new activity once the button is pressed

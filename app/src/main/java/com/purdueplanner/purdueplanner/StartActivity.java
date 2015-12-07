@@ -116,6 +116,7 @@ public class StartActivity extends AppCompatActivity
                         name = jsonObject.getString("name");
                         System.out.println(name);
                         user_name.setText(name);
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

@@ -16,7 +16,8 @@
         android:id="@+id/calendarTitle"
         android:layout_gravity="center_horizontal"
         android:text="Calendar View"
-        android:editable="false" />
+        android:editable="false"
+        android:textSize="25dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
