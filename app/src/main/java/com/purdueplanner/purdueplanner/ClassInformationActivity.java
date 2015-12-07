@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import java.util.Date;
 import java.util.HashMap;
 
 public class ClassInformationActivity extends AppCompatActivity {
@@ -68,6 +69,22 @@ public class ClassInformationActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        if (getIntent().hasExtra("VisibleDays") && getIntent().hasExtra("Day")) {
+            Intent init = new Intent(this, viewClasses.class);
+            init.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            init.putExtra("VisibleDays", (int) getIntent().getExtras().get("VisibleDays"));
+            init.putExtra("Day", (Date) getIntent().getExtras().get("Day"));
+
+            startActivity(init);
+        }
+        finish();
     }
 
 
