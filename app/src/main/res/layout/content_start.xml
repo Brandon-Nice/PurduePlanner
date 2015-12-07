@@ -7,48 +7,48 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingBottom="30dp"
 
     android:layout_centerVertical="true"
-
 
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/app_bar_start"
     tools:context="com.purdueplanner.purdueplanner.StartActivity">
 
     <ImageButton
-        android:layout_width="72dp"
-        android:layout_height="72dp"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:id="@+id/scheduleButton"
         android:background="@drawable/stockcalendar"
         android:contentDescription="scheduleImage"
         android:clickable="true"
-        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:layout_above="@+id/scheduleText"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_gravity="bottom" />
+        android:layout_alignParentStart="true" />
 
     <ImageButton
-        android:layout_width="72dp"
-        android:layout_height="72dp"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:id="@+id/mapsButton"
         android:background="@drawable/stockmap"
         android:clickable="true"
-        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:layout_above="@+id/mapsText"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/scheduleButton"
-        android:layout_gravity="bottom" />
+        android:layout_alignParentEnd="true"/>
 
     <ImageButton
-        android:layout_width="72dp"
-        android:layout_height="72dp"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:id="@+id/friendButton"
         android:background="@drawable/stockfriend"
+        android:clickable = "true"
+        android:layout_gravity="bottom"
+        android:layout_above="@+id/friendsText"
         android:cropToPadding="false"
         android:contextClickable="false"
-        android:layout_below="@+id/dayList"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"/>
 
     <ListView
         android:layout_width="wrap_content"
@@ -56,9 +56,11 @@
         android:id="@+id/dayList"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/scheduleButton"
-        android:layout_below="@+id/textView" />
-
+        android:layout_below="@+id/textView"
+        android:layout_toStartOf="@+id/mapsButton"
+        android:layout_alignRight="@+id/mapsButton"
+        android:layout_alignEnd="@+id/mapsButton"
+        android:layout_above="@+id/scheduleButton" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -69,9 +71,35 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
         android:textSize="35dp"
-        android:textStyle="normal" />
+        android:textStyle="normal"
+        android:layout_toStartOf="@+id/friendButton"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Schedule"
+        android:id="@+id/scheduleText"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Friends"
+        android:id="@+id/friendsText"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Maps    "
+        android:id="@+id/mapsText"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerInParent="true"/>
 
 </RelativeLayout>
