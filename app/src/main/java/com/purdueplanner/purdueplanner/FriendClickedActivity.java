@@ -412,17 +412,6 @@ public class FriendClickedActivity extends AppCompatActivity implements WeekView
 
     @Override
     public void onEventClick(WeekViewEvent event, RectF eventRect) {
-        Intent init = new Intent(FriendClickedActivity.this, ClassInformationActivity.class);
-        init.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        HashMap<String, String> databaseClassInfo = new HashMap<>();
-        databaseClassInfo.put("Major", currentStudentClasses.get((int) event.getId()).getMajor());
-        databaseClassInfo.put("Course", currentStudentClasses.get((int) event.getId()).getCourseNum());
-        databaseClassInfo.put("Section", currentStudentClasses.get((int) event.getId()).getSectionNum());
-        init.putExtra("Database Info", databaseClassInfo);
-        init.putExtra("VisibleDays", (int) getIntent().getExtras().get("VisibleDays"));
-        init.putExtra("Day", (Date) getIntent().getExtras().get("Day"));
-        startActivity(init);
-        finish();
 
     }
 
