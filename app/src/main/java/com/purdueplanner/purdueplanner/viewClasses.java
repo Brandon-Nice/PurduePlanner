@@ -211,7 +211,8 @@ public class viewClasses extends AppCompatActivity implements WeekView.MonthChan
                         event = new WeekViewEvent(i, classList.get(i).getMajor() + " " + classList.get(i).getCourseNum(), startTime, endTime);
                     } else {
                         event = new WeekViewEvent(i, classList.get(i).getMajor() + " " + classList.get(i).getCourseNum()
-                                + "\n" + classList.get(i).getLocation(), startTime, endTime);
+                                + "\n" + classList.get(i).getLocation() + "\n" + classList.get(i).getStartTime() + " - "
+                                + classList.get(i).getEndTime(), startTime, endTime);
                     }
                     event.setColor(getResources().getColor(R.color.caldroid_black));
                     events.add(event);
