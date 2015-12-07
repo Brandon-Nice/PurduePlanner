@@ -92,9 +92,11 @@ public class viewClasses extends AppCompatActivity implements WeekView.MonthChan
         int minTime = 100;
         if (visibleDays == 7) {
             for (int i = 0; i < classList.size(); i++) {
-                HashMap<String, Integer> times = interpretTime(classList.get(i).getStartTime());
-                if (minTime > times.get("Hour")) {
-                    minTime = times.get("Hour");
+                if (!classList.get(i).getStartTime().equals("TBA")) {
+                    HashMap<String, Integer> times = interpretTime(classList.get(i).getStartTime());
+                    if (minTime > times.get("Hour")) {
+                        minTime = times.get("Hour");
+                    }
                 }
             }
             mWeekView.goToHour(minTime);
@@ -137,9 +139,11 @@ public class viewClasses extends AppCompatActivity implements WeekView.MonthChan
             {
                 if (classList.get(i).getDays().contains(letter))
                 {
-                    HashMap<String, Integer> times = interpretTime(classList.get(i).getStartTime());
-                    if (minTime > times.get("Hour")) {
-                        minTime = times.get("Hour");
+                    if (!classList.get(i).getStartTime().equals("TBA")) {
+                        HashMap<String, Integer> times = interpretTime(classList.get(i).getStartTime());
+                        if (minTime > times.get("Hour")) {
+                            minTime = times.get("Hour");
+                        }
                     }
                 }
             }
@@ -165,7 +169,10 @@ public class viewClasses extends AppCompatActivity implements WeekView.MonthChan
         databaseClassInfo.put("Course", classList.get((int) event.getId()).getCourseNum());
         databaseClassInfo.put("Section", classList.get((int) event.getId()).getSectionNum());
         init.putExtra("Database Info", databaseClassInfo);
+        init.putExtra("VisibleDays", (int) getIntent().getExtras().get("VisibleDays"));
+        init.putExtra("Day", (Date) getIntent().getExtras().get("Day"));
         startActivity(init);
+        finish();
 
     }
 
@@ -179,35 +186,33 @@ public class viewClasses extends AppCompatActivity implements WeekView.MonthChan
         List<WeekViewEvent> events = new ArrayList<WeekViewEvent>();
         for (int i = 0; i < classList.size(); i++)
         {
-
-            HashMap<String, Integer> interpretedStartTime = interpretTime(classList.get(i).getStartTime());
-            HashMap<String, Integer> interpretedEndTime = interpretTime(classList.get(i).getEndTime());
-            ArrayList<Integer> classDays = getDay(classList.get(i).getDays());
-            for (int j = 0; j < classDays.size(); j++) {
-                Calendar startTime = Calendar.getInstance();
-                startTime.set(Calendar.HOUR_OF_DAY, interpretedStartTime.get("Hour"));
-                startTime.set(Calendar.MINUTE, interpretedStartTime.get("Minutes"));
-                startTime.set(Calendar.MONTH, newMonth - 1);
-                startTime.set(Calendar.YEAR, newYear);
-                startTime.set(Calendar.DAY_OF_WEEK, classDays.get(j));
-                Calendar endTime = Calendar.getInstance();
-                endTime.set(Calendar.HOUR_OF_DAY, interpretedEndTime.get("Hour"));
-                endTime.set(Calendar.MINUTE, interpretedEndTime.get("Minutes"));
-                endTime.set(Calendar.MONTH, newMonth - 1);
-                endTime.set(Calendar.YEAR, newYear);
-                endTime.set(Calendar.DAY_OF_WEEK, classDays.get(j));
-                WeekViewEvent event = null;
-                if (visibleDays == 7)
-                {
-                    event = new WeekViewEvent(i, classList.get(i).getMajor() + " " + classList.get(i).getCourseNum(), startTime, endTime);
+            if (!classList.get(i).getStartTime().equals("TBA")) {
+                HashMap<String, Integer> interpretedStartTime = interpretTime(classList.get(i).getStartTime());
+                HashMap<String, Integer> interpretedEndTime = interpretTime(classList.get(i).getEndTime());
+                ArrayList<Integer> classDays = getDay(classList.get(i).getDays());
+                for (int j = 0; j < classDays.size(); j++) {
+                    Calendar startTime = Calendar.getInstance();
+                    startTime.set(Calendar.HOUR_OF_DAY, interpretedStartTime.get("Hour"));
+                    startTime.set(Calendar.MINUTE, interpretedStartTime.get("Minutes"));
+                    startTime.set(Calendar.MONTH, newMonth - 1);
+                    startTime.set(Calendar.YEAR, newYear);
+                    startTime.set(Calendar.DAY_OF_WEEK, classDays.get(j));
+                    Calendar endTime = Calendar.getInstance();
+                    endTime.set(Calendar.HOUR_OF_DAY, interpretedEndTime.get("Hour"));
+                    endTime.set(Calendar.MINUTE, interpretedEndTime.get("Minutes"));
+                    endTime.set(Calendar.MONTH, newMonth - 1);
+                    endTime.set(Calendar.YEAR, newYear);
+                    endTime.set(Calendar.DAY_OF_WEEK, classDays.get(j));
+                    WeekViewEvent event = null;
+                    if (visibleDays == 7) {
+                        event = new WeekViewEvent(i, classList.get(i).getMajor() + " " + classList.get(i).getCourseNum(), startTime, endTime);
+                    } else {
+                        event = new WeekViewEvent(i, classList.get(i).getMajor() + " " + classList.get(i).getCourseNum()
+                                + "\n" + classList.get(i).getLocation(), startTime, endTime);
+                    }
+                    event.setColor(getResources().getColor(R.color.caldroid_black));
+                    events.add(event);
                 }
-                else
-                {
-                    event = new WeekViewEvent(i, classList.get(i).getMajor() + " " + classList.get(i).getCourseNum()
-                            + "\n" + classList.get(i).getLocation(), startTime, endTime);
-                }
-                event.setColor(getResources().getColor(R.color.caldroid_black));
-                events.add(event);
             }
 
         }
@@ -217,6 +222,7 @@ public class viewClasses extends AppCompatActivity implements WeekView.MonthChan
 
     public HashMap<String, Integer> interpretTime(String time)
     {
+        System.out.println("Time: " + time);
         int firstColon = time.indexOf(":");
         int firstSpace = time.indexOf(" ");
         int hour = Integer.parseInt(time.substring(0, firstColon));

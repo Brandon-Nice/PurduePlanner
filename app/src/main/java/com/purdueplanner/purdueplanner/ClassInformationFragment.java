@@ -22,6 +22,7 @@ import com.firebase.client.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -114,7 +115,12 @@ public class ClassInformationFragment extends Fragment {
                                 break;
                             }
                         }
-                        getActivity().onBackPressed();
+                        Intent init = new Intent(getActivity(), viewClasses.class);
+                        init.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        init.putExtra("VisibleDays", (int) getActivity().getIntent().getExtras().get("VisibleDays"));
+                        init.putExtra("Day", (Date) getActivity().getIntent().getExtras().get("Day"));
+                        startActivity(init);
+                        getActivity().finish();
 
 
                     }
