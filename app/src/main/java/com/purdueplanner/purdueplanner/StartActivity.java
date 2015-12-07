@@ -114,6 +114,10 @@ public class StartActivity extends AppCompatActivity
                     String name = "";
                     try {
                         name = jsonObject.getString("name");
+                        String firstName = name.substring(0, name.indexOf(" "));
+                        String lastName = name.substring(name.indexOf(" ") + 1);
+                        ((MyApplication) getApplication()).getStudent().setFirstName(firstName);
+                        ((MyApplication) getApplication()).getStudent().setLastName(lastName);
                         System.out.println(name);
                         user_name.setText(name);
 

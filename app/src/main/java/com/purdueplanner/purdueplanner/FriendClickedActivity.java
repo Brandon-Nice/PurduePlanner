@@ -1,13 +1,20 @@
 package com.purdueplanner.purdueplanner;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.RectF;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.alamkanak.weekview.WeekView;
+import com.alamkanak.weekview.WeekViewEvent;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -17,13 +24,20 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class FriendClickedActivity extends AppCompatActivity {
+public class FriendClickedActivity extends AppCompatActivity implements WeekView.MonthChangeListener,
+        WeekView.EventClickListener, WeekView.EventLongPressListener {
 
     private ListView friendView;
     private ArrayAdapter adapter;
+    private WeekView mWeekView;
+    private ArrayList<Classes> currentStudentClasses;
+    private ArrayList<Classes> friendsClasses;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,85 +51,488 @@ public class FriendClickedActivity extends AppCompatActivity {
         String firstName = extras.getString("first");
         String lastName = extras.getString("last");
         String combinedName = firstName + " " + lastName;
-        TextView name = (TextView) findViewById(R.id.friendName);
-        name.setText(combinedName);
+        String currentStudentName = ((MyApplication) getApplication()).getStudent().getFirstName();
+        final TextView friendName = (TextView) findViewById(R.id.friendName);
+        final TextView studentName = (TextView) findViewById(R.id.studentName);
+        friendName.setText(firstName);
+        friendName.setTextColor(getResources().getColor(R.color.ScheduleColor));
+        studentName.setText(currentStudentName);
+        studentName.setTextColor(getResources().getColor(R.color.caldroid_black));
+        mWeekView = (WeekView) findViewById(R.id.weekView);
 
-        //final ArrayList<HashMap<String, String>> classes = new ArrayList<HashMap<String, String>>();
-        final ArrayList<HashMap<String, String>> classes = new ArrayList<>(); //array list to store the classes
-        final ArrayList<String> courseInfo = new ArrayList<String>(); //stores the course info
-        final ArrayList<String> formattedClasses = new ArrayList<String>(); //stores the formatted classes with the classes + times
+        // Set an action when any event is clicked.
+        mWeekView.setOnEventClickListener(FriendClickedActivity.this);
 
-        Firebase tempRef = new Firebase("https://purduescheduler.firebaseio.com/Students/" + id);
-        tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            public void onDataChange(DataSnapshot snapshot) {
-                Log.i("Snapshot: ", snapshot.toString());
-                HashMap<String, Object> tempHash = (HashMap) snapshot.getValue();        /* Hashmap of a Student's content   */
-                Log.i("Hashmap: ", tempHash.toString());
-                ArrayList<HashMap<String, String>> testList = (ArrayList<HashMap<String, String>>) tempHash.get("Schedule");     /* ArrayList of Hashmaps containing the classes*/
-                String cCourse, cMajor, cSec, actualClass; //local variables to store class info to concatenate into an actual class
-                if (testList != null) {
-                    Log.i("ArrayList: ", testList.toString());
-                    for (int j = 0; j < testList.size(); j++) {
-                        HashMap<String, String> courseMap = new HashMap<String, String>();
-                        cCourse = testList.get(j).get("Course");       /* Major, Course, Section of each class    */
-                        cMajor = testList.get(j).get("Major");
-                        cSec = testList.get(j).get("Section");
+        // The week view has infinite scrolling horizontally. We have to provide the events of a
+        // month every time the month changes on the week view.
+        mWeekView.setMonthChangeListener(FriendClickedActivity.this);
 
-                        actualClass = cMajor + " " + cCourse + " " + cSec; //formats them nicely
-                        formattedClasses.add(j, actualClass); //adds them to the formatted class list
+        // Set long press listener for events.
+        mWeekView.setEventLongPressListener(FriendClickedActivity.this);
+        mWeekView.setXScrollingSpeed(0);
+        mWeekView.setNumberOfVisibleDays(1);
+        currentStudentClasses = ((MyApplication) getApplication()).getStudent().getSchedule();
+        friendsClasses = new ArrayList();
 
-                        courseMap.put("Course", cCourse);
-                        courseMap.put("Major", cMajor);
-                        courseMap.put("Section", cSec);
-                        classes.add(j, courseMap);
-                    }
-                    for (int i = 0; i < classes.size(); i++) {
-                        //Log.i("********************", "1");
-                        final String section = classes.get(i).get("Section");
-                        Firebase classRef = new Firebase("https://purduescheduler.firebaseio.com/Classes/" + classes.get(i).get("Major") + "/" + classes.get(i).get("Course") + "/");
-                        final String innerI = Integer.toString(i); //only way to access "i" inside of the listener = make it to string and convert it back to int
-                        classRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                            public void onDataChange(DataSnapshot snapshot) {
 
-                                Log.i("Snapshot: ", snapshot.toString());
-                                HashMap<String, Object> tempHash = (HashMap) snapshot.getValue();        /* Hashmap of a Student's content   */
-                                Log.i("Hashmap: ", tempHash.toString());
 
-                                HashMap<String, String> testList = (HashMap<String, String>) tempHash.get(section);     /* ArrayList of Hashmaps containing the classes*/
-                                String sStart, sEnd, sDays;
-                                String formattedInfo, c = "";
-                                if (testList != null) { //add the info to the classInfo list
-                                    sStart = testList.get("startTime");
-                                    sEnd = testList.get("endTime");
-                                    sDays = testList.get("days");
-                                    formattedInfo = " " + sStart + " - " + sEnd + " " + sDays; //formats the info nicely
-                                    c = formattedClasses.get(Integer.parseInt(innerI)).concat(formattedInfo); //FINALLY adds the course info to the class
+        final Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        ArrayList<String> days = new ArrayList<>();
+        days.add("Sunday");
+        days.add("Monday");
+        days.add("Tuesday");
+        days.add("Wednesday");
+        days.add("Thursday");
+        days.add("Friday");
+        days.add("Saturday");
+
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, days);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+        String currDay = (String) android.text.format.DateFormat.format("EEEE", new Date());
+        if (currDay.equals("Sunday"))
+        {
+            spinner.setSelection(0);
+        }
+        else if (currDay.equals("Monday"))
+        {
+            spinner.setSelection(1);
+        }
+        else if (currDay.equals("Tuesday"))
+        {
+            spinner.setSelection(2);
+        }
+        else if (currDay.equals("Wednesday"))
+        {
+            spinner.setSelection(3);
+        }
+        else if (currDay.equals("Thursday"))
+        {
+            spinner.setSelection(4);
+        }
+        else if (currDay.equals("Friday"))
+        {
+            spinner.setSelection(5);
+        }
+        else if (currDay.equals("Saturday"))
+        {
+            spinner.setSelection(6);
+        }
+
+
+
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                //System.out.println(parent.getItemAtPosition(position));
+                if (parent.getItemAtPosition(position).equals("Sunday")) {
+                    Calendar day = Calendar.getInstance();
+                    day.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+                    mWeekView.goToDate(day);
+
+                    int minTime = 100;
+                    for (int i = 0; i < currentStudentClasses.size(); i++) {
+                        if (currentStudentClasses.get(i).getDays().contains("U")) {
+                            if (!currentStudentClasses.get(i).getStartTime().equals("TBA")) {
+                                HashMap<String, Integer> times = interpretTime(currentStudentClasses.get(i).getStartTime());
+                                if (minTime > times.get("Hour")) {
+                                    minTime = times.get("Hour");
                                 }
-
-                                formattedClasses.remove(Integer.parseInt(innerI)); //remove the old value (that previously had just the classes)
-                                formattedClasses.add(Integer.parseInt(innerI), c); //add the new value of the class with the info
-                                friendView = (ListView) findViewById(R.id.friendClassView);
-                                adapter = new ArrayAdapter(FriendClickedActivity.this, android.R.layout.simple_list_item_1, formattedClasses);
-                                friendView.setAdapter(adapter);
-
                             }
-
-
-                            @Override
-                            public void onCancelled(FirebaseError firebaseError) {
-
-                            }
-                        });
+                        }
                     }
+                    for (int i = 0; i < friendsClasses.size(); i++) {
+                        if (friendsClasses.get(i).getDays().contains("U")) {
+                            if (!friendsClasses.get(i).getStartTime().equals("TBA")) {
+                                HashMap<String, Integer> times = interpretTime(friendsClasses.get(i).getStartTime());
+                                if (minTime > times.get("Hour")) {
+                                    minTime = times.get("Hour");
+                                }
+                            }
+                        }
+                    }
+                    mWeekView.goToHour(minTime);
+                }
+                else if (parent.getItemAtPosition(position).equals("Monday")) {
+                    Calendar day = Calendar.getInstance();
+                    day.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+                    mWeekView.goToDate(day);
 
+                    int minTime = 100;
+                    for (int i = 0; i < currentStudentClasses.size(); i++) {
+                        if (currentStudentClasses.get(i).getDays().contains("M")) {
+                            if (!currentStudentClasses.get(i).getStartTime().equals("TBA")) {
+                                HashMap<String, Integer> times = interpretTime(currentStudentClasses.get(i).getStartTime());
+                                if (minTime > times.get("Hour")) {
+                                    minTime = times.get("Hour");
+                                }
+                            }
+                        }
+                    }
+                    for (int i = 0; i < friendsClasses.size(); i++) {
+                        if (friendsClasses.get(i).getDays().contains("M")) {
+                            if (!friendsClasses.get(i).getStartTime().equals("TBA")) {
+                                HashMap<String, Integer> times = interpretTime(friendsClasses.get(i).getStartTime());
+                                if (minTime > times.get("Hour")) {
+                                    minTime = times.get("Hour");
+                                }
+                            }
+                        }
+                    }
+                    mWeekView.goToHour(minTime);
+                }
+                else if (parent.getItemAtPosition(position).equals("Tuesday")) {
+                    Calendar day = Calendar.getInstance();
+                    day.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);
+                    mWeekView.goToDate(day);
+
+                    int minTime = 100;
+                    for (int i = 0; i < currentStudentClasses.size(); i++) {
+                        if (currentStudentClasses.get(i).getDays().contains("T")) {
+                            if (!currentStudentClasses.get(i).getStartTime().equals("TBA")) {
+                                HashMap<String, Integer> times = interpretTime(currentStudentClasses.get(i).getStartTime());
+                                if (minTime > times.get("Hour")) {
+                                    minTime = times.get("Hour");
+                                }
+                            }
+                        }
+                    }
+                    for (int i = 0; i < friendsClasses.size(); i++) {
+                        if (friendsClasses.get(i).getDays().contains("T")) {
+                            if (!friendsClasses.get(i).getStartTime().equals("TBA")) {
+                                HashMap<String, Integer> times = interpretTime(friendsClasses.get(i).getStartTime());
+                                if (minTime > times.get("Hour")) {
+                                    minTime = times.get("Hour");
+                                }
+                            }
+                        }
+                    }
+                    mWeekView.goToHour(minTime);
+                }
+                else if (parent.getItemAtPosition(position).equals("Wednesday")) {
+                    Calendar day = Calendar.getInstance();
+                    day.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
+                    mWeekView.goToDate(day);
+
+                    int minTime = 100;
+                    for (int i = 0; i < currentStudentClasses.size(); i++) {
+                        if (currentStudentClasses.get(i).getDays().contains("W")) {
+                            if (!currentStudentClasses.get(i).getStartTime().equals("TBA")) {
+                                HashMap<String, Integer> times = interpretTime(currentStudentClasses.get(i).getStartTime());
+                                if (minTime > times.get("Hour")) {
+                                    minTime = times.get("Hour");
+                                }
+                            }
+                        }
+                    }
+                    for (int i = 0; i < friendsClasses.size(); i++) {
+                        if (friendsClasses.get(i).getDays().contains("W")) {
+                            if (!friendsClasses.get(i).getStartTime().equals("TBA")) {
+                                HashMap<String, Integer> times = interpretTime(friendsClasses.get(i).getStartTime());
+                                if (minTime > times.get("Hour")) {
+                                    minTime = times.get("Hour");
+                                }
+                            }
+                        }
+                    }
+                    mWeekView.goToHour(minTime);
+                }
+                else if (parent.getItemAtPosition(position).equals("Thursday")) {
+                    Calendar day = Calendar.getInstance();
+                    day.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
+                    mWeekView.goToDate(day);
+
+                    int minTime = 100;
+                    for (int i = 0; i < currentStudentClasses.size(); i++) {
+                        if (currentStudentClasses.get(i).getDays().contains("R")) {
+                            if (!currentStudentClasses.get(i).getStartTime().equals("TBA")) {
+                                HashMap<String, Integer> times = interpretTime(currentStudentClasses.get(i).getStartTime());
+                                if (minTime > times.get("Hour")) {
+                                    minTime = times.get("Hour");
+                                }
+                            }
+                        }
+                    }
+                    for (int i = 0; i < friendsClasses.size(); i++) {
+                        if (friendsClasses.get(i).getDays().contains("R")) {
+                            if (!friendsClasses.get(i).getStartTime().equals("TBA")) {
+                                HashMap<String, Integer> times = interpretTime(friendsClasses.get(i).getStartTime());
+                                if (minTime > times.get("Hour")) {
+                                    minTime = times.get("Hour");
+                                }
+                            }
+                        }
+                    }
+                    mWeekView.goToHour(minTime);
+                }
+                else if (parent.getItemAtPosition(position).equals("Friday")) {
+                    Calendar day = Calendar.getInstance();
+                    day.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
+                    mWeekView.goToDate(day);
+
+                    int minTime = 100;
+                    for (int i = 0; i < currentStudentClasses.size(); i++) {
+                        if (currentStudentClasses.get(i).getDays().contains("F")) {
+                            if (!currentStudentClasses.get(i).getStartTime().equals("TBA")) {
+                                HashMap<String, Integer> times = interpretTime(currentStudentClasses.get(i).getStartTime());
+                                if (minTime > times.get("Hour")) {
+                                    minTime = times.get("Hour");
+                                }
+                            }
+                        }
+                    }
+                    for (int i = 0; i < friendsClasses.size(); i++) {
+                        if (friendsClasses.get(i).getDays().contains("F")) {
+                            if (!friendsClasses.get(i).getStartTime().equals("TBA")) {
+                                HashMap<String, Integer> times = interpretTime(friendsClasses.get(i).getStartTime());
+                                if (minTime > times.get("Hour")) {
+                                    minTime = times.get("Hour");
+                                }
+                            }
+                        }
+                    }
+                    mWeekView.goToHour(minTime);
+                }
+                else if (parent.getItemAtPosition(position).equals("Saturday")) {
+                    Calendar day = Calendar.getInstance();
+                    day.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+                    mWeekView.goToDate(day);
+
+                    int minTime = 100;
+                    for (int i = 0; i < currentStudentClasses.size(); i++) {
+                        if (currentStudentClasses.get(i).getDays().contains("S")) {
+                            if (!currentStudentClasses.get(i).getStartTime().equals("TBA")) {
+                                HashMap<String, Integer> times = interpretTime(currentStudentClasses.get(i).getStartTime());
+                                if (minTime > times.get("Hour")) {
+                                    minTime = times.get("Hour");
+                                }
+                            }
+                        }
+                    }
+                    for (int i = 0; i < friendsClasses.size(); i++) {
+                        if (friendsClasses.get(i).getDays().contains("S")) {
+                            if (!friendsClasses.get(i).getStartTime().equals("TBA")) {
+                                HashMap<String, Integer> times = interpretTime(friendsClasses.get(i).getStartTime());
+                                if (minTime > times.get("Hour")) {
+                                    minTime = times.get("Hour");
+                                }
+                            }
+                        }
+                    }
+                    mWeekView.goToHour(minTime);
                 }
             }
+
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+
+
+
+
+
+        final Firebase ref = new Firebase("https://purduescheduler.firebaseio.com/Students/" + id);
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                //System.out.println(snapshot);
+                HashMap<String, Object> val = (HashMap) snapshot.getValue();
+
+                ArrayList<HashMap<String, String>> databaseClasses = null;
+                databaseClasses = (ArrayList<HashMap<String, String>>) val.get("Schedule");
+
+                if (databaseClasses != null) {
+                    for (int i = 0; i < databaseClasses.size(); i++) {
+                        if (databaseClasses.get(i) != null) {
+                            final HashMap<String, String> currentDBClass = databaseClasses.get(i);
+                            String major = currentDBClass.get("Major");
+                            String course = currentDBClass.get("Course");
+                            String section = currentDBClass.get("Section");
+
+                            //System.out.println(major + " " + course + " " + section);
+                            Firebase ref = new Firebase("https://purduescheduler.firebaseio.com/Classes/" + major + "/" +
+                                    course + "/" + section);
+                            //System.out.println(ref.getRoot());
+                            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot snapshot) {
+                                    //System.out.println(snapshot);
+                                    Classes currentClass = new Classes();
+                                    HashMap<String, String> val = (HashMap) snapshot.getValue();
+                                    currentClass.setCourseNum(val.get("courseNum"));
+                                    currentClass.setCredits(val.get("credits"));
+                                    currentClass.setCRN(val.get("crn"));
+                                    currentClass.setDays(val.get("days"));
+                                    currentClass.setEndDate(val.get("endDate"));
+                                    currentClass.setEndTime(val.get("endTime"));
+                                    currentClass.setInstructor(val.get("instructor"));
+                                    currentClass.setInstructorEmail(val.get("instructorEmail"));
+                                    currentClass.setLocation(val.get("location"));
+                                    currentClass.setMajor(val.get("major"));
+                                    currentClass.setSectionNum(val.get("sectionNum"));
+                                    currentClass.setStartDate(val.get("startDate"));
+                                    currentClass.setStartTime(val.get("startTime"));
+                                    currentClass.setTitle(val.get("title"));
+                                    currentClass.setType(val.get("type"));
+                                    currentClass.setLatitude(val.get("latitude"));
+                                    currentClass.setLongitude(val.get("longitude"));
+                                    friendsClasses.add(currentClass);
+                                    spinner.setSelection(spinner.getSelectedItemPosition());
+                                    mWeekView.notifyDatasetChanged();
+                                }
+
+                                @Override
+                                public void onCancelled(FirebaseError firebaseError) {
+
+                                }
+                            });
+                        }
+
+                    }
+                }
+
+            }
+
             @Override
             public void onCancelled(FirebaseError firebaseError) {
 
             }
-
         });
 
     }
+
+    @Override
+    public void onEventClick(WeekViewEvent event, RectF eventRect) {
+
+    }
+
+    @Override
+    public void onEventLongPress(WeekViewEvent event, RectF eventRect) {
+
+    }
+
+    @Override
+    public List<WeekViewEvent> onMonthChange(int newYear, int newMonth) {
+        List<WeekViewEvent> events = new ArrayList<WeekViewEvent>();
+        for (int i = 0; i < currentStudentClasses.size(); i++) {
+            if (!currentStudentClasses.get(i).getStartTime().equals("TBA")) {
+                HashMap<String, Integer> interpretedStartTime = interpretTime(currentStudentClasses.get(i).getStartTime());
+                HashMap<String, Integer> interpretedEndTime = interpretTime(currentStudentClasses.get(i).getEndTime());
+                ArrayList<Integer> classDays = getDay(currentStudentClasses.get(i).getDays());
+                for (int j = 0; j < classDays.size(); j++) {
+                    Calendar startTime = Calendar.getInstance();
+                    startTime.set(Calendar.HOUR_OF_DAY, interpretedStartTime.get("Hour"));
+                    startTime.set(Calendar.MINUTE, interpretedStartTime.get("Minutes"));
+                    startTime.set(Calendar.MONTH, newMonth - 1);
+                    startTime.set(Calendar.YEAR, newYear);
+                    startTime.set(Calendar.DAY_OF_WEEK, classDays.get(j));
+                    Calendar endTime = Calendar.getInstance();
+                    endTime.set(Calendar.HOUR_OF_DAY, interpretedEndTime.get("Hour"));
+                    endTime.set(Calendar.MINUTE, interpretedEndTime.get("Minutes"));
+                    endTime.set(Calendar.MONTH, newMonth - 1);
+                    endTime.set(Calendar.YEAR, newYear);
+                    endTime.set(Calendar.DAY_OF_WEEK, classDays.get(j));
+                    WeekViewEvent event = new WeekViewEvent(i, currentStudentClasses.get(i).getMajor()
+                            + " " + currentStudentClasses.get(i).getCourseNum() + "\n" +
+                            currentStudentClasses.get(i).getStartTime() + " - " +
+                            currentStudentClasses.get(i).getEndTime(), startTime, endTime);
+                    event.setColor(getResources().getColor(R.color.caldroid_black));
+                    events.add(event);
+                }
+            }
+        }
+
+        for (int i = 0; i < friendsClasses.size(); i++) {
+            if (!friendsClasses.get(i).getStartTime().equals("TBA")) {
+                HashMap<String, Integer> interpretedStartTime = interpretTime(friendsClasses.get(i).getStartTime());
+                HashMap<String, Integer> interpretedEndTime = interpretTime(friendsClasses.get(i).getEndTime());
+                ArrayList<Integer> classDays = getDay(friendsClasses.get(i).getDays());
+                for (int j = 0; j < classDays.size(); j++) {
+                    Calendar startTime = Calendar.getInstance();
+                    startTime.set(Calendar.HOUR_OF_DAY, interpretedStartTime.get("Hour"));
+                    startTime.set(Calendar.MINUTE, interpretedStartTime.get("Minutes"));
+                    startTime.set(Calendar.MONTH, newMonth - 1);
+                    startTime.set(Calendar.YEAR, newYear);
+                    startTime.set(Calendar.DAY_OF_WEEK, classDays.get(j));
+                    Calendar endTime = Calendar.getInstance();
+                    endTime.set(Calendar.HOUR_OF_DAY, interpretedEndTime.get("Hour"));
+                    endTime.set(Calendar.MINUTE, interpretedEndTime.get("Minutes"));
+                    endTime.set(Calendar.MONTH, newMonth - 1);
+                    endTime.set(Calendar.YEAR, newYear);
+                    endTime.set(Calendar.DAY_OF_WEEK, classDays.get(j));
+                    WeekViewEvent event = new WeekViewEvent(i, friendsClasses.get(i).getMajor()
+                            + " " + friendsClasses.get(i).getCourseNum() + "\n" +
+                            friendsClasses.get(i).getStartTime() + " - " +
+                            friendsClasses.get(i).getEndTime(), startTime, endTime);
+                    event.setColor(getResources().getColor(R.color.ScheduleColor));
+                    events.add(event);
+                }
+            }
+        }
+
+
+
+        return events;
+    }
+
+    public HashMap<String, Integer> interpretTime(String time)
+    {
+        System.out.println("Time: " + time);
+        int firstColon = time.indexOf(":");
+        int firstSpace = time.indexOf(" ");
+        int hour = Integer.parseInt(time.substring(0, firstColon));
+        int minutes = Integer.parseInt(time.substring(firstColon + 1, firstSpace));
+        if (time.contains("pm") && hour < 12)
+        {
+            hour += 12;
+        }
+        HashMap<String, Integer> interpretedTime = new HashMap<>();
+        interpretedTime.put("Hour", hour);
+        interpretedTime.put("Minutes", minutes);
+        return interpretedTime;
+    }
+
+    public ArrayList<Integer> getDay(String days)
+    {
+        ArrayList<Integer> classDays = new ArrayList<>();
+        if (days.contains("M"))
+        {
+            classDays.add(Calendar.MONDAY);
+        }
+        if (days.contains("T"))
+        {
+            classDays.add(Calendar.TUESDAY);
+        }
+        if (days.contains("W"))
+        {
+            classDays.add(Calendar.WEDNESDAY);
+        }
+        if (days.contains("R"))
+        {
+            classDays.add(Calendar.THURSDAY);
+        }
+        if (days.contains("F"))
+        {
+            classDays.add(Calendar.FRIDAY);
+        }
+        if (days.contains("S"))
+        {
+            classDays.add(Calendar.SATURDAY);
+        }
+        if (days.contains("U"))
+        {
+            classDays.add(Calendar.SUNDAY);
+        }
+        return classDays;
+    }
+
 }
