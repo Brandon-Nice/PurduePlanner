@@ -6,6 +6,9 @@ import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.VideoView;
 
@@ -51,6 +54,11 @@ public class LoginActivity extends Activity {
                 mp.setLooping(true);
             }
         });
+
+        ImageView myImageView= (ImageView)findViewById(R.id.purdue_img);
+        Animation myFadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fadein);
+        myImageView.startAnimation(myFadeInAnimation); //Set animation to your ImageView
+
 //        WebView wView = (WebView)findViewById(R.id.webView); //sets the lovely video
 //        String x = "<!DOCTYPE html><html><body><img src=\"https://drive.google.com/file/d/0B7P7W8dYm7KxVktRQ2pDdTdzaUU/view?usp=sharing\"  width=\"100%\" height=\"100%\"></body></html>";
 //
