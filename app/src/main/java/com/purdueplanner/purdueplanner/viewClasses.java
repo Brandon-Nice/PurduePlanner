@@ -107,7 +107,7 @@ public class viewClasses extends AppCompatActivity implements WeekView.MonthChan
             day.set(Calendar.DAY_OF_WEEK, ((Date) intent.getExtras().get("Day")).getDay());
             System.out.println(day.get(Calendar.DAY_OF_WEEK));
             String letter = null;
-            if (day.get(Calendar.DAY_OF_WEEK) == 0)
+            if (day.get(Calendar.DAY_OF_WEEK) == 0 || day.get(Calendar.DAY_OF_WEEK) == 7)
             {
                 letter = "U";
             }
@@ -135,8 +135,11 @@ public class viewClasses extends AppCompatActivity implements WeekView.MonthChan
             {
                 letter = "S";
             }
+            System.out.println("DayCalendar:" + day.get(Calendar.DAY_OF_WEEK));
             for (int i = 0; i < classList.size(); i++)
             {
+                System.out.println("Days:" + classList.get(i).getDays());
+                System.out.println("Letter" + letter);
                 if (classList.get(i).getDays().contains(letter))
                 {
                     if (!classList.get(i).getStartTime().equals("TBA")) {
