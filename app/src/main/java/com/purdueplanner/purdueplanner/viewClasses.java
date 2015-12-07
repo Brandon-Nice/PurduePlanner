@@ -81,7 +81,6 @@ public class viewClasses extends AppCompatActivity implements WeekView.MonthChan
         if (visibleDays == 7)
         {
             Calendar day = Calendar.getInstance();
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             day.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
             mWeekView.goToDate(day);
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
