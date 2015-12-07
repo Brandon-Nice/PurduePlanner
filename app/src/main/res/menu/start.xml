@@ -6,5 +6,5 @@
 
     <item android:id="@+id/add_class" android:title="Add Class"
         android:orderInCategory="200" app:showAsAction="always"
-        android:icon="@drawable/plus"/>
+        android:icon="@drawable/stockplus"/>
 </menu>

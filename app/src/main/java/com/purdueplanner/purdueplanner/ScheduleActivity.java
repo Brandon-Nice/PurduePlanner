@@ -56,6 +56,9 @@ public class ScheduleActivity extends FragmentActivity {
         args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
         caldroidFragment.setArguments(args);
         prevDate = new Date();
+        Button viewClassesButton = (Button)findViewById(R.id.viewClassesButton);
+        viewClassesButton.setBackgroundResource(android.R.drawable.btn_default);
+
         System.out.println("prevdate: " + prevDate);
         final CaldroidListener listener = new CaldroidListener() {
 

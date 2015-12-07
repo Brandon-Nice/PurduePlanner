@@ -40,6 +40,8 @@ public class HomeLocationActivity extends AppCompatActivity {
 
         final Button setButton = (Button) findViewById(R.id.setButton);
         Button cancelButton = (Button) findViewById(R.id.cancelButton);
+        setButton.setBackgroundResource(android.R.drawable.btn_default);
+        cancelButton.setBackgroundResource(android.R.drawable.btn_default);
         final EditText addressInput = (EditText) findViewById(R.id.address);
         final EditText zipInput = (EditText) findViewById(R.id.zip);
         final EditText countryInput = (EditText) findViewById(R.id.country);
