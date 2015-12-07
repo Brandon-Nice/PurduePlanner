@@ -61,7 +61,9 @@ public class ScheduleActivity extends FragmentActivity {
 
             @Override
             public void onSelectDate(Date date, View view) {
-                System.out.println("Date: " + date);
+                Intent intent = new Intent(getApplicationContext(), viewClasses.class).putExtra("VisibleDays", 1).putExtra("Day", date);
+                startActivity(intent);
+                /*System.out.println("Date: " + date);
                 caldroidFragment.setBackgroundResourceForDate(R.color.caldroid_white, prevDate);
                 prevDate = date;
                 caldroidFragment.setBackgroundResourceForDate(R.drawable.red_border, date);
@@ -87,7 +89,8 @@ public class ScheduleActivity extends FragmentActivity {
                 //in order to pass the 'currdate' (and the day letter) string in using a new Activity, we have to do this
                 Intent myIntent = new Intent(ScheduleActivity.this, DayScheduleActivity.class);
                 myIntent.putExtra("dayletter_key", letterDay); //adds the string to a HashMap like object
-                startActivity(myIntent); //goes to new activity once the button is pressed
+                startActivity(myIntent); //goes to new activity once the button is pressed */
+
             }
         };
 
@@ -162,7 +165,7 @@ public class ScheduleActivity extends FragmentActivity {
 
     public void buttonOnClick(View v) {
         Button button = (Button) v;
-        Intent intent = new Intent(this, viewClasses.class);
+        Intent intent = new Intent(this, viewClasses.class).putExtra("VisibleDays", 7);
         startActivity(intent);
     }
 

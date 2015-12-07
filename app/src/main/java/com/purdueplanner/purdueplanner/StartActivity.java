@@ -162,7 +162,6 @@ public class StartActivity extends AppCompatActivity
         Date date = new Date();
 
         currDay = (String) android.text.format.DateFormat.format("EEEE", date);
-        currDay = "Wednesday";
         System.out.println(currDay);
         TextView myTextView = (TextView) findViewById(R.id.textView);
         myTextView.setText(currDay);
