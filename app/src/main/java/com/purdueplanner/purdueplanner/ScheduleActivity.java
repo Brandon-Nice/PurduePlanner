@@ -158,10 +158,6 @@ public class ScheduleActivity extends FragmentActivity {
                 myIntent.putExtra("dayletter_key", actualDay); //adds the string to a HashMap like object
                 startActivity(myIntent); //goes to new activity once the button is pressed
             }
-
-
-
-
         });
 */
     }

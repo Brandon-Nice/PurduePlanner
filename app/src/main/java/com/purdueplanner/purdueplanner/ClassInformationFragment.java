@@ -69,7 +69,9 @@ public class ClassInformationFragment extends Fragment {
         // Create a new text view that will store the class information
         TextView textView = new TextView(getActivity());
         // Put the class information in the text view
+
         textView.setText(currentClass.toString());
+
         // Display the class information on the interface
         rl.addView(textView);
         // Create a button so the user can remove the class

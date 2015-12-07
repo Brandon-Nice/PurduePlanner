@@ -53,7 +53,10 @@ public class AddClassActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            startActivity(new Intent(this, SettingsActivity.class));
+            Intent myIntent = new Intent(getApplicationContext(), StartActivity.class);
+            startActivityForResult(myIntent, 0);
+            return true;
+            //startActivity(new Intent(this, SettingsActivity.class));
         }
 
         return super.onOptionsItemSelected(item);
