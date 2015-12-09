@@ -1,19 +1,11 @@
 package com.purdueplanner.purdueplanner;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.content.BroadcastReceiver;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -25,22 +17,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import static android.content.Context.WIFI_SERVICE;
-
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookException;
-import com.facebook.FacebookCallback;
 import com.facebook.GraphRequest;
-import com.facebook.GraphRequestAsyncTask;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
-import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.facebook.login.widget.ProfilePictureView;
 import com.firebase.client.DataSnapshot;
@@ -53,8 +38,6 @@ import com.firebase.client.ValueEventListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -510,10 +493,20 @@ public class StartActivity extends AppCompatActivity
             startActivity(new Intent(StartActivity.this, ContactActivity.class));
         } else if (id == R.id.nav_about) {
             startActivity(new Intent(StartActivity.this, AboutActivity.class));
+        } else if (id == R.id.nav_hide)
+        {
+            if (item.getIcon().getConstantState().equals(getResources().getDrawable(R.drawable.stockcalendar).getConstantState()))
+            {
+                item.setIcon(getResources().getDrawable(R.drawable.stockfriend));
+            }
+            else
+            {
+                item.setIcon(getResources().getDrawable(R.drawable.stockcalendar));
+            }
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        //DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        //drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
