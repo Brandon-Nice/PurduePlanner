@@ -9,12 +9,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 public class viewClasses extends AppCompatActivity implements WeekView.MonthChangeListener,
         WeekView.EventClickListener, WeekView.EventLongPressListener {
@@ -136,6 +138,7 @@ public class viewClasses extends AppCompatActivity implements WeekView.MonthChan
         mWeekView.setEventLongPressListener(this);
         mWeekView.setXScrollingSpeed(0);
         mWeekView.setNumberOfVisibleDays(visibleDays);
+        setupDateTimeInterpreter(true);
 
 
 
@@ -144,6 +147,35 @@ public class viewClasses extends AppCompatActivity implements WeekView.MonthChan
 
 
 
+    }
+
+    private void setupDateTimeInterpreter(final boolean shortDate) {
+        mWeekView.setDateTimeInterpreter(new DateTimeInterpreter() {
+            @Override
+            public String interpretDate(Calendar date) {
+                SimpleDateFormat sdf = new SimpleDateFormat("EEEE", Locale.getDefault());
+                String weekday = sdf.format(date.getTime());
+                return weekday;
+            }
+
+            @Override
+            public String interpretTime(int hour, int minutes) {
+                String strMinutes = String.format("%02d", minutes);
+                if (hour == 12)
+                {
+                    return "12:" + strMinutes + " PM";
+                }
+                else if (hour > 11) {
+                    return (hour - 12) + ":" + strMinutes + " PM";
+                } else {
+                    if (hour == 0) {
+                        return "12:" + strMinutes + " AM";
+                    } else {
+                        return hour + ":" + strMinutes + " AM";
+                    }
+                }
+            }
+        });
     }
 
 

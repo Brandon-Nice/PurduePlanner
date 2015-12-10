@@ -21,11 +21,13 @@ import com.firebase.client.ValueEventListener;
 import org.json.JSONObject;
 
 import java.lang.reflect.Array;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class FriendClickedActivity extends AppCompatActivity implements WeekView.MonthChangeListener,
@@ -69,6 +71,8 @@ public class FriendClickedActivity extends AppCompatActivity implements WeekView
         mWeekView.setEventLongPressListener(FriendClickedActivity.this);
         mWeekView.setXScrollingSpeed(0);
         mWeekView.setNumberOfVisibleDays(1);
+        mWeekView.setHourHeight(mWeekView.getHourHeight() * 4);
+        setupDateTimeInterpreter(true);
         currentStudentClasses = ((MyApplication) getApplication()).getStudent().getSchedule();
         friendsClasses = new ArrayList();
 
@@ -583,6 +587,35 @@ public class FriendClickedActivity extends AppCompatActivity implements WeekView
             mWeekView.goToHour(minTime);
             System.out.println("MinTime: " + minTime);
         }
+    }
+
+    private void setupDateTimeInterpreter(final boolean shortDate) {
+        mWeekView.setDateTimeInterpreter(new DateTimeInterpreter() {
+            @Override
+            public String interpretDate(Calendar date) {
+                SimpleDateFormat sdf = new SimpleDateFormat("EEEE", Locale.getDefault());
+                String weekday = sdf.format(date.getTime());
+                return weekday;
+            }
+
+            @Override
+            public String interpretTime(int hour, int minutes) {
+                String strMinutes = String.format("%02d", minutes);
+                if (hour == 12)
+                {
+                    return "12:" + strMinutes + " PM";
+                }
+                else if (hour > 11) {
+                    return (hour - 12) + ":" + strMinutes + " PM";
+                } else {
+                    if (hour == 0) {
+                        return "12:" + strMinutes + " AM";
+                    } else {
+                        return hour + ":" + strMinutes + " AM";
+                    }
+                }
+            }
+        });
     }
 
 }
