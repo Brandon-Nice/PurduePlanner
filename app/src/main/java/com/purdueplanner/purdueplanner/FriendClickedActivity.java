@@ -197,7 +197,12 @@ public class FriendClickedActivity extends AppCompatActivity implements WeekView
             public void onDataChange(DataSnapshot snapshot) {
                 //System.out.println(snapshot);
                 HashMap<String, Object> val = (HashMap) snapshot.getValue();
-                if (((boolean) val.get("isScheduleHidden")) == true) {
+                boolean isScheduleHidden = false;
+                if (val.get("isScheduleHidden") != null)
+                {
+                    isScheduleHidden = (boolean) val.get("isScheduleHidden");
+                }
+                if (isScheduleHidden == true) {
                     RelativeLayout rl = (RelativeLayout) findViewById(R.id.totalLayout);
                     rl.removeAllViews();
                     TextView hiddenFriend = new TextView(FriendClickedActivity.this);
