@@ -163,14 +163,11 @@ public class StartActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
 
-
-
-
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         MenuItem hide = navigationView.getMenu().getItem(2);
-        hide.setIcon(getResources().getDrawable(R.drawable.stockcalendar));
+        hide.setIcon(getResources().getDrawable(R.drawable.x_icon));
         navigationView.setNavigationItemSelectedListener(this);
 
     }
@@ -501,13 +498,13 @@ public class StartActivity extends AppCompatActivity
             startActivity(new Intent(StartActivity.this, AboutActivity.class));
         } else if (id == R.id.nav_hide)
         {
-            if (item.getIcon().getConstantState().equals(getResources().getDrawable(R.drawable.stockcalendar).getConstantState()))
+            if (item.getIcon().getConstantState().equals(getResources().getDrawable(R.drawable.x_icon).getConstantState()))
             {
-                item.setIcon(getResources().getDrawable(R.drawable.stockfriend));
+                item.setIcon(getResources().getDrawable(R.drawable.check_mark));
             }
             else
             {
-                item.setIcon(getResources().getDrawable(R.drawable.stockcalendar));
+                item.setIcon(getResources().getDrawable(R.drawable.x_icon));
             }
         }
 
