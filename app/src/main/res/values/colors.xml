@@ -5,4 +5,5 @@
     <color name="colorAccent">#edbe00</color>
     <color name="actionBarText">#ff0066</color>
     <color name="ScheduleColor">#ab9316</color>
+    <color name="timeRed">#CD5555</color>
 </resources>

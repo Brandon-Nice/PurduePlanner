@@ -7,10 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import com.alamkanak.weekview.WeekView;
-import com.alamkanak.weekview.WeekViewEvent;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -32,47 +29,16 @@ public class viewClasses extends AppCompatActivity implements WeekView.MonthChan
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.view_classes);
-
 
         Intent intent = getIntent();
         visibleDays = (int) intent.getExtras().get("VisibleDays");
 
 
-
-        ArrayList<String> stringList = new ArrayList<>();
-
         classList = ((MyApplication) getApplication()).getStudent().getSchedule();
-        /*Classes currentClass = new Classes();
-        //classList.add(currentClass);
-        int size = classList.size();
-        for (int i = 0; i < size; i++) {
-            stringList.add(classList.get(i).getMajor() + " " + classList.get(i).getCourseNum() + "\n" +
-                    classList.get(i).getDays() + "\t" +
-                    classList.get(i).getStartTime()
-                     + " - " + classList.get(i).getEndTime() + "\n" +
-                    classList.get(i).getLocation());
-        }
 
-        // 3 lines below work!
-        classListView = (ListView) findViewById(R.id.classView);
-        adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, stringList);
-        classListView.setAdapter(adapter); */
 
-        // Get a reference for the week view in the layout.
-        mWeekView = (WeekView) findViewById(R.id.weekView);
 
-// Set an action when any event is clicked.
-        mWeekView.setOnEventClickListener(this);
 
-// The week view has infinite scrolling horizontally. We have to provide the events of a
-// month every time the month changes on the week view.
-        mWeekView.setMonthChangeListener(this);
-
-// Set long press listener for events.
-        mWeekView.setEventLongPressListener(this);
-
-        mWeekView.setNumberOfVisibleDays(visibleDays);
 
         final String currDay = (String) android.text.format.DateFormat.format("EEEE", new Date());
 
@@ -80,9 +46,17 @@ public class viewClasses extends AppCompatActivity implements WeekView.MonthChan
         int minTime = 100;
         if (visibleDays == 7)
         {
-            Calendar day = Calendar.getInstance();
+            setContentView(R.layout.view_classes_7);
+            mWeekView = (WeekView) findViewById(R.id.weekView);
+            mWeekView.setHourHeight(mWeekView.getHourHeight() * 2);
+            System.out.println("Hello");
+            mWeekView.setFirstDayOfWeek(Calendar.SUNDAY);
+            GregorianCalendar day = new GregorianCalendar();
             day.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
             mWeekView.goToDate(day);
+            System.out.println("First Visible Day" + mWeekView.getFirstVisibleDay());
+            System.out.println("First day of week:" + mWeekView.getFirstDayOfWeek());
+
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
             for (int i = 0; i < classList.size(); i++) {
@@ -97,6 +71,9 @@ public class viewClasses extends AppCompatActivity implements WeekView.MonthChan
         }
         else
         {
+            setContentView(R.layout.view_classes_1);
+            mWeekView = (WeekView) findViewById(R.id.weekView);
+            mWeekView.setHourHeight(mWeekView.getHourHeight() * 4);
             Calendar day = Calendar.getInstance();
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             day.set(Calendar.DAY_OF_WEEK, ((Date) intent.getExtras().get("Day")).getDay() + 1);
@@ -149,9 +126,20 @@ public class viewClasses extends AppCompatActivity implements WeekView.MonthChan
             mWeekView.goToHour(minTime);
         }
 
-        mWeekView.setXScrollingSpeed(0);
+        mWeekView.setOnEventClickListener(this);
 
-        //mWeekView.visible
+        // The week view has infinite scrolling horizontally. We have to provide the events of a
+        // month every time the month changes on the week view.
+        mWeekView.setMonthChangeListener(this);
+
+        // Set long press listener for events.
+        mWeekView.setEventLongPressListener(this);
+        mWeekView.setXScrollingSpeed(0);
+        mWeekView.setNumberOfVisibleDays(visibleDays);
+
+
+
+
 
 
 
@@ -206,9 +194,7 @@ public class viewClasses extends AppCompatActivity implements WeekView.MonthChan
                     endTime.set(Calendar.DAY_OF_WEEK, classDays.get(j));
                     WeekViewEvent event = null;
                     if (visibleDays == 7) {
-                        event = new WeekViewEvent(i, classList.get(i).getMajor() + " " + classList.get(i).getCourseNum()
-                                + "\n" + classList.get(i).getStartTime() + " - "
-                                + classList.get(i).getEndTime() + "\n", startTime, endTime);
+                        event = new WeekViewEvent(i, classList.get(i).getMajor() + " " + classList.get(i).getCourseNum(), startTime, endTime);
                     } else {
                         event = new WeekViewEvent(i, classList.get(i).getMajor() + " " + classList.get(i).getCourseNum()
                                 + "\n" + classList.get(i).getLocation() + "\n" + classList.get(i).getStartTime() + " - "
@@ -226,7 +212,6 @@ public class viewClasses extends AppCompatActivity implements WeekView.MonthChan
 
     public HashMap<String, Integer> interpretTime(String time)
     {
-        System.out.println("Time: " + time);
         int firstColon = time.indexOf(":");
         int firstSpace = time.indexOf(" ");
         int hour = Integer.parseInt(time.substring(0, firstColon));

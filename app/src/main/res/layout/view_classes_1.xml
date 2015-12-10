@@ -10,25 +10,25 @@
                 android:paddingBottom="@dimen/activity_vertical_margin"
                 tools:context="com.purdueplanner.purdueplanner.viewClasses">
 
-   <!-- <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/classView"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="29dp" />
+    <!-- <ListView
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:id="@+id/classView"
+         android:layout_alignParentTop="true"
+         android:layout_centerHorizontal="true"
+         android:layout_marginTop="29dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="All Classes"
-        android:id="@+id/textView4"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" /> -->
+     <TextView
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:textAppearance="?android:attr/textAppearanceSmall"
+         android:text="All Classes"
+         android:id="@+id/textView4"
+         android:layout_alignParentTop="true"
+         android:layout_alignParentLeft="true"
+         android:layout_alignParentStart="true" /> -->
 
-    <com.alamkanak.weekview.WeekView
+    <com.purdueplanner.purdueplanner.WeekView
         android:id="@+id/weekView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -39,9 +39,11 @@
         app:headerColumnTextColor="#8f000000"
         app:headerRowPadding="12dp"
         app:columnGap="8dp"
-        app:noOfVisibleDays="3"
+        app:noOfVisibleDays="7"
         app:headerRowBackgroundColor="#ffefefef"
         app:dayBackgroundColor="#05000000"
         app:todayBackgroundColor="#1848adff"
-        app:headerColumnBackground="#ffffffff"/>
+        app:headerColumnBackground="#ffffffff"
+        app:showHalfHours="true"
+        app:useNewColoringStyle="true"/>
 </RelativeLayout>
