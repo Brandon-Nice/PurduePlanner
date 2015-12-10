@@ -163,11 +163,12 @@ public class StartActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
 
+
+
+
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        MenuItem hide = navigationView.getMenu().getItem(2);
-        hide.setIcon(getResources().getDrawable(R.drawable.x_icon));
         navigationView.setNavigationItemSelectedListener(this);
 
     }
@@ -330,6 +331,20 @@ public class StartActivity extends AppCompatActivity
                     ArrayList<HashMap<String, String>> databaseClasses = null;
                     HashMap<String, Double> homeLocation = null;
                     currentStudent.setId((String) val.get("id"));
+                    NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+                    MenuItem hide = navigationView.getMenu().getItem(2);
+                    if (val.get("isScheduleHidden") != null) {
+                        currentStudent.setScheduleHidden((boolean) val.get("isScheduleHidden"));
+                        if (currentStudent.getScheduleHidden()) {
+                            hide.setIcon(getResources().getDrawable(R.drawable.check_mark));
+                        } else {
+                            hide.setIcon(getResources().getDrawable(R.drawable.x_icon));
+                        }
+                    }
+                    else
+                    {
+                        hide.setIcon(getResources().getDrawable(R.drawable.x_icon));
+                    }
                     databaseClasses = (ArrayList<HashMap<String, String>>) val.get("Schedule");
                     homeLocation = (HashMap<String, Double>) val.get("HomeLocation");
                     if(homeLocation != null) {
@@ -482,6 +497,8 @@ public class StartActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        final Student currentStudent = ((MyApplication) getApplication()).getStudent();
+        Firebase.setAndroidContext(this);
 
         if (id == R.id.nav_login) {
             // Handle the login action
@@ -498,13 +515,27 @@ public class StartActivity extends AppCompatActivity
             startActivity(new Intent(StartActivity.this, AboutActivity.class));
         } else if (id == R.id.nav_hide)
         {
-            if (item.getIcon().getConstantState().equals(getResources().getDrawable(R.drawable.x_icon).getConstantState()))
+            if (currentStudent.getScheduleHidden())
             {
-                item.setIcon(getResources().getDrawable(R.drawable.check_mark));
+                item.setIcon(getResources().getDrawable(R.drawable.x_icon));
+                currentStudent.setScheduleHidden(false);
+                Firebase ref = new Firebase("https://purduescheduler.firebaseio.com/Students/" + currentStudent.getId());
+                // Go to the current student's schedule in the firebase data
+                Firebase isScheduleHiddenRef = ref.child("isScheduleHidden");
+                isScheduleHiddenRef.setValue(false);;
+
+
+
             }
             else
             {
-                item.setIcon(getResources().getDrawable(R.drawable.x_icon));
+                item.setIcon(getResources().getDrawable(R.drawable.check_mark));
+                currentStudent.setScheduleHidden(true);
+                Firebase ref = new Firebase("https://purduescheduler.firebaseio.com/Students/" + currentStudent.getId());
+                // Go to the current student's schedule in the firebase data
+                Firebase isScheduleHiddenRef = ref.child("isScheduleHidden");
+                isScheduleHiddenRef.setValue(true);
+
             }
         }
 

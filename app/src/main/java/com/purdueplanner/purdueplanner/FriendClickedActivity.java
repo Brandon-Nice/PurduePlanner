@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -50,8 +51,8 @@ public class FriendClickedActivity extends AppCompatActivity implements WeekView
         String id = extras.getString("friendID");
         String firstName = extras.getString("first");
         String lastName = extras.getString("last");
-        String combinedName = firstName + " " + lastName;
-        String currentStudentName = ((MyApplication) getApplication()).getStudent().getFirstName();
+        final String combinedName = firstName + " " + lastName;
+        final String currentStudentName = ((MyApplication) getApplication()).getStudent().getFirstName();
         final TextView friendName = (TextView) findViewById(R.id.friendName);
         final TextView studentName = (TextView) findViewById(R.id.studentName);
         friendName.setText(firstName);
@@ -137,43 +138,37 @@ public class FriendClickedActivity extends AppCompatActivity implements WeekView
                     mWeekView.goToDate(day);
 
                     setMinTime("Sunday");
-                }
-                else if (parent.getItemAtPosition(position).equals("Monday")) {
+                } else if (parent.getItemAtPosition(position).equals("Monday")) {
                     Calendar day = Calendar.getInstance();
                     day.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
                     mWeekView.goToDate(day);
 
                     setMinTime("Monday");
-                }
-                else if (parent.getItemAtPosition(position).equals("Tuesday")) {
+                } else if (parent.getItemAtPosition(position).equals("Tuesday")) {
                     Calendar day = Calendar.getInstance();
                     day.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);
                     mWeekView.goToDate(day);
 
                     setMinTime("Tuesday");
-                }
-                else if (parent.getItemAtPosition(position).equals("Wednesday")) {
+                } else if (parent.getItemAtPosition(position).equals("Wednesday")) {
                     Calendar day = Calendar.getInstance();
                     day.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
                     mWeekView.goToDate(day);
 
                     setMinTime("Wednesday");
-                }
-                else if (parent.getItemAtPosition(position).equals("Thursday")) {
+                } else if (parent.getItemAtPosition(position).equals("Thursday")) {
                     Calendar day = Calendar.getInstance();
                     day.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
                     mWeekView.goToDate(day);
 
                     setMinTime("Thursday");
-                }
-                else if (parent.getItemAtPosition(position).equals("Friday")) {
+                } else if (parent.getItemAtPosition(position).equals("Friday")) {
                     Calendar day = Calendar.getInstance();
                     day.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
                     mWeekView.goToDate(day);
 
                     setMinTime("Friday");
-                }
-                else if (parent.getItemAtPosition(position).equals("Saturday")) {
+                } else if (parent.getItemAtPosition(position).equals("Saturday")) {
                     Calendar day = Calendar.getInstance();
                     day.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
                     mWeekView.goToDate(day);
@@ -202,57 +197,71 @@ public class FriendClickedActivity extends AppCompatActivity implements WeekView
             public void onDataChange(DataSnapshot snapshot) {
                 //System.out.println(snapshot);
                 HashMap<String, Object> val = (HashMap) snapshot.getValue();
+                if (((boolean) val.get("isScheduleHidden")) == true) {
+                    RelativeLayout rl = (RelativeLayout) findViewById(R.id.totalLayout);
+                    rl.removeAllViews();
+                    TextView hiddenFriend = new TextView(FriendClickedActivity.this);
+                    hiddenFriend.setText(combinedName + " has decided not to share their schedule with you.");
+                    rl.addView(hiddenFriend);
+                }
+                else {
+                    studentName.setVisibility(View.VISIBLE);
+                    friendName.setVisibility(View.VISIBLE);
+                    spinner.setVisibility(View.VISIBLE);
+                    mWeekView.setVisibility(View.VISIBLE);
+                    findViewById(R.id.versus).setVisibility(View.VISIBLE);
 
-                ArrayList<HashMap<String, String>> databaseClasses = null;
-                databaseClasses = (ArrayList<HashMap<String, String>>) val.get("Schedule");
+                    ArrayList<HashMap<String, String>> databaseClasses = null;
+                    databaseClasses = (ArrayList<HashMap<String, String>>) val.get("Schedule");
 
-                if (databaseClasses != null) {
-                    for (int i = 0; i < databaseClasses.size(); i++) {
-                        if (databaseClasses.get(i) != null) {
-                            final HashMap<String, String> currentDBClass = databaseClasses.get(i);
-                            String major = currentDBClass.get("Major");
-                            String course = currentDBClass.get("Course");
-                            String section = currentDBClass.get("Section");
+                    if (databaseClasses != null) {
+                        for (int i = 0; i < databaseClasses.size(); i++) {
+                            if (databaseClasses.get(i) != null) {
+                                final HashMap<String, String> currentDBClass = databaseClasses.get(i);
+                                String major = currentDBClass.get("Major");
+                                String course = currentDBClass.get("Course");
+                                String section = currentDBClass.get("Section");
 
-                            //System.out.println(major + " " + course + " " + section);
-                            Firebase ref = new Firebase("https://purduescheduler.firebaseio.com/Classes/" + major + "/" +
-                                    course + "/" + section);
-                            //System.out.println(ref.getRoot());
-                            ref.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot snapshot) {
-                                    //System.out.println(snapshot);
-                                    Classes currentClass = new Classes();
-                                    HashMap<String, String> val = (HashMap) snapshot.getValue();
-                                    currentClass.setCourseNum(val.get("courseNum"));
-                                    currentClass.setCredits(val.get("credits"));
-                                    currentClass.setCRN(val.get("crn"));
-                                    currentClass.setDays(val.get("days"));
-                                    currentClass.setEndDate(val.get("endDate"));
-                                    currentClass.setEndTime(val.get("endTime"));
-                                    currentClass.setInstructor(val.get("instructor"));
-                                    currentClass.setInstructorEmail(val.get("instructorEmail"));
-                                    currentClass.setLocation(val.get("location"));
-                                    currentClass.setMajor(val.get("major"));
-                                    currentClass.setSectionNum(val.get("sectionNum"));
-                                    currentClass.setStartDate(val.get("startDate"));
-                                    currentClass.setStartTime(val.get("startTime"));
-                                    currentClass.setTitle(val.get("title"));
-                                    currentClass.setType(val.get("type"));
-                                    currentClass.setLatitude(val.get("latitude"));
-                                    currentClass.setLongitude(val.get("longitude"));
-                                    friendsClasses.add(currentClass);
-                                    setMinTime((String) spinner.getSelectedItem());
-                                    mWeekView.notifyDatasetChanged();
-                                }
+                                //System.out.println(major + " " + course + " " + section);
+                                Firebase ref = new Firebase("https://purduescheduler.firebaseio.com/Classes/" + major + "/" +
+                                        course + "/" + section);
+                                //System.out.println(ref.getRoot());
+                                ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot snapshot) {
+                                        //System.out.println(snapshot);
+                                        Classes currentClass = new Classes();
+                                        HashMap<String, String> val = (HashMap) snapshot.getValue();
+                                        currentClass.setCourseNum(val.get("courseNum"));
+                                        currentClass.setCredits(val.get("credits"));
+                                        currentClass.setCRN(val.get("crn"));
+                                        currentClass.setDays(val.get("days"));
+                                        currentClass.setEndDate(val.get("endDate"));
+                                        currentClass.setEndTime(val.get("endTime"));
+                                        currentClass.setInstructor(val.get("instructor"));
+                                        currentClass.setInstructorEmail(val.get("instructorEmail"));
+                                        currentClass.setLocation(val.get("location"));
+                                        currentClass.setMajor(val.get("major"));
+                                        currentClass.setSectionNum(val.get("sectionNum"));
+                                        currentClass.setStartDate(val.get("startDate"));
+                                        currentClass.setStartTime(val.get("startTime"));
+                                        currentClass.setTitle(val.get("title"));
+                                        currentClass.setType(val.get("type"));
+                                        currentClass.setLatitude(val.get("latitude"));
+                                        currentClass.setLongitude(val.get("longitude"));
+                                        friendsClasses.add(currentClass);
+                                        setMinTime((String) spinner.getSelectedItem());
+                                        mWeekView.notifyDatasetChanged();
+                                    }
 
-                                @Override
-                                public void onCancelled(FirebaseError firebaseError) {
+                                    @Override
+                                    public void onCancelled(FirebaseError firebaseError) {
 
-                                }
-                            });
+                                    }
+                                });
+                            }
+
                         }
-
                     }
                 }
 

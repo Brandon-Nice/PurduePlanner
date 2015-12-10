@@ -20,6 +20,8 @@ public class Student {
     private double Latitude;
     // Stores the student's Longitude
     private double Longitude;
+    // Stores the whether or not the student wants to hide their schedule from friends
+    private boolean isScheduleHidden;
 
 
     // Declare an empty student
@@ -29,12 +31,16 @@ public class Student {
     }
 
     // Declare a complete student
-    public Student(String id, String firstName, String lastName, ArrayList<Classes> schedule)
+    public Student(String id, String firstName, String lastName, ArrayList<Classes> schedule, double Latitude, double Longitude, boolean isScheduleHidden)
     {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.schedule = schedule;
+        this.Latitude = Latitude;
+        this.Longitude = Longitude;
+        this.isScheduleHidden = isScheduleHidden;
+
     }
 
     // Get the student's unique identification number
@@ -95,5 +101,17 @@ public class Student {
 
     // Get the student's Longitude
     public double getLongitude() { return Longitude;}
+
+    // Set whether or not the student wants to hide their schedule from friends
+    public void setScheduleHidden(boolean isScheduleHidden)
+    {
+        this.isScheduleHidden = isScheduleHidden;
+    }
+
+    // Get whether or not the student wants to hide their schedule from friends
+    public boolean getScheduleHidden()
+    {
+        return isScheduleHidden;
+    }
 
 }

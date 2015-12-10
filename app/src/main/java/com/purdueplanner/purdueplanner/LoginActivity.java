@@ -186,7 +186,9 @@ public class LoginActivity extends Activity {
 
     public void loginStudent(final String userID)
     {
-        Student currentStudent = currentStudent = new Student(userID, null, null, new ArrayList<Classes>());
+        Student currentStudent = new Student();
+        currentStudent.setId(userID);
+        currentStudent.setSchedule(new ArrayList<Classes>());
         ((MyApplication) getApplication()).setStudent(currentStudent);
         Intent init = new Intent(LoginActivity.this, StartActivity.class);
         init.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
