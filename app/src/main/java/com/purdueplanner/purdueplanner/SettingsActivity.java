@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
+import android.preference.DialogPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.support.v4.app.NavUtils;
@@ -20,6 +21,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.text.TextUtils;
+import android.util.AttributeSet;
 import android.view.MenuItem;
 
 import java.util.List;
@@ -270,4 +272,5 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             return super.onOptionsItemSelected(item);
         }
     }
+
 }

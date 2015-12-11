@@ -509,7 +509,12 @@ public class StartActivity extends AppCompatActivity
             // Handle the Home Location
             startActivity(new Intent(StartActivity.this, HomeLocationActivity.class));
 
-        }else if (id == R.id.nav_contact) {
+        }
+        else if(id == R.id.nav_del) {
+            ArrayList<Classes> currClasses = currentStudent.getSchedule();
+            ArrayList<Classes> emptyClasses = new ArrayList<>();
+            currentStudent.setSchedule(emptyClasses);
+        } else if (id == R.id.nav_contact) {
             startActivity(new Intent(StartActivity.this, ContactActivity.class));
         } else if (id == R.id.nav_about) {
             startActivity(new Intent(StartActivity.this, AboutActivity.class));
@@ -583,7 +588,7 @@ public class StartActivity extends AppCompatActivity
 
         } catch (NullPointerException n){ //means that the user is offline
             //TODO: Implement actions for button
-            Toast.makeText(getApplicationContext(), "Lost connect.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Lost connection.", Toast.LENGTH_LONG).show();
             AlertDialog alertDialog = new AlertDialog.Builder(StartActivity.this).create();
             alertDialog.setTitle("Alert");
             alertDialog.setMessage("Oops! Looks like you aren't connected to Wifi or a mobile network at the moment. Would you like to connect or exit?");

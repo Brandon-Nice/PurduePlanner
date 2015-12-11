@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:Android="http://schemas.android.com/tools">
 
     <group>
-        <item android:id="@+id/nav_login" android:icon="@android:drawable/ic_menu_camera"
+        <item android:id="@+id/nav_login" android:icon="@drawable/lock_icon"
               android:title="Log Out"
               android:checkable="false"/>
-        <item android:id="@+id/nav_home" android:icon="@android:drawable/ic_menu_gallery"
+        <item android:id="@+id/nav_home" android:icon="@drawable/home_icon"
               android:title="Home Location"
               android:checkable="false"/>
         <item android:id="@+id/nav_hide" android:icon="@drawable/x_icon"
@@ -21,7 +22,14 @@
 
     </group>
 
+    <item android:title="Delete">
+        <menu>
+            <item android:id="@+id/nav_del" android:icon="@drawable/delete_icon"
+                android:title="Delete All Classes"
+                android:checkable="false"/>
 
+        </menu>
+    </item>
 
     <item android:title="About">
         <menu>
