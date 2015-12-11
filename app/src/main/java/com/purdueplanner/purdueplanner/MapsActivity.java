@@ -2,11 +2,17 @@ package com.purdueplanner.purdueplanner;
 
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.firebase.client.Firebase;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -20,6 +26,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.jar.Manifest;
@@ -97,6 +105,36 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng purdueUni = new LatLng(40.427976, -86.915479);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(purdueUni, 15));
 
+        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+
+            @Override
+            public View getInfoWindow(Marker arg0) {
+                return null;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+
+                LinearLayout info = new LinearLayout(MapsActivity.this);
+                info.setOrientation(LinearLayout.VERTICAL);
+
+                /*TextView title = new TextView(MapsActivity.this);
+                title.setTextColor(Color.BLACK);
+                title.setGravity(Gravity.CENTER);
+                title.setTypeface(null, Typeface.BOLD);
+                title.setText(marker.getTitle());*/
+
+                TextView snippet = new TextView(MapsActivity.this);
+                snippet.setTextColor(Color.BLACK);
+                snippet.setText(marker.getSnippet());
+
+                //info.addView(title);
+                info.addView(snippet);
+
+                return info;
+            }
+        });
+
 
 
         Date date = new Date();
@@ -110,7 +148,69 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ArrayList<Classes> currentStudentClasses = new ArrayList<Classes>();
         currentStudentClasses = currentStudent.getSchedule();
 
-        //iterates through every class and de termines the day
+        ArrayList<HashMap<String, Object>> markers = new ArrayList();
+        for (Classes specClass: currentStudentClasses)
+        {
+            if(specClass.getDays().contains(dayLetter)) {
+                if (specClass.getLatitude() != null) {
+                    boolean alreadyThere = false;
+                    int whereAt = 0;
+                    for (int i = 0; i < markers.size(); i++) {
+                        if (specClass.getLatitude().equals(markers.get(i).get("Latitude")) &&
+                                specClass.getLongitude().equals(markers.get(i).get("Longitude"))) {
+                            alreadyThere = true;
+                            whereAt = i;
+                            break;
+                        }
+                    }
+                    if (alreadyThere) {
+                        ArrayList<HashMap<String, String>> classes = (ArrayList) markers.get(whereAt).get("Classes");
+                        HashMap<String, String> currentClass = new HashMap();
+                        currentClass.put("Class", "Class: " + specClass.getMajor() + " "
+                                + specClass.getCourseNum() + "\n" + specClass.getLocation());
+                        currentClass.put("StartTime", specClass.getStartTime());
+                        classes.add(currentClass);
+                        markers.get(whereAt).put("Classes", classes);
+                    } else {
+                        HashMap<String, Object> marker = new HashMap();
+                        marker.put("Latitude", specClass.getLatitude());
+                        marker.put("Longitude", specClass.getLongitude());
+                        ArrayList<HashMap<String, String>> classes = new ArrayList();
+                        HashMap<String, String> currentClass = new HashMap();
+                        currentClass.put("Class", "Class: " + specClass.getMajor() + " "
+                                + specClass.getCourseNum() + "\n" + specClass.getLocation());
+                        currentClass.put("StartTime", specClass.getStartTime());
+                        classes.add(currentClass);
+                        marker.put("Classes", classes);
+                        markers.add(marker);
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < markers.size(); i++)
+        {
+            HashMap<String, Object> currentMarker = markers.get(i);
+            ArrayList<HashMap<String, String>> classes = (ArrayList) currentMarker.get("Classes");
+            sortMarkers(classes);
+            System.out.println(classes);
+            String currentSnippet = "";
+            int j = 0;
+            while (j < classes.size() - 1)
+            {
+                currentSnippet += classes.get(j).get("Class") + "\n";
+                j++;
+            }
+            currentSnippet += classes.get(j).get("Class");
+            mMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(Double.parseDouble((String) currentMarker.get("Latitude"))
+                            , Double.parseDouble((String) currentMarker.get("Longitude"))))
+                    .title("")
+                    .snippet(currentSnippet));
+        }
+
+
+        /*//iterates through every class and de termines the day
         for(Classes specClass : currentStudentClasses) {
             //does the class meet on the current day
             if(specClass.getDays().contains(dayLetter)) {
@@ -124,7 +224,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
 
             }
-        }
+        }*/
 
         if (currentStudent.getLatitude() != 0) {
             Marker homeMarker = mMap.addMarker(new MarkerOptions()
@@ -157,6 +257,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             //Supposedly there is no classes offered on Sunday's at Purdue, so I won't account for it
         }
         return letter;
+    }
+
+    private void sortMarkers(ArrayList<HashMap<String, String>> markers)
+    {
+        Comparator<HashMap<String, String>> byTime = new Comparator<HashMap<String, String>>() {
+            public int compare(HashMap<String, String> h1, HashMap<String, String> h2) {
+
+                int firstColon = h1.get("StartTime").indexOf(":");
+                int firstSpace = h1.get("StartTime").indexOf(" ");
+                int firstStartTime = Integer.parseInt(h1.get("StartTime").substring(0, firstColon) +
+                        h1.get("StartTime").substring(firstColon + 1, firstSpace));
+                if (h1.get("StartTime").contains("pm") && firstStartTime < 1200)
+                {
+                    firstStartTime += 1200;
+                }
+                int secondColon = h2.get("StartTime").indexOf(":");
+                int secondSpace = h2.get("StartTime").indexOf(" ");
+                int secondStartTime = Integer.parseInt(h2.get("StartTime").substring(0, secondColon) +
+                        h2.get("StartTime").substring(secondColon + 1, secondSpace));
+                if (h2.get("StartTime").contains("pm") && secondStartTime < 1200)
+                {
+                    secondStartTime += 1200;
+                }
+                return (firstStartTime - secondStartTime);
+            }
+        };
+        Collections.sort(markers, byTime);
     }
 
 }
