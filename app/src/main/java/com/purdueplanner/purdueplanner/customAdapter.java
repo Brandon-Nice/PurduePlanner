@@ -50,6 +50,11 @@ public class customAdapter extends BaseAdapter implements ListAdapter {
         return 0;
     }
 
+    public void clearList()
+    {
+        list.clear();
+    }
+
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         view = convertView;

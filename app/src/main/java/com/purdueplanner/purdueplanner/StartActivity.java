@@ -511,9 +511,12 @@ public class StartActivity extends AppCompatActivity
 
         }
         else if(id == R.id.nav_del) {
-            ArrayList<Classes> currClasses = currentStudent.getSchedule();
             ArrayList<Classes> emptyClasses = new ArrayList<>();
             currentStudent.setSchedule(emptyClasses);
+            ((customAdapter) dayListView.getAdapter()).clearList();
+            ((customAdapter) dayListView.getAdapter()).notifyDataSetChanged();
+            Firebase ref = new Firebase("https://purduescheduler.firebaseio.com/Students/" + currentStudent.getId() + "/Schedule");
+            ref.removeValue();
         } else if (id == R.id.nav_contact) {
             startActivity(new Intent(StartActivity.this, ContactActivity.class));
         } else if (id == R.id.nav_about) {
