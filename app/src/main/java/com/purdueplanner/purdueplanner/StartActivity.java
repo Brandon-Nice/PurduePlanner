@@ -178,7 +178,7 @@ public class StartActivity extends AppCompatActivity
         Log.d("logTest", "Network is unavailable"); //debugging
         isConnected = false;
         //TODO: Implement actions for button
-        Toast.makeText(getApplicationContext(), "Lost connect.", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "Lost connection.", Toast.LENGTH_LONG).show();
         AlertDialog alertDialog = new AlertDialog.Builder(StartActivity.this).create();
         alertDialog.setTitle("Alert");
         alertDialog.setMessage("Oops! Looks like you aren't connected to Wifi or a mobile network at the moment. Would you like to connect or exit?");
@@ -511,12 +511,29 @@ public class StartActivity extends AppCompatActivity
 
         }
         else if(id == R.id.nav_del) {
-            ArrayList<Classes> emptyClasses = new ArrayList<>();
-            currentStudent.setSchedule(emptyClasses);
-            ((customAdapter) dayListView.getAdapter()).clearList();
-            ((customAdapter) dayListView.getAdapter()).notifyDataSetChanged();
-            Firebase ref = new Firebase("https://purduescheduler.firebaseio.com/Students/" + currentStudent.getId() + "/Schedule");
-            ref.removeValue();
+            //Sets an alertdialog message to confirm delete
+            AlertDialog.Builder deleteDialog = new AlertDialog.Builder(StartActivity.this);
+            deleteDialog.setTitle("Confirm Delete");
+            deleteDialog.setMessage("Are you sure you want to delete all classes?");
+            deleteDialog.setIcon(R.drawable.delete_icon);
+            deleteDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    ArrayList<Classes> emptyClasses = new ArrayList<>();
+                    currentStudent.setSchedule(emptyClasses);
+                    ((customAdapter) dayListView.getAdapter()).clearList();
+                    ((customAdapter) dayListView.getAdapter()).notifyDataSetChanged();
+                    Firebase ref = new Firebase("https://purduescheduler.firebaseio.com/Students/" + currentStudent.getId() + "/Schedule");
+                    ref.removeValue();
+                }
+            });
+            deleteDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+
+                }
+            });
+            deleteDialog.show();
+
         } else if (id == R.id.nav_contact) {
             startActivity(new Intent(StartActivity.this, ContactActivity.class));
         } else if (id == R.id.nav_about) {
