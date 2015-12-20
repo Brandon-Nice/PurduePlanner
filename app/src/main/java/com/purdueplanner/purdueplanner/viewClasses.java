@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,27 +38,23 @@ public class viewClasses extends AppCompatActivity implements WeekView.MonthChan
 
 
         classList = ((MyApplication) getApplication()).getStudent().getSchedule();
-
+        //System.out.println(((Date) intent.getExtras().get("Day")));
 
 
 
 
         final String currDay = (String) android.text.format.DateFormat.format("EEEE", new Date());
 
-        System.out.println(visibleDays);
         int minTime = 100;
         if (visibleDays == 7)
         {
             setContentView(R.layout.view_classes_7);
             mWeekView = (WeekView) findViewById(R.id.weekView);
             mWeekView.setHourHeight(mWeekView.getHourHeight() * 2);
-            System.out.println("Hello");
             mWeekView.setFirstDayOfWeek(Calendar.SUNDAY);
             GregorianCalendar day = new GregorianCalendar();
             day.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
             mWeekView.goToDate(day);
-            System.out.println("First Visible Day" + mWeekView.getFirstVisibleDay());
-            System.out.println("First day of week:" + mWeekView.getFirstDayOfWeek());
 
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
@@ -71,7 +68,7 @@ public class viewClasses extends AppCompatActivity implements WeekView.MonthChan
             }
             mWeekView.goToHour(minTime);
         }
-        else
+        else if (visibleDays == 1)
         {
             setContentView(R.layout.view_classes_1);
             mWeekView = (WeekView) findViewById(R.id.weekView);
@@ -110,11 +107,8 @@ public class viewClasses extends AppCompatActivity implements WeekView.MonthChan
             {
                 letter = "S";
             }
-            System.out.println("DayCalendar:" + day.get(Calendar.DAY_OF_WEEK));
             for (int i = 0; i < classList.size(); i++)
             {
-                System.out.println("Days:" + classList.get(i).getDays());
-                System.out.println("Letter" + letter);
                 if (classList.get(i).getDays().contains(letter))
                 {
                     if (!classList.get(i).getStartTime().equals("TBA")) {
@@ -208,32 +202,57 @@ public class viewClasses extends AppCompatActivity implements WeekView.MonthChan
         for (int i = 0; i < classList.size(); i++)
         {
             if (!classList.get(i).getStartTime().equals("TBA")) {
-                HashMap<String, Integer> interpretedStartTime = interpretTime(classList.get(i).getStartTime());
-                HashMap<String, Integer> interpretedEndTime = interpretTime(classList.get(i).getEndTime());
-                ArrayList<Integer> classDays = getDay(classList.get(i).getDays());
-                for (int j = 0; j < classDays.size(); j++) {
-                    Calendar startTime = Calendar.getInstance();
-                    startTime.set(Calendar.HOUR_OF_DAY, interpretedStartTime.get("Hour"));
-                    startTime.set(Calendar.MINUTE, interpretedStartTime.get("Minutes"));
-                    startTime.set(Calendar.MONTH, newMonth - 1);
-                    startTime.set(Calendar.YEAR, newYear);
-                    startTime.set(Calendar.DAY_OF_WEEK, classDays.get(j));
-                    Calendar endTime = Calendar.getInstance();
-                    endTime.set(Calendar.HOUR_OF_DAY, interpretedEndTime.get("Hour"));
-                    endTime.set(Calendar.MINUTE, interpretedEndTime.get("Minutes"));
-                    endTime.set(Calendar.MONTH, newMonth - 1);
-                    endTime.set(Calendar.YEAR, newYear);
-                    endTime.set(Calendar.DAY_OF_WEEK, classDays.get(j));
-                    WeekViewEvent event = null;
-                    if (visibleDays == 7) {
-                        event = new WeekViewEvent(i, classList.get(i).getMajor() + " " + classList.get(i).getCourseNum(), startTime, endTime);
-                    } else {
-                        event = new WeekViewEvent(i, classList.get(i).getMajor() + " " + classList.get(i).getCourseNum()
-                                + "\n" + classList.get(i).getLocation() + "\n" + classList.get(i).getStartTime() + " - "
-                                + classList.get(i).getEndTime(), startTime, endTime);
+                if (visibleDays == 7) {
+                    HashMap<String, Integer> interpretedStartTime = interpretTime(classList.get(i).getStartTime());
+                    HashMap<String, Integer> interpretedEndTime = interpretTime(classList.get(i).getEndTime());
+                    ArrayList<Integer> classDays = getDay(classList.get(i).getDays());
+                    for (int j = 0; j < classDays.size(); j++) {
+                        Calendar startTime = Calendar.getInstance();
+                        startTime.set(Calendar.HOUR_OF_DAY, interpretedStartTime.get("Hour"));
+                        startTime.set(Calendar.MINUTE, interpretedStartTime.get("Minutes"));
+                        startTime.set(Calendar.MONTH, newMonth - 1);
+                        startTime.set(Calendar.YEAR, newYear);
+                        startTime.set(Calendar.DAY_OF_WEEK, classDays.get(j));
+                        Calendar endTime = Calendar.getInstance();
+                        endTime.set(Calendar.HOUR_OF_DAY, interpretedEndTime.get("Hour"));
+                        endTime.set(Calendar.MINUTE, interpretedEndTime.get("Minutes"));
+                        endTime.set(Calendar.MONTH, newMonth - 1);
+                        endTime.set(Calendar.YEAR, newYear);
+                        endTime.set(Calendar.DAY_OF_WEEK, classDays.get(j));
+                        WeekViewEvent event = new WeekViewEvent(i, classList.get(i).getMajor() + " " + classList.get(i).getCourseNum(), startTime, endTime);
+                        event.setColor(getResources().getColor(R.color.caldroid_black));
+                        events.add(event);
                     }
-                    event.setColor(getResources().getColor(R.color.caldroid_black));
-                    events.add(event);
+                }
+                else if (visibleDays == 1) {
+                    Calendar classStartDate = convertToDate(classList.get(i).getStartDate());
+                    Calendar classEndDate = convertToDate(classList.get(i).getEndDate());
+                    Calendar datePicked = Calendar.getInstance();
+                    datePicked.setTime((Date) getIntent().getExtras().get("Day"));
+                    if (datePicked.after(classStartDate) && datePicked.before(classEndDate)) {
+                        HashMap<String, Integer> interpretedStartTime = interpretTime(classList.get(i).getStartTime());
+                        HashMap<String, Integer> interpretedEndTime = interpretTime(classList.get(i).getEndTime());
+                        ArrayList<Integer> classDays = getDay(classList.get(i).getDays());
+                        for (int j = 0; j < classDays.size(); j++) {
+                            Calendar startTime = Calendar.getInstance();
+                            startTime.set(Calendar.HOUR_OF_DAY, interpretedStartTime.get("Hour"));
+                            startTime.set(Calendar.MINUTE, interpretedStartTime.get("Minutes"));
+                            startTime.set(Calendar.MONTH, newMonth - 1);
+                            startTime.set(Calendar.YEAR, newYear);
+                            startTime.set(Calendar.DAY_OF_WEEK, classDays.get(j));
+                            Calendar endTime = Calendar.getInstance();
+                            endTime.set(Calendar.HOUR_OF_DAY, interpretedEndTime.get("Hour"));
+                            endTime.set(Calendar.MINUTE, interpretedEndTime.get("Minutes"));
+                            endTime.set(Calendar.MONTH, newMonth - 1);
+                            endTime.set(Calendar.YEAR, newYear);
+                            endTime.set(Calendar.DAY_OF_WEEK, classDays.get(j));
+                            WeekViewEvent event = new WeekViewEvent(i, classList.get(i).getMajor() + " " + classList.get(i).getCourseNum()
+                                        + "\n" + classList.get(i).getLocation() + "\n" + classList.get(i).getStartTime() + " - "
+                                        + classList.get(i).getEndTime(), startTime, endTime);
+                            event.setColor(getResources().getColor(R.color.caldroid_black));
+                            events.add(event);
+                        }
+                    }
                 }
             }
 
@@ -290,5 +309,67 @@ public class viewClasses extends AppCompatActivity implements WeekView.MonthChan
             classDays.add(Calendar.SUNDAY);
         }
         return classDays;
+    }
+
+    private Calendar convertToDate(String date)
+    {
+        Calendar returnDate = Calendar.getInstance();
+        String month = date.substring(0, date.indexOf(" "));
+        String day = date.substring(date.indexOf(" ") + 1, date.indexOf(","));
+        String year = date.substring(date.indexOf(",") + 2);
+
+        if (month.equals("Jan"))
+        {
+            returnDate.set(Calendar.MONTH, Calendar.JANUARY);
+        }
+        else if (month.equals("Feb"))
+        {
+            returnDate.set(Calendar.MONTH, Calendar.FEBRUARY);
+        }
+        else if (month.equals("Mar"))
+        {
+            returnDate.set(Calendar.MONTH, Calendar.MARCH);
+        }
+        else if (month.equals("Apr"))
+        {
+            returnDate.set(Calendar.MONTH, Calendar.APRIL);
+        }
+        else if (month.equals("May"))
+        {
+            returnDate.set(Calendar.MONTH, Calendar.MAY);
+        }
+        else if (month.equals("Jun"))
+        {
+            returnDate.set(Calendar.MONTH, Calendar.JUNE);
+        }
+        else if (month.equals("Jul"))
+        {
+            returnDate.set(Calendar.MONTH, Calendar.JULY);
+        }
+        else if (month.equals("Aug"))
+        {
+            returnDate.set(Calendar.MONTH, Calendar.AUGUST);
+        }
+        else if (month.equals("Sep"))
+        {
+            returnDate.set(Calendar.MONTH, Calendar.SEPTEMBER);
+        }
+        else if (month.equals("Oct"))
+        {
+            returnDate.set(Calendar.MONTH, Calendar.OCTOBER);
+        }
+        else if (month.equals("Nov"))
+        {
+            returnDate.set(Calendar.MONTH, Calendar.NOVEMBER);
+        }
+        else if (month.equals("Dec"))
+        {
+            returnDate.set(Calendar.MONTH, Calendar.DECEMBER);
+        }
+
+        returnDate.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
+
+        returnDate.set(Calendar.YEAR, Integer.parseInt(year));
+        return returnDate;
     }
 }
