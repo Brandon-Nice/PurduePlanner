@@ -1,0 +1,445 @@
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Scanner;
+import java.util.logging.Level;
+
+import org.apache.commons.logging.LogFactory;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.support.ui.Select;
+
+
+public class ExampleWebPage {
+	public static void main (String[] args)  {
+		
+		
+		
+		//ArrayList<Classes> classes = new ArrayList<Classes>();
+		//classes = readClassesFromWebPage();
+
+		//Classes.writeClassesToFile(classes, "classesFall2015.txt");
+		ArrayList<Classes> readClasses = Classes.readClassesFromFile("classesFall2015.txt");
+		
+		 
+
+		ArrayList<HashMap<String, String>> locationsSingle = new ArrayList();
+		try (BufferedReader br = new BufferedReader(new FileReader("locationsWithLatLongFall2015.txt"))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		       HashMap<String, String> loc = new HashMap();
+		       int firstParen = line.indexOf("(");
+		       int secondParen = line.indexOf(")", firstParen + 1);
+		       int comma = line.indexOf(",", firstParen);
+		       loc.put("Location", line.substring(0, firstParen - 1));
+		       loc.put("Latitude", line.substring(firstParen + 1, comma));
+		       loc.put("Longitude", line.substring(comma + 2, secondParen));
+		       locationsSingle.add(loc);
+		    }
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		for (int i = 0; i < readClasses.size(); i++)
+		{
+			String CCL = readClasses.get(i).getLocation();
+			for (int j = 0; j < locationsSingle.size(); j++)
+			{
+				String loc = locationsSingle.get(j).get("Location");
+				if (CCL.contains(loc))
+				{
+					if (locationsSingle.get(j).get("Latitude").equals("null"))
+					{
+						
+					}
+					else
+					{
+						readClasses.get(i).setLatitude(locationsSingle.get(j).get("Latitude"));
+						readClasses.get(i).setLongitude(locationsSingle.get(j).get("Longitude"));
+				
+					}
+				}
+			}
+		}
+		
+		try
+		{
+			PrintWriter out = new PrintWriter("locationsWithoutLatLong");
+			ArrayList<String> locations = new ArrayList();
+			for (int i = 0; i < readClasses.size(); i++)
+			{
+				boolean alreadyInLocations = false;
+				if (readClasses.get(i).getLatitude().equals("null"))
+				{
+					System.out.println("hello");
+					for (int j = 0; j < locations.size(); j++)
+					{
+						if (readClasses.get(i).getLocation().equals(locations.get(j)))
+						{
+							alreadyInLocations = true;
+							break;
+						}
+					}
+					if (alreadyInLocations == false)
+					{
+						locations.add(readClasses.get(i).getLocation());
+					}
+				}
+			}
+			for (int i = 0; i < locations.size(); i++)
+			{
+				out.print(locations.get(i) + "\n");
+			}
+			out.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		try {
+			PrintWriter out = new PrintWriter("classesFall2015.txt");
+			for (int i = 0; i < readClasses.size(); i++)
+			{
+				out.print(readClasses.get(i) + "\n");
+			}
+			out.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+		System.out.println("Completeted"); 
+	}
+
+	// Read all classes from all majors to an arraylist of classes
+	public static ArrayList<Classes> readClassesFromWebPage()
+	{
+		return readClassesFromWebPage(-1);
+	}
+
+	// Read a all classes from a certain number of majors to an arraylist of classes
+	public static  ArrayList<Classes> readClassesFromWebPage(int numMajors)
+	{
+		// Will hold all classes read
+		ArrayList<Classes> readClasses = new ArrayList<Classes>();
+		// Make an HtmlUnitDriver to load webpages
+		HtmlUnitDriver driver = new HtmlUnitDriver();
+		// Stops htmlunitdriver from giving unnecessary CSS errors
+		LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log","org.apache.commons.logging.impl.NoOpLog");
+		java.util.logging.Logger.getLogger("com.gargoylesoftware.htmlunit").setLevel(Level.OFF);
+		java.util.logging.Logger.getLogger("org.apache.commons.httpclient").setLevel(Level.OFF); 
+		// Go to the webpage to select the semester
+		driver.get("https://selfservice.mypurdue.purdue.edu/prod/bwckschd.p_disp_dyn_sched");
+		// This gets the drop down box that contains the semester
+		Select semester = new Select(driver.findElement(By.name("p_term")));
+		// Make a list of all the semester to choose from
+		List<WebElement> semesterOptions = semester.getOptions();
+		// Choose the third semester in the list, which is currently Fall 2015
+		semesterOptions.get(2).click();
+		// Submit the webpage with Fall 2015 so that is loads the next webpage
+		semesterOptions.get(2).submit();
+
+		// This gets the box that contains all the majors
+		Select majors = new Select(driver.findElement(By.id("subj_id")));
+		// Make a list of all the majors to choose from
+		List<WebElement> majorsOptions = majors.getOptions();
+
+		// If -1 is entered as the number of majors that want to be read, that means
+		// that all majors should be read
+		if (numMajors == -1)
+		{
+			numMajors = majorsOptions.size();
+		}
+
+		// This loop will cycle through every single major. For "i < x" in the loop below
+		// change x to how many majors you want it to cycle through, where 
+		// majorsOptions.size() is the max and will get all majors
+		for (int i = 0; i < 1; i++)
+		{
+			
+			// This block of code is the same as above and needs to be done every iteration
+			// of the loop because every webpage after the base webpage expires after
+			// navigating away from it
+			driver.get("https://selfservice.mypurdue.purdue.edu/prod/bwckschd.p_disp_dyn_sched");
+			semester = new Select(driver.findElement(By.name("p_term")));
+			semesterOptions = semester.getOptions();
+			semesterOptions.get(2).click();
+			semesterOptions.get(2).submit();
+			majors = new Select(driver.findElement(By.id("subj_id")));
+			majorsOptions = majors.getOptions();
+			majorsOptions.get(i).click();
+			majorsOptions.get(i).submit();
+			System.out.println(majorsOptions.get(i));
+
+			// This will store the current section of a class
+			Classes currentClass;
+			// Each section of a class is seperated by the table class "ddlabel". So these
+			// two variables mark where the information where a class starts and where a 
+			// class ends
+			int firstOccurenceofDDLABEL = driver.getPageSource().indexOf("ddlabel");
+			int secondOccurenceofDDLABEL = driver.getPageSource().indexOf("ddlabel", firstOccurenceofDDLABEL + 1);
+
+			// This loop will run as long as there are more sections of classes to read 
+			// through.
+			while (secondOccurenceofDDLABEL != -1)
+			{
+				// The class can now store information
+				currentClass = new Classes();
+				// Get the html code for the current class
+				String sub = driver.getPageSource().substring(firstOccurenceofDDLABEL + 1, secondOccurenceofDDLABEL);
+
+				extractClass(currentClass, sub.replace("&amp;", "&"));
+				readClasses.add(currentClass);
+
+				// Set the firstOccurenceofDDLABEL to the seoncdOccurenecofDDLABEL
+				// so the the first occurrence is now at the start of the next class
+				firstOccurenceofDDLABEL = secondOccurenceofDDLABEL;
+				// Set the secondOccurenceofDDLABEL to the end of the next class
+				secondOccurenceofDDLABEL = driver.getPageSource().indexOf("ddlabel", firstOccurenceofDDLABEL + 1); 
+			}
+			int firstOccureneceofDATADISPLAYTABLE = driver.getPageSource().indexOf("datadisplaytable", firstOccurenceofDDLABEL + 1);
+			int secondOccureneceofDATADISPLAYTABLE = driver.getPageSource().indexOf("datadisplaytable", firstOccureneceofDATADISPLAYTABLE + 1);
+			currentClass = new Classes();
+			String sub = driver.getPageSource().substring(firstOccurenceofDDLABEL + 1, secondOccureneceofDATADISPLAYTABLE);
+			extractClass(currentClass, sub.replace("&amp;", "&"));
+			readClasses.add(currentClass);
+		}
+		// Close the driver to stop loading webpages
+		driver.quit();
+
+		return readClasses;
+
+	}
+	
+	/**
+	 * Extracts all class info between two points in source code. Helper for
+	 * read ClassesFromWebPage()
+	 * @param currentClass where all the info will be stored
+	 * @param sub the text that the info will be extracted from
+	 */ 
+	public static void extractClass(Classes currentClass, String sub)
+	{
+		// The title of each class starts at the second occurrence >, which ends
+		// an html tag
+		int startTitle = sub.indexOf(">", sub.indexOf(">") + 1);
+		// The end of the title of each class ends at start of the next html tag
+		int endTitle = sub.indexOf("<", startTitle + 1);
+		// This string contains the title, crn, major, course number, 
+		// and section id
+		String tCMCS = sub.substring(startTitle + 1, endTitle).trim();
+		int i = 0;
+		while (Character.isDigit(tCMCS.charAt(i)) == false)
+		{
+			i++;
+		}
+		// Each " - " separates a part of the title we want to break down
+		// This first " - " separates the class name and the CRN
+		int firstTCMCSDash = tCMCS.indexOf(" - ", i - 3);
+		// The second " - " separates the CRN and Major/Course Number 
+		int secondTCMCSDash = tCMCS.indexOf(" - ", firstTCMCSDash + 1);
+		// The third " - " separates the Major/Course Number and Section Number
+		int thirdTCMCSDash = tCMCS.indexOf(" - ", secondTCMCSDash + 1);
+		// Set the title of the class to what before the first " - "
+		currentClass.setTitle(tCMCS.substring(0, firstTCMCSDash));
+		// Set the CRN of the class to what is in between the first " - " and
+		// and the second " - "
+		currentClass.setCRN(tCMCS.substring(firstTCMCSDash + 3, secondTCMCSDash));
+		// Set the Major/Course number to what is in between the second " - "
+		// and the third " - "
+		String majorCoursenum = tCMCS.substring(secondTCMCSDash + 3, thirdTCMCSDash);
+		// In the Major/Course Number string, what separates the major and 
+		// course number is a space
+		// Set the major to what is before the space
+		currentClass.setMajor(majorCoursenum.substring(0, majorCoursenum.indexOf(" ")));
+		// Set the course number to what is after the space
+		currentClass.setCourseNum(majorCoursenum.substring(majorCoursenum.indexOf(" ") + 1));
+		// Set the section number to what is in after the third " - "
+		currentClass.setSectionNum(tCMCS.substring(thirdTCMCSDash + 3));
+		// Make a scanner to scan the info that the classes has
+		Scanner credits = new Scanner(sub);
+		// Will be used to store the credits information
+		String line = "";
+		// While the line that contains credits has not been found
+		while (line.contains("Credits") == false)
+		{
+			// Set line equal to the current line
+			line = credits.nextLine();
+		}
+		credits.close();
+		// This is the place where the word credits is
+		int creditsPlace = sub.indexOf("Credits");
+		// Set credits to what is contained in the credits line
+		currentClass.setCredits(line.trim().replaceAll("\\s+", " "));
+
+		// For each DDDEFAULT, there is an important piece of information
+		// that can be extracted for each class
+		int firstDDDEFAULT = sub.indexOf("dddefault\">", creditsPlace);
+		// Between the first and second dddefault is unneeded information
+		int secondDDDEFAULT = sub.indexOf("dddefault\">", firstDDDEFAULT + 1);
+		// Between the second and third dddefault is the start and end time 
+		// of the class
+		int thirdDDDEFAULT = sub.indexOf("dddefault\">", secondDDDEFAULT + 1);
+		// This will store the class's start time
+		String startTime;
+		// This will store the class's start time
+		String endTime;
+		// If the start time is undefined on the page, set both the start and
+		// end time to "TBA". It is set to "TBA" because other values on the page
+		// are set to "TBA".
+		if (sub.substring(secondDDDEFAULT + 1, thirdDDDEFAULT).contains("TBA"))
+		{
+			startTime = "TBA";
+			endTime = "TBA";
+		}
+		// If the start time is defined on the page
+		else
+		{
+			// Get where the class times start on the html page
+			int startOfTimes = sub.indexOf(">", secondDDDEFAULT);
+			// Get where the class times end on the html page
+			int endOfTimes = sub.indexOf("<", startOfTimes + 1);
+			// Extract the class times from these two points in the html and
+			// trim any trailing and leading white space
+			String totalTimes = sub.substring(startOfTimes + 1, endOfTimes).trim();
+			// Extract the start time from the class times
+			startTime = totalTimes.substring(0, totalTimes.indexOf("-") - 1);
+			// Extract the end time from the class times
+			endTime = totalTimes.substring(totalTimes.indexOf("-") + 2);
+		}
+		// Set the start time of the class
+		currentClass.setStartTime(startTime);
+		// Set the end time of the class
+		currentClass.setEndTime(endTime);
+
+		// Get where the class days starts
+		int startOfDays = sub.indexOf(">", thirdDDDEFAULT);
+		// Get where the class days ends
+		int endOfDays = sub.indexOf("<", startOfDays + 1);
+		// Extract the all of the days of the classes and trim any 
+		// trailing and leading white space
+		String totalDays = sub.substring(startOfDays + 1, endOfDays).trim();
+		// If the days is undefined on the page, set the days to "TBA".
+		// It is set to "TBA" because other values on the page are set to "TBA".
+		if (!totalDays.contains("M") && !totalDays.contains("T") 
+				&& !totalDays.contains("W") && ! totalDays.contains("R")
+				&& !totalDays.contains("F"))
+		{
+			totalDays = "TBA";
+		}
+		// Set the days of the class
+		currentClass.setDays(totalDays);
+
+		//Between the third and fourth default is the days
+		int fourthDDDEFAULT = sub.indexOf("dddefault\">", thirdDDDEFAULT + 1);
+		//Between the fourth and fifth default is the location.
+		int fifthDDDEFAULT = sub.indexOf("dddefault\">", fourthDDDEFAULT + 1);
+		// This is where the location will be stored
+		String totalLocation;
+		// If the location is undefined on the page, set the location
+		// to "TBA". It is set to "TBA" because other values on the page
+		// are set to "TBA".
+		if (sub.substring(fourthDDDEFAULT + 1, fifthDDDEFAULT).contains("TBA"))
+		{
+			totalLocation = "TBA";
+		}
+		// If the location is defined
+		else
+		{
+			//Get where the location starts on the html page
+			int startOfLocation = sub.indexOf(">", fourthDDDEFAULT);
+			// Get where the location ends on the html page
+			int endOfLocation = sub.indexOf("<", startOfLocation + 1);
+			// Extract the location from the two points in the html page and trim 
+			// any trailing and leading white space
+			totalLocation = sub.substring(startOfLocation + 1, endOfLocation).trim();
+		}
+		// Set the location of the class
+		currentClass.setLocation(totalLocation);
+
+		// Get where the date starts on the web page
+		int startOfDate = sub.indexOf(">", fifthDDDEFAULT);
+		// Get where the date ends on the web page
+		int endOfDate = sub.indexOf("<", startOfDate + 1);
+		// Extract the date from the two points in the html page and trim
+		// any trailing and leading white space
+		String totalDate = sub.substring(startOfDate + 1, endOfDate).trim();
+		// The start date and end date are separated by a " - ".
+		// Set the start date to the date before the " - " in the total date
+		currentClass.setStartDate(totalDate.substring(0, totalDate.indexOf("-") - 1));
+		// Set the end date to the date after the " - " in the total date
+		currentClass.setEndDate(totalDate.substring(totalDate.indexOf("-") + 2));
+
+		// Between the fifth and sixth DDDEFAULT is the date
+		int sixthDDDEFAULT = sub.indexOf("dddefault\">", fifthDDDEFAULT + 1);
+		// Get where the type of class starts on the web page
+		int startOfType = sub.indexOf(">", sixthDDDEFAULT);
+		// Get where the type of class ends on the web page
+		int endOfType = sub.indexOf("<", startOfType + 1);
+		// Extract the type of class from the two points in the html page and 
+		// trim the trailing and leading white space and set the type of class
+		currentClass.setType(sub.substring(startOfType + 1, endOfType).trim());
+
+		// Between the sixth and seventh DDDEFAULT is the type of class
+		int seventhDDDEFAULT = sub.indexOf("dddefault\">", sixthDDDEFAULT + 1);
+		// This is where the instructor name will be stored
+		String totalInstructor;
+		// This is where the instructor's email will be stored
+		String totalEmail;
+		// If the instructor is undefined on the page, set the instructor and the
+		// instructor's email to "TBA". 
+		// It is set to "TBA" because other values on the page are set to "TBA".
+		if (sub.substring(seventhDDDEFAULT).contains("TBA"))
+		{
+			totalInstructor = "TBA";
+			totalEmail = "TBA";
+		}
+		// If the instructor is defined
+		else
+		{
+			// Get where the instructor name starts in the html
+			int startOfInstructor = sub.indexOf(">", seventhDDDEFAULT);
+			// Get where the instructor name ends in the html
+			int endOfInstructor = sub.indexOf("<", startOfInstructor + 1);
+			// Extract the instructor name from the two points in the html page and
+			// trim the trailing and leading white space
+			totalInstructor = sub.substring(startOfInstructor + 1, endOfInstructor).trim();
+			// Get rid of an extra ( that was on the end of the Instructor name
+			totalInstructor = totalInstructor.substring(0, totalInstructor.length() - 2);
+			// Get rid of any extra white space
+			totalInstructor = totalInstructor.replaceAll("\\s+", " ");
+			if (sub.contains("mailto:"))
+			{
+				// The actual email start after the : after mailto
+				int startOfEmail = sub.indexOf("mailto:") + 7;
+				// The email ends right before \ in the html
+				int endOfEmail = sub.indexOf("\"", startOfEmail + 1);
+				// Extract the total email from the two points
+				totalEmail = sub.substring(startOfEmail, endOfEmail);
+			}
+			else
+			{
+				totalEmail = "TBA";
+			}
+			
+		}
+		// Set the instructor's name of the class
+		currentClass.setInstructor(totalInstructor);
+		// Set the instructor's email of the class
+		currentClass.setInstructorEmail(totalEmail);
+		currentClass.setLatitude(null);
+		currentClass.setLongitude(null);
+	}
+}

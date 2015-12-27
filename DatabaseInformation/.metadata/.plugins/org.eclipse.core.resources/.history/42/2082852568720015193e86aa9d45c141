@@ -1,0 +1,171 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+
+public class Classes {
+	
+	private String startTime;
+	private String endTime;
+	private String startDate;
+	private String endDate;
+	private String CRN;
+	private String major;
+	private String courseNum;
+	private String sectionNum;
+	private double credits;
+	private String title;
+	private String days;
+	private String instructors;
+	private String instructorsEmail;
+	private String location;
+	private String type;
+	
+	
+	public Classes()
+	{
+		
+	}
+	public Classes(String startTime, String endTime, String startDate, String endDate, 
+			String CRN, String major, String courseNum, String section, double credits, 
+			String title, String days, String instructors, String location, String type)
+	{
+		
+	}
+	public String getStartTime() {
+		return startTime;
+	}
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+	public String getEndTime() {
+		return endTime;
+	}
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+	public String getStartDate() {
+		return startDate;
+	}
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+	public String getEndDate() {
+		return endDate;
+	}
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+	public String getCRN() {
+		return CRN;
+	}
+	public void setCRN(String cRN) {
+		CRN = cRN;
+	}
+	public String getMajor() {
+		return major;
+	}
+	public void setMajor(String major) {
+		this.major = major;
+	}
+	public String getCourseNum() {
+		return courseNum;
+	}
+	public void setCourseNum(String courseNum) {
+		this.courseNum = courseNum;
+	}
+	public String getSections() {
+		return sectionNum;
+	}
+	public void setSections(String sectionNum) {
+		this.sectionNum = sectionNum;
+	}
+	public double getCredits() {
+		return credits;
+	}
+	public void setCredits(double credits) {
+		this.credits = credits;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public String getDays() {
+		return days;
+	}
+	public void setDays(String days) {
+		this.days = days;
+	}
+	public String getInstructors() {
+		return instructors;
+	}
+	public void setInstructors(String instructors) {
+		this.instructors = instructors;
+	}
+	public String getLocation() {
+		return location;
+	}
+	public void setLocation(String location) {
+		this.location = location;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	public String getInstructorsEmail() {
+		return instructorsEmail;
+	}
+	public void setInstructorsEmail(String instructorsEmail) {
+		this.instructorsEmail = instructorsEmail;
+	}
+	
+	//Must be connected to database for this to work
+	public void addClassToDataBase()
+	{
+		String url = "jdbc:mysql://localhost:3306/PurduePlanner";
+		String username = "root";
+		String password = "root";
+
+		System.out.println("Connecting database...");
+		
+		try (Connection connection = DriverManager.getConnection(url, username, password)) {
+			System.out.println("Database connected!");
+			// the mysql insert statement
+			String query = " insert into users (startTime, endTime, startDate, "
+					+ "endDate, CRN, major, courseNum, section, credits, title, days, "
+					+ "instructors, instructorEmail, location, type)"
+					+ " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+			// create the mysql insert preparedstatement
+			PreparedStatement preparedStmt = connection.prepareStatement(query);
+			preparedStmt.setString(1, getStartTime());
+			preparedStmt.setString(2, getEndTime());
+			preparedStmt.setString(3, getStartDate());
+			preparedStmt.setString(4, getEndDate());
+			preparedStmt.setString(5, getCRN());
+			preparedStmt.setString(6, getMajor());
+			preparedStmt.setString(7, getCourseNum());
+			preparedStmt.setString(8, getSections());
+			preparedStmt.setDouble(9, getCredits());
+			preparedStmt.setString(10, getTitle());
+			preparedStmt.setString(11, getDays());
+			preparedStmt.setString(12, getInstructors());
+			preparedStmt.setString(13, getInstructorsEmail());
+			preparedStmt.setString(14, getLocation());
+			preparedStmt.setString(15, getType());
+			// execute the preparedstatement
+			preparedStmt.execute();
+			connection.close();
+		} catch (SQLException e) {
+		    throw new IllegalStateException("Cannot connect the database!", e);
+		}
+	       
+	   
+	}
+}

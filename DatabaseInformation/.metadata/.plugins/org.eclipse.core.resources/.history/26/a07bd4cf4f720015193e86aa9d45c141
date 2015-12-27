@@ -1,0 +1,175 @@
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.support.ui.Select;
+
+import com.gargoylesoftware.htmlunit.BrowserVersion;
+import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.html.HtmlTable;
+import com.gargoylesoftware.htmlunit.html.HtmlTableCell;
+import com.gargoylesoftware.htmlunit.html.HtmlTableRow;
+
+
+public class ExampleWebPage {
+	public static void main(String[] args)  {
+        // Create a new instance of the html unit driver
+        // Notice that the remainder of the code relies on the interface, 
+        // not the implementation.
+        HtmlUnitDriver driver = new HtmlUnitDriver();
+
+        // And now use this to visit Google
+        driver.get("https://selfservice.mypurdue.purdue.edu/prod/bwckschd.p_disp_dyn_sched");
+        //System.out.println("Page title is: " + driver.getCurrentUrl());
+        Select semester = new Select(driver.findElement(By.name("p_term")));
+        List<WebElement> semesterOptions = semester.getOptions();
+        semesterOptions.get(2).click();
+        semesterOptions.get(2).submit();
+        //System.out.println("Page title is: " + driver.getCurrentUrl());
+        
+        Select majors = new Select(driver.findElement(By.id("subj_id")));
+        List<WebElement> majorsOptions = majors.getOptions();
+        majorsOptions.get(0).click();
+        majorsOptions.get(0).submit();
+        
+        Classes currentClass;
+        int firstOccurenceofDDLABEL = driver.getPageSource().indexOf("ddlabel");
+        int secondOccurenceofDDLABEL = driver.getPageSource().indexOf("ddlabel", firstOccurenceofDDLABEL + 1);
+        while (secondOccurenceofDDLABEL != -1)
+        {
+	        String sub = driver.getPageSource().substring(firstOccurenceofDDLABEL + 1, secondOccurenceofDDLABEL);
+	        //System.out.println(sub); 
+	        int startTitle = sub.indexOf(">", sub.indexOf(">") + 1);
+	        int endTitle = sub.indexOf("<", startTitle + 1);
+	        // This string contains the title, crn, major, course number, and section id
+	        String tCMCS = sub.substring(startTitle + 1, endTitle).trim();
+	        int firstTCMCSDash = tCMCS.indexOf("-");
+	        int secondTCMCSDash = tCMCS.indexOf("-", firstTCMCSDash + 1);
+	        int thirdTCMCSDash = tCMCS.indexOf("-", secondTCMCSDash + 1);
+	        String title = tCMCS.substring(0, firstTCMCSDash - 1);
+	        String crn = tCMCS.substring(firstTCMCSDash + 2, secondTCMCSDash - 1);
+	        String majorSection = tCMCS.substring(secondTCMCSDash + 2, thirdTCMCSDash - 1);
+	        String major = majorSection.substring(0, majorSection.indexOf(" "));
+	        String courseNum = majorSection.substring(majorSection.indexOf(" ") + 1);
+	        String sectionNum = tCMCS.substring(thirdTCMCSDash + 2);
+	        System.out.println("Title: \"" + title + "\"");
+	        //System.out.println("CRN: \"" + crn + "\"");
+	        //System.out.println("Major: \"" + major + "\"");
+	        //System.out.println("Course Number: \"" + courseNum + "\"");
+	        //System.out.println("Section Number: \"" + sectionNum + "\"");
+	        int creditsPlace = sub.indexOf("Credits");
+	        double credits = Double.parseDouble(sub.substring(creditsPlace - 6, creditsPlace - 1));
+	        //System.out.println("Credits: \"" + credits + "\"");
+	        int firstDDDEFAULT = sub.indexOf("dddefault\">", creditsPlace);
+	        
+	        int secondDDDEFAULT = sub.indexOf("dddefault\">", firstDDDEFAULT + 1);
+	        int thirdDDDEFAULT = sub.indexOf("dddefault\">", secondDDDEFAULT + 1);
+	        if (sub.substring(secondDDDEFAULT + 1, thirdDDDEFAULT).contains("TBA"))
+	        {
+	        	String startTime = "TBA";
+	        	String endTime = "TBA";
+	        }
+	        else
+	        {
+		        int startOfTimes = sub.indexOf(">", secondDDDEFAULT);
+		        int endOfTimes = sub.indexOf("<", startOfTimes + 1);
+		        String totalTimes = sub.substring(startOfTimes + 1, endOfTimes).trim();
+		        System.out.println(totalTimes);
+		        System.out.println(totalTimes.indexOf("-") - 1);
+		        String startTime = totalTimes.substring(0, totalTimes.indexOf("-") - 1);
+		        String endTime = totalTimes.substring(totalTimes.indexOf("-") + 2);
+	        }
+	        //System.out.println("Start Time: \"" + startTime + "\"");
+	        //System.out.println("End Time: \"" + endTime + "\"");
+	        
+	        int startOfDays = sub.indexOf(">", thirdDDDEFAULT);
+	        int endOfDays = sub.indexOf("<", startOfDays + 1);
+	        String totalDays = sub.substring(startOfDays + 1, endOfDays).trim();
+	        //System.out.println("Days: \"" + totalDays + "\"");
+	        
+	        int fourthDDDEFAULT = sub.indexOf("dddefault\">", thirdDDDEFAULT + 1);
+	        int startOfLocation = sub.indexOf(">", fourthDDDEFAULT);
+	        int endOfLocation = sub.indexOf("<", startOfLocation + 1);
+	        String totalLocation = sub.substring(startOfLocation + 1, endOfLocation).trim();
+	        //System.out.println("Location: \"" + totalLocation + "\"");
+	        
+	        int fifthDDDEFAULT = sub.indexOf("dddefault\">", fourthDDDEFAULT + 1);
+	        int startOfDate = sub.indexOf(">", fifthDDDEFAULT);
+	        int endOfDate = sub.indexOf("<", startOfDate + 1);
+	        String totalDate = sub.substring(startOfDate + 1, endOfDate).trim();
+	        String startDate = totalDate.substring(0, totalDate.indexOf("-") - 1);
+	        String endDate = totalDate.substring(totalDate.indexOf("-") + 2);
+	        //System.out.println("Start Date: \"" + startDate + "\"");
+	        //System.out.println("End Date: \"" + endDate + "\"");
+	        
+	        int sixthDDDEFAULT = sub.indexOf("dddefault\">", fifthDDDEFAULT + 1);
+	        int startOfType = sub.indexOf(">", sixthDDDEFAULT);
+	        int endOfType = sub.indexOf("<", startOfType + 1);
+	        String totalType = sub.substring(startOfType + 1, endOfType).trim();
+	        //System.out.println("Type: \"" + totalType + "\"");
+	        
+	        int seventhDDDEFAULT = sub.indexOf("dddefault\">", sixthDDDEFAULT + 1);
+	        int startOfInstructor = sub.indexOf(">", seventhDDDEFAULT);
+	        int endOfInstructor = sub.indexOf("<", startOfInstructor + 1);
+	        String totalInstructor = sub.substring(startOfInstructor + 1, endOfInstructor).trim();
+	        totalInstructor = totalInstructor.substring(0, totalInstructor.length() - 2);
+	        //System.out.println("Instructor: \"" + totalInstructor + "\"");
+	        
+	        int emailPlace = sub.indexOf("mailto", seventhDDDEFAULT);
+	        int startOfEmail = sub.indexOf(":", emailPlace);
+	        int endOfEmail = sub.indexOf("\"", startOfEmail + 1);
+	        String totalEmail = sub.substring(startOfEmail + 1, endOfEmail);
+	        //System.out.println("Instructor Email: \"" + totalEmail + "\"");
+	        
+	        try {
+				PrintWriter writer = new PrintWriter("AAE classes", "UTF-8");
+				writer.println("Title: \"" + title + "\"");
+		        writer.println("CRN: \"" + crn + "\"");
+		        writer.println("Major: \"" + major + "\"");
+		        writer.println("Course Number: \"" + courseNum + "\"");
+		        writer.println("Section Number: \"" + sectionNum + "\"");
+		        writer.println("Credits: \"" + credits + "\"");
+		        writer.println("Start Time: \"" + startTime + "\"");
+		        writer.println("End Time: \"" + endTime + "\"");
+		        writer.println("Days: \"" + totalDays + "\"");
+		        writer.println("Location: \"" + totalLocation + "\"");
+		        writer.println("Start Date: \"" + startDate + "\"");
+		        writer.println("End Date: \"" + endDate + "\"");
+		        writer.println("Type: \"" + totalType + "\"");
+		        writer.println("Instructor: \"" + totalInstructor + "\"");
+		        writer.println("Instructor Email: \"" + totalEmail + "\"");
+		        writer.println("");
+		        writer.close();
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	        firstOccurenceofDDLABEL = secondOccurenceofDDLABEL;
+	        secondOccurenceofDDLABEL = driver.getPageSource().indexOf("ddlabel", firstOccurenceofDDLABEL + 1); 
+        }
+        
+        
+        driver.quit();
+    }
+
+
+}
