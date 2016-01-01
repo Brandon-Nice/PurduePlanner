@@ -1,0 +1,349 @@
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+
+
+public class Classes {
+
+	// Stores the class's start time
+	private String startTime;
+	// Stores the class's end time
+	private String endTime;
+	// Stores the class's start date
+	private String startDate;
+	// Stores the class's end date
+	private String endDate;
+	// Stores the class's CRN
+	private String CRN;
+	// Stores the class's major
+	private String major;
+	// Stores the class's course number
+	private String courseNum;
+	// Stores the class's section number
+	private String sectionNum;
+	// Stores the class's credit number
+	private String credits;
+	// Stores the class's title
+	private String title;
+	// Stores the days the class meets
+	private String days;
+	// Stores the primary instructor of the class
+	private String instructor;
+	// Stores the primary instructor's email
+	private String instructorEmail;
+	// Stores the location the class meets at
+	private String location;
+	// Stores the type of class
+	private String type;
+	// Stores the latitude
+	private String latitude;
+	// Stores the longitude
+	private String longitude;
+
+	// Default constructor
+	public Classes()
+	{
+
+	}
+	// Constructor that can set all the variables needed
+	public Classes(String startTime, String endTime, String startDate, String endDate, 
+			String CRN, String major, String courseNum, String section, double credits, 
+			String title, String days, String instructors, String location, String type)
+	{
+
+	}
+	public String getStartTime() {
+		return startTime;
+	}
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+	public String getEndTime() {
+		return endTime;
+	}
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+	public String getStartDate() {
+		return startDate;
+	}
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+	public String getEndDate() {
+		return endDate;
+	}
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+	public String getCRN() {
+		return CRN;
+	}
+	public void setCRN(String cRN) {
+		CRN = cRN;
+	}
+	public String getMajor() {
+		return major;
+	}
+	public void setMajor(String major) {
+		this.major = major;
+	}
+	public String getCourseNum() {
+		return courseNum;
+	}
+	public void setCourseNum(String courseNum) {
+		this.courseNum = courseNum;
+	}
+	public String getSectionNum() {
+		return sectionNum;
+	}
+	public void setSectionNum(String sectionNum) {
+		this.sectionNum = sectionNum;
+	}
+	public String getCredits() {
+		return credits;
+	}
+	public void setCredits(String string) {
+		this.credits = string;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public String getDays() {
+		return days;
+	}
+	public void setDays(String days) {
+		this.days = days;
+	}
+	public String getInstructor() {
+		return instructor;
+	}
+	public void setInstructor(String instructors) {
+		this.instructor = instructors;
+	}
+	public String getLocation() {
+		return location;
+	}
+	public void setLocation(String location) {
+		this.location = location;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	public String getInstructorEmail() {
+		return instructorEmail;
+	}
+	public void setInstructorEmail(String instructorsEmail) {
+		this.instructorEmail = instructorsEmail;
+	}
+	public String getLatitude() {
+		return latitude;
+	}
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
+	}
+	public String getLongitude() {
+		return longitude;
+	}
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
+	}
+
+	// Write an arraylist of classes to a file
+	public static void writeClassesToFile(ArrayList<Classes> classes, String filename)
+	{
+		try 
+		{
+			// Code to write classes to text file
+			PrintWriter out = new PrintWriter(filename);
+			for (int i = 0; i < classes.size(); i++)
+			{
+				Classes currentClass = classes.get(i);
+				out.print(currentClass + "\n");
+			}
+			out.close();
+		} 
+		catch (FileNotFoundException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	// Read an arraylist of classes from a file
+	public static ArrayList<Classes> readClassesFromFile(String filename)
+	{
+		// Code to read classes from text file
+		ArrayList<Classes> readClasses = new ArrayList<Classes>();
+		try 
+		{
+			FileReader fileReader = new FileReader(filename);
+			BufferedReader bufferedReader = new BufferedReader(fileReader);
+			String line = null;
+			Classes currentClass = new Classes();
+			while((line = bufferedReader.readLine()) != null) 
+			{
+				if (line.startsWith("Start Time"))
+				{
+					int start = line.indexOf(":") + 1;
+					String startTime = line.substring(start);
+					currentClass.setStartTime(startTime);
+				}
+				else if (line.startsWith("End Time"))
+				{
+					int start = line.indexOf(":") + 1;
+					String endTime = line.substring(start);
+					currentClass.setEndTime(endTime);
+				}
+				else if (line.startsWith("Start Date"))
+				{
+					int start = line.indexOf(":") + 1;
+					String startDate = line.substring(start);
+					currentClass.setStartDate(startDate);
+				}
+				else if (line.startsWith("End Date"))
+				{
+					int start = line.indexOf(":") + 1;
+					String endDate = line.substring(start);
+					currentClass.setEndDate(endDate);
+				}
+				else if (line.startsWith("CRN"))
+				{
+					int start = line.indexOf(":") + 1;
+					String crn = line.substring(start);
+					currentClass.setCRN(crn);
+				}
+				else if (line.startsWith("Major"))
+				{
+					int start = line.indexOf(":") + 1;
+					String major = line.substring(start);
+					currentClass.setMajor(major);
+				}
+				else if (line.startsWith("Course Number"))
+				{
+					int start = line.indexOf(":") + 1;
+					String courseNumber = line.substring(start);
+					currentClass.setCourseNum(courseNumber);
+				}
+				else if (line.startsWith("Section Number"))
+				{
+					int start = line.indexOf(":") + 1;
+					String sectionNumber = line.substring(start);
+					currentClass.setSectionNum(sectionNumber);
+				}
+				else if (line.startsWith("Credits"))
+				{
+					int start = line.indexOf(":") + 1;
+					String credits = line.substring(start);
+					currentClass.setCredits(credits);
+				}
+				else if (line.startsWith("Title"))
+				{
+					int start = line.indexOf(":") + 1;
+					String title = line.substring(start);
+					currentClass.setTitle(title);
+				}
+				else if (line.startsWith("Days"))
+				{
+					int start = line.indexOf(":") + 1;
+					String days = line.substring(start);
+					currentClass.setDays(days);
+				}
+				else if (line.startsWith("Primary instructor"))
+				{
+					int start = line.indexOf(":") + 1;
+					String instructor = line.substring(start);
+					currentClass.setInstructor(instructor);
+				}
+				else if (line.startsWith("Primary instructor email"))
+				{
+					int start = line.indexOf(":") + 1;
+					String email = line.substring(start);
+					currentClass.setInstructorEmail(email);
+				}
+				else if (line.startsWith("Location"))
+				{
+					int start = line.indexOf(":") + 1;
+					String location = line.substring(start);
+					currentClass.setLocation(location);
+				}
+				else if (line.startsWith("Type"))
+				{
+					int start = line.indexOf(":") + 1;
+					String type = line.substring(start);
+					currentClass.setType(type);
+				}
+				else if (line.startsWith("Latitude"))
+				{
+					int start = line.indexOf(":") + 1;
+					String latitude = line.substring(start);
+					currentClass.setLatitude(latitude);
+				}
+				else if (line.startsWith("Longitude"))
+				{
+					int start = line.indexOf(":") + 1;
+					String longitude = line.substring(start);
+					currentClass.setLongitude(longitude);
+				}
+				else
+				{
+					readClasses.add(currentClass);
+					System.out.println("Hello");
+					currentClass = new Classes();
+				}
+			}  
+			bufferedReader.close();         
+		}
+		catch(FileNotFoundException ex) 
+		{
+			System.out.println("Unable to open file '" + filename + "'");                
+		}
+		catch(IOException ex) 
+		{
+			System.out.println("Error reading file '" + filename + "'");    
+		}
+
+		return readClasses;
+	}
+
+
+
+	// Convert classes to a string
+	@Override 
+	public String toString()
+	{
+		String startTime = "Start Time: " +  getStartTime() + "\n";
+		String endTime = "End Time: " + getEndTime() + "\n";
+		String startDate = "Start Date: " +  getStartDate() + "\n";
+		String endDate = "End Date: " + getEndDate() + "\n";
+		String crn = "CRN: " + getCRN() + "\n";
+		String major = "Major: " + getMajor() + "\n";
+		String courseNum = "Course Number: " + getCourseNum() + "\n";
+		String sectionNum = "Section Number: " + getSectionNum() + "\n";
+		String credits = "Credits: " + getCredits() + "\n";
+		String title = "Title: " + getTitle() + "\n";
+		String days = "Days: " + getDays() + "\n";
+		String instructor = "Primary instructor: " + getInstructor() + "\n";
+		String instructorEmail = "Primary instructor email: " + getInstructorEmail() + "\n";
+		String location = "Location: " + getLocation() + "\n";
+		String type = "Type: " + getType() + "\n";
+		String latitude = "Latitude: " + getLatitude() + "\n";
+		String longitude = "Longitude: " + getLongitude() + "\n";
+
+		String total = startTime + endTime + startDate + endDate + crn + major +
+				courseNum + sectionNum + credits + title + days + instructor +
+				instructorEmail + location + type + latitude + longitude;
+		return total;
+
+	}
+	
+}

@@ -16,7 +16,7 @@ import java.util.HashMap;
  * Created by Kenny on 12/11/2015.
  */
 public class DatabaseBuilder extends AppCompatActivity {
-/*
+
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -28,9 +28,9 @@ public class DatabaseBuilder extends AppCompatActivity {
         protected void onStart() {
 
             super.onStart();
-            //Firebase nuke = new Firebase("https://purduescheduler.firebaseio.com/Classes");
-            //nuke.removeValue();
-            //System.out.println("Post nuke");
+            Firebase nuke = new Firebase("https://purduescheduler.firebaseio.com/Classes");
+            nuke.removeValue();
+            System.out.println("Post nuke");
 
             try {
                 AssetManager am = getAssets();
@@ -42,7 +42,7 @@ public class DatabaseBuilder extends AppCompatActivity {
                 int majorNumber = 100;
                 Classes c;
                 HashMap<String, String> fireMap = new HashMap<>(19);
-                //String courseName = "";
+                String courseName = "";
                 String courseNumber = "";
                 String sectionNumber = "";
                 String major = "";
@@ -65,11 +65,11 @@ public class DatabaseBuilder extends AppCompatActivity {
                     }
                     else {
                         fireMap.put(line.substring(0, line.indexOf(':')), line.substring(line.indexOf(':') + 2));
-                    /*if(i == 9) {
+                    if(i == 9) {
                        // System.out.println("TITLE FOR ADDRESS: " + fireMap.get(line.substring(0, line.indexOf(':'))));
                         courseName = fireMap.get(line.substring(0, line.indexOf(':')));
-                    }*/
-                    /*
+                    }
+
                         if(i == 7) {
                             // System.out.println("SECTION FOR ADDRESS: " + fireMap.get(line.substring(0, line.indexOf(':'))));
                             sectionNumber = fireMap.get(line.substring(0, line.indexOf(':')));
@@ -92,6 +92,6 @@ public class DatabaseBuilder extends AppCompatActivity {
                 ioe.printStackTrace();
                 return;
             }
-        }*/
+        }
 }
 
