@@ -3,13 +3,9 @@ package com.purdueplanner.purdueplanner;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.Typeface;
-import android.location.Address;
-import android.location.Geocoder;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -24,13 +20,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.jar.Manifest;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -118,11 +112,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 LinearLayout info = new LinearLayout(MapsActivity.this);
                 info.setOrientation(LinearLayout.VERTICAL);
 
-                /*TextView title = new TextView(MapsActivity.this);
-                title.setTextColor(Color.BLACK);
-                title.setGravity(Gravity.CENTER);
-                title.setTypeface(null, Typeface.BOLD);
-                title.setText(marker.getTitle());*/
 
                 TextView snippet = new TextView(MapsActivity.this);
                 snippet.setTextColor(Color.BLACK);
@@ -139,10 +128,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         Date date = new Date();
         String currDay = (String) android.text.format.DateFormat.format("EEEE", date);
-        System.out.println(currDay);
 
         String dayLetter = getLetter(currDay);
-        System.out.println(dayLetter);
 
         final Student currentStudent = ((MyApplication) getApplication()).getStudent();
         ArrayList<Classes> currentStudentClasses = new ArrayList<Classes>();
@@ -209,22 +196,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     .snippet(currentSnippet));
         }
 
-
-        /*//iterates through every class and de termines the day
-        for(Classes specClass : currentStudentClasses) {
-            //does the class meet on the current day
-            if(specClass.getDays().contains(dayLetter)) {
-                //add a marker and building name if lat & long is not null
-                if (!specClass.getLatitude().equals("Null") && !specClass.getLongitude().equals("Null")) {
-                    mMap.addMarker(new MarkerOptions()
-                            .position(new LatLng(Double.parseDouble(specClass.getLatitude())
-                            , Double.parseDouble(specClass.getLongitude())))
-                            .title(specClass.getLocation())
-                            .snippet("Class: " + specClass.getMajor() + " " + specClass.getCourseNum()));
-                }
-
-            }
-        }*/
 
         if (currentStudent.getLatitude() != 0) {
             Marker homeMarker = mMap.addMarker(new MarkerOptions()

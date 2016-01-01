@@ -59,33 +59,6 @@ public class LoginActivity extends Activity {
         Animation myFadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fadein);
         myImageView.startAnimation(myFadeInAnimation); //Set animation to your ImageView
 
-//        WebView wView = (WebView)findViewById(R.id.webView); //sets the lovely video
-//        String x = "<!DOCTYPE html><html><body><img src=\"https://drive.google.com/file/d/0B7P7W8dYm7KxVktRQ2pDdTdzaUU/view?usp=sharing\"  width=\"100%\" height=\"100%\"></body></html>";
-//
-//        wView.loadData(x, "text/html", "utf-8");
-
-
-
-//        wView.setInitialScale(1);
-//        wView.getSettings().setJavaScriptEnabled(true);
-//        wView.getSettings().setLoadWithOverviewMode(true);
-//        wView.getSettings().setUseWideViewPort(true);
-//        wView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
-//        wView.setScrollbarFadingEnabled(false);
-        //wView.loadUrl("file:///android_asset/pics/loginpage.gif");
-        //String html = "<html><body><img src=\"" + "file:///android_asset/pics/loginpage.gif" + "\" width=\"100%\" height=\"100%\"\"/></body></html>";
-        //wView.loadData(html, "text/html", null);
-        //wView.loadDataWithBaseURL(null, "<style>img{display: inline;height: auto;max-width: 100%;}</style>" + "file:///android_asset/pics/loginpage.gif" + "text/html", "UTF-8", null, null);
-
-
-        //RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT);
-        //wView.setLayoutParams(params);
-        //wView.loadUrl("file:///android_asset/pics/loginpage2.gif");
-
-
-        //wView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-        //wView.loadUrl("file:///android_asset/pics/loginpage2.gif");
-
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setupActionBar();
 

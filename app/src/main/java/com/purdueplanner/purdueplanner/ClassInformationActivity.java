@@ -28,27 +28,6 @@ public class ClassInformationActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Class Information");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
-
-
-        /*//Add buttons and spinners
-        Button okbutton = (Button) findViewById(R.id.okbutton);
-        okbutton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Submit schedule to the database
-            }
-        });
-
-        Button cancelbutton = (Button) findViewById(R.id.cancelbutton);
-        cancelbutton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(AddClassActivity.this, StartActivity.class));
-            }
-        });*/
     }
 
     @Override
@@ -64,7 +43,6 @@ public class ClassInformationActivity extends AppCompatActivity {
         }
         else if (id == android.R.id.home)
         {
-            System.out.println("Back Pressed");
             onBackPressed();
         }
 
@@ -85,10 +63,5 @@ public class ClassInformationActivity extends AppCompatActivity {
             startActivity(init);
         }
         finish();
-    }
-
-
-    public void setActionBarTitle(String title) {
-        getSupportActionBar().setTitle(title);
     }
 }

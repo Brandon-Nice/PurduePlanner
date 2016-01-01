@@ -18,11 +18,8 @@ public class ClassInfo extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         ListView dayListView = (ListView) findViewById(R.id.dayList);
         ArrayList<String> classList = new ArrayList<>();
-        //classList.add(ref.getKey(courseNum));
         classList.add("CS 307");
         classList.add("CS 391");
         classList.add("MA 265");
-        //customAdapter arrayAdapter = new customAdapter(classList, this);
-        //dayListView.setAdapter(arrayAdapter);
     }
 }

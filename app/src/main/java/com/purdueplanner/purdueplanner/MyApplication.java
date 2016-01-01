@@ -2,8 +2,6 @@ package com.purdueplanner.purdueplanner;
 
 import android.app.Application;
 
-import java.util.ArrayList;
-
 public class MyApplication extends Application {
 
     // Stores the application's current student

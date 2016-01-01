@@ -6,9 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -18,42 +16,27 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.FacebookGraphResponseException;
-import com.facebook.GraphRequestAsyncTask;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
-import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.FieldPosition;
-import java.text.Format;
-import java.text.ParsePosition;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+
 
 public class FriendsActivity extends AppCompatActivity {
 
@@ -79,8 +62,6 @@ public class FriendsActivity extends AppCompatActivity {
                 new GraphRequest.Callback() {
                     @Override
                     public void onCompleted(GraphResponse response) {
-                               Log.i("INFO", response.toString()); //DISPLAYS ON LOGCAT
-
                         JSONObject test = response.getJSONObject();
                         try {
                             JSONArray friendsList = test.getJSONArray("data");
@@ -95,7 +76,6 @@ public class FriendsActivity extends AppCompatActivity {
                                 friend.put("id", id);
                                 friends.add(friend);
                             }
-                            System.out.println(friends);
 
                             sortFriends(friends);
 
@@ -140,7 +120,6 @@ public class FriendsActivity extends AppCompatActivity {
 
                             n.printStackTrace();
                         }
-                        //Log.i("OKAY", yo.toString());
                     }
 
                 }
@@ -157,7 +136,6 @@ public class FriendsActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    System.out.println("hello");
                     hideKeyboard(v);
                     inputSearch.setFocusable(false);
                     inputSearch.setFocusableInTouchMode(false);

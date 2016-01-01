@@ -1,16 +1,11 @@
 package com.purdueplanner.purdueplanner;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 
 public class AddClassActivity extends AppCompatActivity {
 
@@ -23,25 +18,6 @@ public class AddClassActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Select Major");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
-        /*//Add buttons and spinners
-        Button okbutton = (Button) findViewById(R.id.okbutton);
-        okbutton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Submit schedule to the database
-            }
-        });
-
-        Button cancelbutton = (Button) findViewById(R.id.cancelbutton);
-        cancelbutton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(AddClassActivity.this, StartActivity.class));
-            }
-        });*/
     }
 
     @Override
@@ -56,14 +32,9 @@ public class AddClassActivity extends AppCompatActivity {
             Intent myIntent = new Intent(getApplicationContext(), StartActivity.class);
             startActivityForResult(myIntent, 0);
             return true;
-            //startActivity(new Intent(this, SettingsActivity.class));
         }
-
         return super.onOptionsItemSelected(item);
     }
-
-
-
     public void setActionBarTitle(String title){
         getSupportActionBar().setTitle(title);
     }

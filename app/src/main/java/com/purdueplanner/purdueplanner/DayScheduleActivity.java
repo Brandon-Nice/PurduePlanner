@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
-
 import java.util.ArrayList;
 
 
@@ -30,8 +28,6 @@ public class DayScheduleActivity extends AppCompatActivity {
         String dayLetter = myIntent.getStringExtra("dayletter_key"); // will return the value associated with this key, i.e. the day letter string
 
         //Get the actual classes for each day
-        System.out.println("DayLetter: " + "\"" + dayLetter + "\"");
-        System.out.println("Hello");
         ArrayList<Classes> classList = ((MyApplication) getApplication()).getStudent().getSchedule(); //total classes for the student
         ArrayList<String> classPerDayList = new ArrayList<>(); //classes per each day for the student
         int size = classList.size();
@@ -43,11 +39,9 @@ public class DayScheduleActivity extends AppCompatActivity {
         for (int i = 0; i < size; i++) { //iterates through the classes
             classLength = (classList.get(i).getMajor() + " " + classList.get(i).getCourseNum()).length();
             spaces = "";
-            Log.i("CLASS LENGTH", "classLength = " + classLength);
             for (int s = classLength; s < lengthBuffer; s++) {
                 spaces += " ";
             }
-                Log.i("SPACES", "spaces = |" + spaces + "|");
                 if(classList.get(i).getDays().contains(dayLetter)){ //match by the day
                     classPerDayList.add(classList.get(i).getMajor() + " " + classList.get(i).getCourseNum() + spaces + classList.get(i).getStartTime()
                             + " - " + classList.get(i).getEndTime());

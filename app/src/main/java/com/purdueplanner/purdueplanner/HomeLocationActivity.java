@@ -1,8 +1,6 @@
 package com.purdueplanner.purdueplanner;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.location.Address;
 import android.location.Geocoder;
@@ -54,7 +52,6 @@ public class HomeLocationActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                    System.out.println("hello");
                     addressInput.clearFocus();
                     zipInput.requestFocus(zipInput.FOCUS_DOWN);
                     return true;
@@ -146,7 +143,6 @@ public class HomeLocationActivity extends AppCompatActivity {
                 else {
                     String fullAddress = addressInput.getText().toString()
                             + " " + zipInput.getText().toString() + " " + countryInput.getText().toString();
-                    System.out.println(fullAddress);
                     Geocoder coder = new Geocoder(getApplicationContext());
                     try {
                         ArrayList<Address> addresses = (ArrayList<Address>) coder.getFromLocationName(fullAddress, 1);
@@ -176,7 +172,6 @@ public class HomeLocationActivity extends AppCompatActivity {
 
                                currentStudent.setLatitude(lat);
                                currentStudent.setLongitude(lon);
-                                System.out.println("done");
                                //Finish activity
                                finish();
                            }

@@ -55,30 +55,8 @@ public class StartActivity extends AppCompatActivity
     private NetworkStateReceiver networkStateReceiver;
     public static Boolean isConnected; //boolean that can be accessed via any class to see if connection is lost or not
 
-
-   //WifiManager w = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-//    public static int connected(Context context) {
-//        ConnectivityManager cm =
-//                (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
-//
-//        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-//         boolean isConnected = activeNetwork != null &&
-//                activeNetwork.isConnected();
-//
-//
-//        if(isConnected) {
-//            Toast.makeText(context, "Connected.", Toast.LENGTH_LONG).show();
-//            return 1;
-//        }
-//        else{
-//            Toast.makeText(context, "Lost connect.", Toast.LENGTH_LONG).show();
-//        }
-//            return 0;
-//    }
-
     @Override
     public void networkAvailable() { //Function that is called when the network is available == aka the onCreate stuff
-        Log.d("logTest", "Network is available!"); //debugging
         isConnected = true;
 
         Toast.makeText(getApplicationContext(), "Connected.", Toast.LENGTH_LONG).show();
@@ -101,7 +79,6 @@ public class StartActivity extends AppCompatActivity
                         String lastName = name.substring(name.indexOf(" ") + 1);
                         ((MyApplication) getApplication()).getStudent().setFirstName(firstName);
                         ((MyApplication) getApplication()).getStudent().setLastName(lastName);
-                        System.out.println(name);
                         user_name.setText(name);
 
                     } catch (JSONException e) {
@@ -150,7 +127,6 @@ public class StartActivity extends AppCompatActivity
         Date date = new Date();
 
         currDay = (String) android.text.format.DateFormat.format("EEEE", date);
-        System.out.println(currDay);
         TextView myTextView = (TextView) findViewById(R.id.textView);
         myTextView.setText(currDay);
 
@@ -175,7 +151,6 @@ public class StartActivity extends AppCompatActivity
 
     @Override
     public void networkUnavailable() { //Function that is called when user loses connection. TODO: Implement more functionality maybe?
-        Log.d("logTest", "Network is unavailable"); //debugging
         isConnected = false;
         //TODO: Implement actions for button
         Toast.makeText(getApplicationContext(), "Lost connection.", Toast.LENGTH_LONG).show();
@@ -207,103 +182,7 @@ public class StartActivity extends AppCompatActivity
         networkStateReceiver = new NetworkStateReceiver();
         networkStateReceiver.addListener(this);
         this.registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
-
-
-//            //sets the name in the nav_header
-//            if (isLoggedIn()) {
-//                final TextView user_name = (TextView) findViewById(R.id.usertextView);
-//                loginButton = LoginActivity.getLoginButton();
-//                callbackManager = LoginActivity.getCallbackManager();
-//
-//                //Gets the name of the user
-//                new GraphRequest(AccessToken.getCurrentAccessToken(), "/me", null,
-//                        HttpMethod.GET, new GraphRequest.Callback() {
-//                    public void onCompleted(GraphResponse response) {
-//                        //handle the response
-//                        final JSONObject jsonObject = response.getJSONObject();
-//                        String name = "";
-//                        try {
-//                            name = jsonObject.getString("name");
-//                            System.out.println(name);
-//                            user_name.setText(name);
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }).executeAsync();
-//
-//                //Gets the picture of the user
-//                final ProfilePictureView profilePictureView;
-//                profilePictureView = (ProfilePictureView) findViewById(R.id.userimageView);
-//                profilePictureView.setCropped(true);
-//                profilePictureView.setProfileId(AccessToken.getCurrentAccessToken().getUserId());
-//            }
-//            //code that implements  the map button
-//            ImageButton mapButton = (ImageButton) findViewById(R.id.mapsButton);
-//
-//            mapButton.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    startActivity(new Intent(StartActivity.this, MapsActivity.class));
-//                }
-//            });
-//
-//            //code that implements the friends button
-//            ImageButton friendButton = (ImageButton) findViewById(R.id.friendButton);
-//
-//            friendButton.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    startActivity(new Intent(StartActivity.this, FriendsActivity.class));
-//                }
-//            });
-//
-//            //code that implements the schedule button
-//            ImageButton scheduleButton = (ImageButton) findViewById(R.id.scheduleButton);
-//
-//            scheduleButton.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    startActivity(new Intent(StartActivity.this, ScheduleActivity.class));
-//                }
-//            });
-//
-//            //Gets the current day
-//            Date date = new Date();
-//
-//            currDay = (String) android.text.format.DateFormat.format("EEEE", date);
-//            System.out.println(currDay);
-//            TextView myTextView = (TextView) findViewById(R.id.textView);
-//            myTextView.setText(currDay);
-//
-//            // Set the student's schedule up to be displayed
-//            setStudent();
-//
-//
-//            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-//                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-//            drawer.setDrawerListener(toggle);
-//            toggle.syncState();
-//
-//            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-//            navigationView.setNavigationItemSelectedListener(this);
-//        }
     }
-
-    // Was used for just wifi
-//    public static int getState(Context cont){
-//        WifiManager wifi;
-//        wifi = (WifiManager) cont.getSystemService(Context.WIFI_SERVICE);
-//        int s = wifi.getWifiState();
-//        if(s == 0 || s == 1 || s == 4 || s == 5 ){
-//            Log.i(Integer.toString(s),"Fail!!");
-//            return 0;
-//        }
-//        else
-//            Log.i(Integer.toString(s),"Success :-)");
-//            return 1;
-//    }
 
     public boolean isLoggedIn() {
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
@@ -351,18 +230,6 @@ public class StartActivity extends AppCompatActivity
                         currentStudent.setLongitude(homeLocation.get("Longitude"));
                         currentStudent.setLatitude(homeLocation.get("Latitude"));
                     }
-                    /*for (HashMap.Entry<String, Object> entry : val.entrySet()) {
-                        if (entry.getKey().equals("lastName")) {
-                            currentStudent.setLastName((String) entry.getValue());
-                        } else if (entry.getKey().equals("firstName")) {
-                            currentStudent.setFirstName((String) entry.getValue());
-                        } else if (entry.getKey().equals("Schedule")) {
-                            databaseClasses = (ArrayList<HashMap<String, String>>) entry.getValue();
-                        } else if (entry.getKey().equals("id")) {
-                            currentStudent.setId((String) entry.getValue());
-                        }
-                    }*/
-
                     if (databaseClasses != null) {
                         for (int i = 0; i < databaseClasses.size(); i++) {
                             if (databaseClasses.get(i) != null) {
@@ -371,10 +238,8 @@ public class StartActivity extends AppCompatActivity
                                 String course = currentDBClass.get("Course");
                                 String section = currentDBClass.get("Section");
 
-                                //System.out.println(major + " " + course + " " + section);
                                 Firebase ref = new Firebase("https://purduescheduler.firebaseio.com/Classes/" + major + "/" +
                                         course + "/" + section);
-                                //System.out.println(ref.getRoot());
                                 ref.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot snapshot) {
@@ -434,7 +299,6 @@ public class StartActivity extends AppCompatActivity
                         }
                     }
                 }
-                System.out.println(currentStudentClasses);
                 currentStudent.setSchedule(currentStudentClasses);
                 ((MyApplication) getApplication()).setStudent(currentStudent);
                 studentsClasses = ((MyApplication) getApplication()).getStudent().getSchedule();
@@ -563,9 +427,6 @@ public class StartActivity extends AppCompatActivity
 
             }
         }
-
-        //DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        //drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
@@ -573,7 +434,6 @@ public class StartActivity extends AppCompatActivity
     public void onRestart() {
         try {
             ArrayList<HashMap<String, String>> databaseAdapterList = new ArrayList();
-            System.out.println(studentsClasses);
             for (int i = 0; i < studentsClasses.size(); i++) {
                 Classes currentClass = studentsClasses.get(i);
                 boolean addClassForDay = false;

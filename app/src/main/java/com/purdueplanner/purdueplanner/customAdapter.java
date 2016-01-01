@@ -5,9 +5,7 @@ package com.purdueplanner.purdueplanner;
  */
 
 import android.content.Context;
-import android.app.Activity;
 import android.content.Intent;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +13,6 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.TextView;
-
-import com.firebase.client.Firebase;
-import com.firebase.client.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,7 +41,6 @@ public class customAdapter extends BaseAdapter implements ListAdapter {
 
     @Override
     public long getItemId(int pos) {
-        //return list.get(pos).;
         return 0;
     }
 
@@ -79,13 +73,6 @@ public class customAdapter extends BaseAdapter implements ListAdapter {
                 init.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 init.putExtra("Database Info", list.get(position));
                 context.startActivity(init);
-                //view.getContext().startActivity(new Intent(this, ClassInfo.class));
-                //System.out.println("HERE");
-                //Intent i = new Intent(AppCompatPreferenceActivity.this, ClassInfo.class);
-                //view.getContext().startActivity(i);
-                //startActivity(i);
-               //Firebase ref = new Firebase("https://purduescheduler.firebaseio.com/Classes/CS");
-                //System.out.println(ref.get);
                 notifyDataSetChanged();
             }
         });

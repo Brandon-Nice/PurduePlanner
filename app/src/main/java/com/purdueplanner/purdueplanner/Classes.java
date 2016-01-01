@@ -6,11 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-/*import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Types;*/
+
 
 
 
@@ -165,100 +161,6 @@ public class Classes {
 	public void setLongitude(String longitude) {
 		this.longitude = longitude;
 	}
-
-	/*// Adds a class to the database
-	public void addClassToSQLDataBase()
-	{
-		// This is the database that will stores the class
-		String url = "jdbc:mysql://localhost:3306/PurduePlanner";
-		// Username for sql database
-		String username = "root";
-		// Password for sql database
-		String password = "root";
-
-		System.out.println("Connecting database...");
-
-		try (Connection connection = DriverManager.getConnection(url, username, password)) {
-			// Will print when connection to database is achieved
-			System.out.println("Database connected!");
-			// the mysql insert statement
-			String query = " insert into classes (startTime, endTime, startDate, "
-					+ "endDate, CRN, major, courseNum, section, credits, title, days, "
-					+ "instructors, instructorEmail, location, type)"
-					+ " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-			// create the mysql insert preparedstatement
-			PreparedStatement preparedStmt = connection.prepareStatement(query);
-
-			// These prepared statements fill in each of the ? in the insert statement
-			if (startTime.equals("TBA"))
-			{
-				preparedStmt.setNull(1, Types.VARCHAR);
-			}
-			else
-			{
-				preparedStmt.setString(1, startTime);
-			}
-			if (endTime.equals("TBA"))
-			{
-				preparedStmt.setNull(2, Types.VARCHAR);
-			}
-			else
-			{
-				preparedStmt.setString(2, endTime);
-			}
-			preparedStmt.setString(3, startDate);
-			preparedStmt.setString(4, endDate);
-			preparedStmt.setString(5, CRN);
-			preparedStmt.setString(6, major);
-			preparedStmt.setString(7, courseNum);
-			preparedStmt.setString(8, sectionNum);
-			preparedStmt.setString(9, credits);
-			preparedStmt.setString(10, title);
-			if (days.equals("TBA"))
-			{
-				preparedStmt.setNull(11, Types.VARCHAR);
-			}
-			else
-			{
-				preparedStmt.setString(11, days);
-			}
-			if (instructor.equals("TBA"))
-			{
-				preparedStmt.setNull(12, Types.VARCHAR);
-			}
-			else
-			{
-				preparedStmt.setString(12, instructor);
-			}
-			if (instructorEmail.equals("TBA"))
-			{
-				preparedStmt.setNull(13, Types.VARCHAR);
-			}
-			else
-			{
-				preparedStmt.setString(13, instructorEmail);
-			}
-			if (location.equals("TBA"))
-			{
-				preparedStmt.setNull(14, Types.VARCHAR);
-			}
-			else
-			{
-				preparedStmt.setString(14, location);
-			}
-			preparedStmt.setString(15, type);
-			// execute the prepared statement
-			preparedStmt.execute();
-			// close the connection
-			connection.close();
-		} catch (SQLException e) {
-			// Will print if connection to the database cannot be made
-		    throw new IllegalStateException("Cannot connect the database!", e);
-		}
-
-
-	}*/
 
 	// Write an arraylist of classes to a file
 	public static void writeClassesToFile(ArrayList<Classes> classes, String filename)

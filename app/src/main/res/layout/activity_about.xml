@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="The Purdue Planner application was created by CS 307 students Milia Enane, Jacob Losin, Brandon Nice, Michael Rollberg, and Kenny Tam"
+        android:text="The Purdue Planner application was created by CS 307 students Milia Enane, Jacob Losin, Brandon Nice, Michael Rollberg, and Kenny Tam."
         android:id="@+id/textView2"
         android:textColor="#020202"
         android:layout_below="@+id/textView5"
@@ -33,7 +33,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="This application allows Purdue students to keep track of their schedule, navigate to classes, and compare their schedules with their friends. "
+        android:text="This application allows Purdue students to keep track of their schedule, navigate to classes, and compare their schedules with friends."
         android:id="@+id/textView6"
         android:textColor="#000000"
         android:layout_below="@+id/textView7"

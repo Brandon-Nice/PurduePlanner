@@ -1,11 +1,9 @@
 package com.purdueplanner.purdueplanner;
 
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.RectF;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -19,9 +17,6 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
-import org.json.JSONObject;
-
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -29,7 +24,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 public class FriendClickedActivity extends AppCompatActivity implements WeekView.MonthChangeListener,
         WeekView.EventClickListener, WeekView.EventLongPressListener {
@@ -46,7 +40,6 @@ public class FriendClickedActivity extends AppCompatActivity implements WeekView
         setContentView(R.layout.activity_friend_clicked);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        //ArrayList<String> test = new ArrayList<>();
         Bundle extras = getIntent().getExtras();
         String id = extras.getString("friendID");
         String firstName = extras.getString("first");
@@ -131,7 +124,6 @@ public class FriendClickedActivity extends AppCompatActivity implements WeekView
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                System.out.println(parent.getItemAtPosition(position));
                 if (parent.getItemAtPosition(position).equals("Sunday")) {
                     Calendar day = Calendar.getInstance();
                     day.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
@@ -195,7 +187,6 @@ public class FriendClickedActivity extends AppCompatActivity implements WeekView
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                //System.out.println(snapshot);
                 HashMap<String, Object> val = (HashMap) snapshot.getValue();
                 boolean isScheduleHidden = false;
                 if (val.get("isScheduleHidden") != null)
@@ -227,14 +218,11 @@ public class FriendClickedActivity extends AppCompatActivity implements WeekView
                                 String course = currentDBClass.get("Course");
                                 String section = currentDBClass.get("Section");
 
-                                //System.out.println(major + " " + course + " " + section);
                                 Firebase ref = new Firebase("https://purduescheduler.firebaseio.com/Classes/" + major + "/" +
                                         course + "/" + section);
-                                //System.out.println(ref.getRoot());
                                 ref.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot snapshot) {
-                                        //System.out.println(snapshot);
                                         Classes currentClass = new Classes();
                                         HashMap<String, String> val = (HashMap) snapshot.getValue();
                                         currentClass.setCourseNum(val.get("courseNum"));
@@ -599,7 +587,6 @@ public class FriendClickedActivity extends AppCompatActivity implements WeekView
                 }
             }
             mWeekView.goToHour(minTime);
-            System.out.println("MinTime: " + minTime);
         }
     }
 

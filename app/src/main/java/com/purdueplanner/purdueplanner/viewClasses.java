@@ -44,20 +44,16 @@ public class viewClasses extends AppCompatActivity implements WeekView.MonthChan
 
         final String currDay = (String) android.text.format.DateFormat.format("EEEE", new Date());
 
-        System.out.println(visibleDays);
         int minTime = 100;
         if (visibleDays == 7)
         {
             setContentView(R.layout.view_classes_7);
             mWeekView = (WeekView) findViewById(R.id.weekView);
             mWeekView.setHourHeight(mWeekView.getHourHeight() * 2);
-            System.out.println("Hello");
             mWeekView.setFirstDayOfWeek(Calendar.SUNDAY);
             GregorianCalendar day = new GregorianCalendar();
             day.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
             mWeekView.goToDate(day);
-            System.out.println("First Visible Day" + mWeekView.getFirstVisibleDay());
-            System.out.println("First day of week:" + mWeekView.getFirstDayOfWeek());
 
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
@@ -110,11 +106,8 @@ public class viewClasses extends AppCompatActivity implements WeekView.MonthChan
             {
                 letter = "S";
             }
-            System.out.println("DayCalendar:" + day.get(Calendar.DAY_OF_WEEK));
             for (int i = 0; i < classList.size(); i++)
             {
-                System.out.println("Days:" + classList.get(i).getDays());
-                System.out.println("Letter" + letter);
                 if (classList.get(i).getDays().contains(letter))
                 {
                     if (!classList.get(i).getStartTime().equals("TBA")) {
